@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Ops Dashboard - Live Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            color: #10b981;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-top: 15px;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .metric-card {
+            background: #1e293b;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        .metric-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3b82f6;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            color: #94a3b8;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .metric-change {
+            margin-top: 10px;
+            padding: 5px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85em;
+            color: #10b981;
+        }
+        
+        .metric-change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        
+        .chart-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            background: #1e293b;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+        }
+        
+        .chart-container h3 {
+            color: #3b82f6;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .activity-feed {
+            background: #1e293b;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .activity-feed h3 {
+            color: #3b82f6;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            transition: background 0.2s ease;
+        }
+        
+        .activity-item:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-text {
+            color: #e2e8f0;
+            margin-bottom: 3px;
+        }
+        
+        .activity-time {
+            color: #64748b;
+            font-size: 0.85em;
+        }
+        
+        .disclaimer {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+        
+        .disclaimer h3 {
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+        
+        .disclaimer p {
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        
+        .possibilities {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .possibilities ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .possibilities li {
+            padding: 8px 0;
+            color: #cbd5e1;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .possibilities li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Personal Operations Dashboard</h1>
+            <p style="color: #94a3b8; font-size: 1.1em; margin-top: 10px;">
+                Raspberry Pi-Powered Self-Optimization System
+            </p>
+            <div class="status-badge">🟢 LIVE DEMO - Simulated Data</div>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">💼</div>
+                <div class="metric-value" id="jobApps">12</div>
+                <div class="metric-label">Job Applications</div>
+                <div class="metric-change">+4 this week</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">💻</div>
+                <div class="metric-value" id="commits">47</div>
+                <div class="metric-label">GitHub Commits</div>
+                <div class="metric-change">+12 this week</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">📧</div>
+                <div class="metric-value" id="emails">156</div>
+                <div class="metric-label">Emails Sent</div>
+                <div class="metric-change">+28 today</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">🏃</div>
+                <div class="metric-value" id="steps">8,347</div>
+                <div class="metric-label">Steps Today</div>
+                <div class="metric-change">+2.3k vs yesterday</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">📅</div>
+                <div class="metric-value">62%</div>
+                <div class="metric-label">Calendar Utilization</div>
+                <div class="metric-change negative">-8% vs last week</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">🎵</div>
+                <div class="metric-value" id="musicDays">3</div>
+                <div class="metric-label">Days Since Music Production</div>
+                <div class="metric-change negative">⚠️ Overdue</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">💰</div>
+                <div class="metric-value">$847</div>
+                <div class="metric-label">Monthly Dining Spend</div>
+                <div class="metric-change">Budget: $500 exceeded</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-icon">📚</div>
+                <div class="metric-value">2</div>
+                <div class="metric-label">Books This Month</div>
+                <div class="metric-change">Target: 3/month</div>
+            </div>
+        </div>
+        
+        <div class="chart-row">
+            <div class="chart-container">
+                <h3>Weekly Productivity Score</h3>
+                <canvas id="productivityChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Daily Steps Tracking</h3>
+                <canvas id="stepsChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="activity-feed">
+            <h3>🔔 Live Activity Feed</h3>
+            
+            <div class="activity-item">
+                <div class="activity-icon">💼</div>
+                <div class="activity-content">
+                    <div class="activity-text">Applied to Amazon Music - Tour Operations Manager</div>
+                    <div class="activity-time">2 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">💻</div>
+                <div class="activity-content">
+                    <div class="activity-text">Pushed 3 commits to portfolio repository</div>
+                    <div class="activity-time">4 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">📧</div>
+                <div class="activity-content">
+                    <div class="activity-text">Sent follow-up email to Sony recruiter</div>
+                    <div class="activity-time">6 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">🏃</div>
+                <div class="activity-content">
+                    <div class="activity-text">Completed 45-minute workout (Strength Training)</div>
+                    <div class="activity-time">8 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">⚠️</div>
+                <div class="activity-content">
+                    <div class="activity-text">Alert: Meetings >8hrs this week, auto-blocked focus time tomorrow</div>
+                    <div class="activity-time">12 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">📚</div>
+                <div class="activity-content">
+                    <div class="activity-text">Finished reading: "The Hard Thing About Hard Things"</div>
+                    <div class="activity-time">Yesterday</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <h3>⚙️ Live Demo Dashboard</h3>
+            <p><strong>Note:</strong> This dashboard uses simulated real-time data to demonstrate capabilities. The actual Raspberry Pi implementation (Q1 2026) will track genuine metrics via API integrations.</p>
+            
+            <p><strong>This baseline can expand into:</strong></p>
+            
+            <div class="possibilities">
+                <ul>
+                    <li><strong>Real-time API integrations</strong> - Gmail, GitHub, Apple Health, Plaid, Spotify, Calendar sync</li>
+                    <li><strong>Automated smart alerts</strong> - SMS when dining spend >$500, Slack reminder when no commits 3+ days</li>
+                    <li><strong>Machine learning predictions</strong> - Predict productivity based on sleep, meetings, exercise patterns</li>
+                    <li><strong>Goal tracking & accountability</strong> - Set targets, track progress, celebrate wins</li>
+                    <li><strong>Weekly/monthly reports</strong> - Auto-generated insights delivered via email</li>
+                    <li><strong>Time-blocking automation</strong> - Auto-block focus time when meeting load exceeds threshold</li>
+                    <li><strong>Financial forecasting</strong> - Budget predictions, spending category analysis, savings goals</li>
+                    <li><strong>Health correlations</strong> - Discover how sleep/exercise impact work performance</li>
+                    <li><strong>Habit streak tracking</strong> - Visualize consistency across multiple life domains</li>
+                    <li><strong>Custom dashboards per domain</strong> - Separate views for work, health, finance, personal growth</li>
+                </ul>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Tech Stack:</strong> Raspberry Pi 4, Python, Grafana, SQLite, APIs (Gmail, GitHub, Apple Health, Plaid, Google Calendar)</p>
+        </div>
+    </div>
+    
+    <script>
+        // Animate counters on load
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+            const timer = setInterval(() => {
+                current += increment;
+                obj.textContent = current.toLocaleString();
+                if (current == end) clearInterval(timer);
+            }, stepTime);
+        }
+        
+        // Trigger animations
+        setTimeout(() => {
+            animateValue('jobApps', 0, 12, 1000);
+            animateValue('commits', 0, 47, 1500);
+            animateValue('emails', 0, 156, 2000);
+            animateValue('steps', 0, 8347, 2500);
+            animateValue('musicDays', 0, 3, 800);
+        }, 300);
+        
+        // Productivity score chart
+        const prodCtx = document.getElementById('productivityChart').getContext('2d');
+        new Chart(prodCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Productivity Score',
+                    data: [72, 68, 85, 78, 91, 45, 62],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#3b82f6',
+                    pointBorderColor: '#1e293b',
+                    pointBorderWidth: 3,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(59, 130, 246, 0.1)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(59, 130, 246, 0.1)' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+        
+        // Steps chart
+        const stepsCtx = document.getElementById('stepsChart').getContext('2d');
+        new Chart(stepsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Daily Steps',
+                    data: [7234, 6891, 9456, 8123, 8347, 5432, 6789],
+                    backgroundColor: 'rgba(139, 92, 246, 0.6)',
+                    borderColor: '#8b5cf6',
+                    borderWidth: 2,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(59, 130, 246, 0.1)' },
+                        ticks: {
+                            color: '#94a3b8',
+                            callback: (value) => (value/1000).toFixed(1) + 'k'
+                        }
+                    },
+                    x: {
+                        grid: { color: 'rgba(59, 130, 246, 0.1)' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+        
+        // Simulate real-time updates
+        setInterval(() => {
+            const steps = document.getElementById('steps');
+            if (steps) {
+                const current = parseInt(steps.textContent.replace(',', ''));
+                const newValue = current + Math.floor(Math.random() * 50);
+                steps.textContent = newValue.toLocaleString();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

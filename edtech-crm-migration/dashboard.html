@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC EdTech - Student Pipeline Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 700; }
+        .subtitle { opacity: 0.8; font-size: 1.1rem; }
+        .disclaimer {
+            background: rgba(255,255,255,0.15);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            border-left: 4px solid #ffd700;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-change {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #4ade80;
+        }
+        .chart-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .chart-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .possibilities-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .possibilities-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .possibilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .possibility-item {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #ffd700;
+            transition: all 0.3s;
+        }
+        .possibility-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .possibility-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #ffd700;
+        }
+        .possibility-item p {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            line-height: 1.5;
+        }
+        canvas { max-height: 400px !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 ABC EdTech - Student Pipeline Dashboard</h1>
+            <p class="subtitle">Real-time CRM Migration & Data Quality Monitoring</p>
+            <div class="disclaimer">
+                ⚠️ <strong>Demo Dashboard</strong> - This uses representative data from ABC Company migration. 
+                Built from the Talstack (Nigerian EdTech) real-world implementation. Fully customizable.
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">5,247</div>
+                <div class="stat-label">Total Records Processed</div>
+                <div class="stat-change">↑ From 12 Google Sheets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">4,891</div>
+                <div class="stat-label">Clean Contacts in HubSpot</div>
+                <div class="stat-change">↑ 93.2% data quality score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">356</div>
+                <div class="stat-label">Duplicates Removed</div>
+                <div class="stat-change">↓ 6.8% reduction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">48hrs</div>
+                <div class="stat-label">Total Migration Time</div>
+                <div class="stat-change">↓ vs. 3 weeks manual process</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">Student Enrollment Pipeline</div>
+            <canvas id="enrollmentChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">Data Quality Improvement</div>
+            <canvas id="qualityChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">Course Popularity</div>
+            <canvas id="courseChart"></canvas>
+        </div>
+
+        <div class="possibilities-section">
+            <div class="possibilities-title">🚀 What You Can Build From Here</div>
+            <p style="opacity: 0.9; margin-bottom: 25px; font-size: 1.05rem;">
+                This is just the foundation. Here's what we can layer on top:
+            </p>
+            <div class="possibilities-grid">
+                <div class="possibility-item">
+                    <h4>Real-Time Sync Dashboard</h4>
+                    <p>Live HubSpot API integration showing migration progress, error tracking, and automatic retry mechanisms</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Automated Data Quality Alerts</h4>
+                    <p>Slack/Email notifications when duplicate contacts detected, invalid emails found, or missing critical fields</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Multi-CRM Connector</h4>
+                    <p>Expand beyond HubSpot - Salesforce, Pipedrive, Zoho, Monday.com with unified data models</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Predictive Enrollment Analytics</h4>
+                    <p>ML models to predict which students will complete courses, identify at-risk drop-offs</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Automated Data Enrichment</h4>
+                    <p>Pull LinkedIn profiles, company data via Clearbit, geographic enrichment for localized campaigns</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Custom Field Mapping Engine</h4>
+                    <p>Visual drag-and-drop interface to map any spreadsheet schema to any CRM structure</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Version Control & Rollback</h4>
+                    <p>Snapshot data before migration, one-click restore if anything goes wrong</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Team Collaboration Tools</h4>
+                    <p>Multi-user access, role-based permissions, audit logs showing who changed what</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>White-Label for Agencies</h4>
+                    <p>Rebrand entire system as your own migration service, charge clients per migration</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Scheduled Auto-Sync</h4>
+                    <p>Keep Google Sheets and HubSpot in continuous sync - changes flow both ways automatically</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Revenue Forecasting</h4>
+                    <p>Track enrollment trends, predict monthly revenue based on course completion rates</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>Custom Reporting Portal</h4>
+                    <p>Let sales teams build their own dashboards without touching code - drag metrics, set filters</p>
+                </div>
+                <div class="possibility-item">
+                    <h4>API Webhooks for Events</h4>
+                    <p>Trigger actions when students enroll, complete courses, go inactive - integrate with Zapier/Make</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enrollment Pipeline Chart
+        const enrollmentCtx = document.getElementById('enrollmentChart').getContext('2d');
+        new Chart(enrollmentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active Students', 'Enrollment Started', 'Course Completed', 'Inactive'],
+                datasets: [{
+                    data: [2847, 1245, 623, 176],
+                    backgroundColor: ['#10b981', '#fbbf24', '#3b82f6', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#fff', padding: 15, font: { size: 13 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                let value = context.parsed;
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Data Quality Chart
+        const qualityCtx = document.getElementById('qualityChart').getContext('2d');
+        new Chart(qualityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Valid Emails', 'Phone Numbers', 'Complete Names', 'No Duplicates'],
+                datasets: [
+                    {
+                        label: 'Before Cleanup',
+                        data: [72, 58, 81, 68],
+                        backgroundColor: '#ef4444'
+                    },
+                    {
+                        label: 'After Cleanup',
+                        data: [98, 94, 99, 100],
+                        backgroundColor: '#10b981'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { color: '#fff', callback: value => value + '%' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#fff', padding: 15 } }
+                }
+            }
+        });
+
+        // Course Popularity Chart
+        const courseCtx = document.getElementById('courseChart').getContext('2d');
+        new Chart(courseCtx, {
+            type: 'horizontalBar',
+            data: {
+                labels: ['Python Fundamentals', 'Data Science', 'Web Development', 'Machine Learning', 'AI Engineering'],
+                datasets: [{
+                    label: 'Students Enrolled',
+                    data: [1247, 982, 876, 654, 423],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#ffd700']
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
