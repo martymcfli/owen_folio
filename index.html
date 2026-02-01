@@ -775,6 +775,68 @@
         .hidden {
             display: none !important;
         }
+
+        /* Featured Project Card */
+        .project-card.featured {
+            border: 2px solid var(--accent-primary);
+            position: relative;
+        }
+        .project-card.featured::before {
+            content: 'FEATURED';
+            position: absolute;
+            top: -1px;
+            right: 20px;
+            background: var(--accent-primary);
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+        .project-card.featured:hover {
+            box-shadow: 0 20px 60px rgba(255, 59, 48, 0.3);
+        }
+
+        /* Video Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-modal.active {
+            display: flex;
+        }
+        .video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 900px;
+        }
+        .video-modal video {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .video-modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 10px;
+            transition: color 0.3s ease;
+        }
+        .video-modal-close:hover {
+            color: var(--accent-primary);
+        }
     </style>
 </head>
 <body>
@@ -885,6 +947,145 @@
 
         <!-- Projects Grid -->
         <div class="projects-grid">
+            <!-- Culture Heat Map - FEATURED -->
+            <div class="project-card featured" data-category="data ai">
+                <div class="project-header">
+                    <div class="project-category">Data Intelligence / AI</div>
+                    <div class="project-title">Culture Heat Map</div>
+                    <div class="project-company">Company Culture Platform</div>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">A company culture intelligence platform that visualizes culture scores across 100+ companies with salary benchmarking, AI-powered news, and anonymous reviews.</p>
+                    <div class="project-stats">
+                        <div class="stat">
+                            <div class="stat-value">100+</div>
+                            <div class="stat-label">Companies</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">AI</div>
+                            <div class="stat-label">Powered</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">1600+</div>
+                            <div class="stat-label">Salaries</div>
+                        </div>
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">OpenAI</span>
+                        <span class="tag">PostgreSQL</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://cultheatmap-vt5pqowf.manus.space" target="_blank" class="project-btn project-btn-primary">Live Demo</a>
+                        <a href="./culture-heatmap.html" class="project-btn project-btn-secondary">Case Study</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PerformIQ -->
+            <div class="project-card" data-category="ai operations">
+                <div class="project-header">
+                    <div class="project-category">Performance Management / AI</div>
+                    <div class="project-title">PerformIQ</div>
+                    <div class="project-company">Gamified Performance Platform</div>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">A gamified performance management platform with AI/ML recommendations, XP leveling, achievements, and transparent promotion paths.</p>
+                    <div class="project-stats">
+                        <div class="stat">
+                            <div class="stat-value">AI</div>
+                            <div class="stat-label">Powered</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">XP</div>
+                            <div class="stat-label">Gamified</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">Real</div>
+                            <div class="stat-label">Time</div>
+                        </div>
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">ML</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="./performiq.html" class="project-btn project-btn-primary">View Case Study</a>
+                        <a href="https://github.com/martymcfli/performiq" target="_blank" class="project-btn project-btn-secondary">GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TradeSphere AI -->
+            <div class="project-card" data-category="ai data">
+                <div class="project-header">
+                    <div class="project-category">FinTech / AI Trading</div>
+                    <div class="project-title">TradeSphere AI</div>
+                    <div class="project-company">Trading Dashboard</div>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">AI-powered trading dashboard with real-time market predictions, trade execution, and performance history tracking.</p>
+                    <div class="project-stats">
+                        <div class="stat">
+                            <div class="stat-value">Real</div>
+                            <div class="stat-label">Time</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">AI</div>
+                            <div class="stat-label">Predictions</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">Live</div>
+                            <div class="stat-label">Trading</div>
+                        </div>
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">Chart.js</span>
+                        <span class="tag">Tailwind</span>
+                        <span class="tag">Vercel</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/martymcfli/tradesphere-ai" target="_blank" class="project-btn project-btn-primary">View on GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resume Alchemist -->
+            <div class="project-card" data-category="ai automation">
+                <div class="project-header">
+                    <div class="project-category">AI Tools</div>
+                    <div class="project-title">Resume Alchemist</div>
+                    <div class="project-company">AI Resume Parser</div>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">AI-powered resume parser using Gemini 2.5 Flash to extract and restructure resume data into professional templates.</p>
+                    <div class="project-stats">
+                        <div class="stat">
+                            <div class="stat-value">Gemini</div>
+                            <div class="stat-label">AI</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">Auto</div>
+                            <div class="stat-label">Format</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">Fast</div>
+                            <div class="stat-label">Parse</div>
+                        </div>
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Gemini API</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/martymcfli/resume-alchemist" target="_blank" class="project-btn project-btn-primary">View on GitHub</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- EdTech CRM Migration -->
             <div class="project-card" data-category="automation data">
                 <div class="project-header">
@@ -1257,12 +1458,24 @@
                         <span class="tag">Sustainability</span>
                     </div>
                     <div class="project-links">
-                        <a href="./redwood_presentation.pdf" target="_blank" class="project-btn project-btn-primary">View Presentation</a>
+                        <a href="#" onclick="openVideoModal(); return false;" class="project-btn project-btn-primary">Watch Video</a>
+                        <a href="./redwood_presentation.pdf" target="_blank" class="project-btn project-btn-secondary">View PDF</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-modal-content">
+            <button class="video-modal-close" onclick="closeVideoModal()">&times;</button>
+            <video id="redwoodVideo" controls>
+                <source src="./redwood-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
 
     <div class="separator"></div>
 
@@ -1390,6 +1603,38 @@
                 nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.3)';
             } else {
                 nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Video Modal Functions
+        function openVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('redwoodVideo');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            video.play();
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('redwoodVideo');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            video.pause();
+            video.currentTime = 0;
+        }
+
+        // Close modal on background click
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideoModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideoModal();
             }
         });
     </script>
