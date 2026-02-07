@@ -863,6 +863,375 @@
             box-shadow: 0 20px 60px rgba(20, 184, 166, 0.25), 0 10px 30px rgba(13, 148, 136, 0.15);
         }
 
+        /* Featured Showcase Section */
+        .featured-showcase {
+            padding: 100px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .featured-project {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 100px;
+            padding: 40px;
+            background: var(--bg-card);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-project::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+        }
+
+        .featured-project:nth-child(even) {
+            direction: rtl;
+        }
+
+        .featured-project:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .featured-project:last-child {
+            margin-bottom: 0;
+        }
+
+        .featured-content {
+            padding: 20px 0;
+        }
+
+        .featured-number {
+            font-size: 5rem;
+            font-weight: 900;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.3;
+            line-height: 1;
+            margin-bottom: -20px;
+        }
+
+        .featured-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(20, 184, 166, 0.15);
+            color: var(--accent-primary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .featured-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .featured-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .featured-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .featured-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .featured-stat {
+            text-align: center;
+        }
+
+        .featured-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+        }
+
+        .featured-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .featured-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .featured-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Screenshot Gallery */
+        .featured-gallery {
+            position: relative;
+            height: 400px;
+            perspective: 1000px;
+        }
+
+        .gallery-item {
+            position: absolute;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item:nth-child(1) {
+            width: 280px;
+            height: 200px;
+            top: 0;
+            left: 0;
+            z-index: 3;
+            animation: floatGallery1 8s ease-in-out infinite;
+        }
+
+        .gallery-item:nth-child(2) {
+            width: 320px;
+            height: 220px;
+            top: 80px;
+            right: 0;
+            z-index: 2;
+            animation: floatGallery2 9s ease-in-out infinite;
+        }
+
+        .gallery-item:nth-child(3) {
+            width: 260px;
+            height: 180px;
+            bottom: 0;
+            left: 50px;
+            z-index: 1;
+            animation: floatGallery3 7s ease-in-out infinite;
+        }
+
+        .gallery-item:hover {
+            z-index: 10;
+            transform: scale(1.1) translateY(-10px);
+            box-shadow: 0 30px 60px rgba(20, 184, 166, 0.3);
+            border-color: var(--accent-primary);
+        }
+
+        @keyframes floatGallery1 {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(0deg); }
+        }
+
+        @keyframes floatGallery2 {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-20px) rotate(0deg); }
+        }
+
+        @keyframes floatGallery3 {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-12px) rotate(1deg); }
+        }
+
+        /* Video Preview for Redwood */
+        .video-preview {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 16/9;
+            background: var(--bg-secondary);
+        }
+
+        .video-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            transition: background 0.3s ease;
+        }
+
+        .video-preview:hover::before {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .video-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            width: 80px;
+            height: 80px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(20, 184, 166, 0.4);
+        }
+
+        .play-button svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+            margin-left: 5px;
+        }
+
+        .video-preview:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Dashboard Preview */
+        .dashboard-preview {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            animation: floatDashboard 6s ease-in-out infinite;
+        }
+
+        .dashboard-preview img {
+            width: 100%;
+            display: block;
+        }
+
+        @keyframes floatDashboard {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        /* All Projects Toggle */
+        .all-projects-section {
+            padding: 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .toggle-projects-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            font-family: inherit;
+            margin-bottom: 40px;
+        }
+
+        .toggle-projects-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .toggle-projects-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-projects-btn.active svg {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-projects {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .collapsible-projects.show {
+            display: block;
+            opacity: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .featured-project {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .featured-project:nth-child(even) {
+                direction: ltr;
+            }
+            .featured-gallery {
+                height: 300px;
+            }
+            .gallery-item:nth-child(1) {
+                width: 200px;
+                height: 150px;
+            }
+            .gallery-item:nth-child(2) {
+                width: 220px;
+                height: 160px;
+            }
+            .gallery-item:nth-child(3) {
+                width: 180px;
+                height: 130px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .featured-title {
+                font-size: 1.8rem;
+            }
+            .featured-stats {
+                gap: 20px;
+            }
+            .featured-stat-value {
+                font-size: 1.5rem;
+            }
+            .featured-gallery {
+                height: 250px;
+            }
+        }
+
         /* Video Modal */
         .video-modal {
             display: none;
@@ -1024,60 +1393,161 @@
 
     <div class="separator"></div>
 
-    <!-- Projects Section -->
-    <section class="projects" id="projects">
+    <!-- Featured Showcase Section -->
+    <section class="featured-showcase" id="projects">
         <div class="section-header">
-            <div class="section-tag">Portfolio</div>
-            <h2 class="section-title">Key Projects</h2>
+            <div class="section-tag">Featured Work</div>
+            <h2 class="section-title">Signature Projects</h2>
         </div>
 
-        <!-- Filter Buttons -->
-        <div class="filter-container">
-            <button class="filter-btn active" data-filter="all">All Projects</button>
-            <button class="filter-btn" data-filter="automation">Automation</button>
-            <button class="filter-btn" data-filter="data">Data & Analytics</button>
-            <button class="filter-btn" data-filter="ai">AI & Trading</button>
-            <button class="filter-btn" data-filter="operations">Operations</button>
-            <button class="filter-btn" data-filter="strategy">Strategy</button>
-        </div>
-
-        <!-- Projects Grid -->
-        <div class="projects-grid">
-            <!-- Culture Heat Map - FEATURED -->
-            <div class="project-card featured" data-category="data ai">
-                <div class="project-header">
-                    <div class="project-category">Data Intelligence / AI</div>
-                    <div class="project-title">Culture Heat Map</div>
-                    <div class="project-company">Company Culture Platform</div>
+        <!-- Project 1: Culture Heat Map -->
+        <div class="featured-project">
+            <div class="featured-content">
+                <div class="featured-number">01</div>
+                <div class="featured-tag">Data Intelligence / AI</div>
+                <h3 class="featured-title">Culture Heat Map</h3>
+                <p class="featured-subtitle">Company Culture Intelligence Platform</p>
+                <p class="featured-desc">Built a comprehensive platform that visualizes company culture scores across 100+ organizations. Features AI-powered chatbot for company insights, interactive radar charts for culture breakdowns, and bubble visualizations comparing work-life balance vs overall ratings.</p>
+                <div class="featured-stats">
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">100+</div>
+                        <div class="featured-stat-label">Companies</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">1,600+</div>
+                        <div class="featured-stat-label">Salaries</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">AI</div>
+                        <div class="featured-stat-label">Powered</div>
+                    </div>
                 </div>
-                <div class="project-body">
-                    <p class="project-desc">A company culture intelligence platform that visualizes culture scores across 100+ companies with salary benchmarking, AI-powered news, and anonymous reviews.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">100+</div>
-                            <div class="stat-label">Companies</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">AI</div>
-                            <div class="stat-label">Powered</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">1600+</div>
-                            <div class="stat-label">Salaries</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">React</span>
-                        <span class="tag">TypeScript</span>
-                        <span class="tag">OpenAI</span>
-                        <span class="tag">PostgreSQL</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://cultheatmap-vt5pqowf.manus.space" target="_blank" class="project-btn project-btn-primary">Live Demo</a>
-                        <a href="./culture-heatmap.html" class="project-btn project-btn-secondary">Case Study</a>
-                    </div>
+                <div class="featured-tags">
+                    <span class="tag">React</span>
+                    <span class="tag">TypeScript</span>
+                    <span class="tag">OpenAI</span>
+                    <span class="tag">PostgreSQL</span>
+                </div>
+                <div class="featured-links">
+                    <a href="https://cultheatmap-vt5pqowf.manus.space" target="_blank" class="btn-primary" style="padding: 14px 24px;">Live Demo</a>
+                    <a href="./culture-heatmap.html" class="btn-secondary" style="padding: 14px 24px;">Case Study</a>
                 </div>
             </div>
+            <div class="featured-gallery">
+                <div class="gallery-item">
+                    <img src="./images/heatmap-ai-chat.png" alt="AI Chat Assistant">
+                </div>
+                <div class="gallery-item">
+                    <img src="./images/heatmap-radar.png" alt="Culture Score Radar Chart">
+                </div>
+                <div class="gallery-item">
+                    <img src="./images/heatmap-bubble.png" alt="Company Comparison Bubble Chart">
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 2: Redwood Materials CSR -->
+        <div class="featured-project">
+            <div class="featured-content">
+                <div class="featured-number">02</div>
+                <div class="featured-tag">Strategy / Sustainability</div>
+                <h3 class="featured-title">Redwood Materials CSR</h3>
+                <p class="featured-subtitle">Battery Recycling Strategic Proposal</p>
+                <p class="featured-desc">Developed a comprehensive CSR strategy for scaling EV battery recycling initiatives. The proposal outlines education programs, innovation partnerships, and community access initiatives to accelerate sustainable battery lifecycle management.</p>
+                <div class="featured-stats">
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">CSR</div>
+                        <div class="featured-stat-label">Strategy</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">EV</div>
+                        <div class="featured-stat-label">Battery</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">Scale</div>
+                        <div class="featured-stat-label">Focus</div>
+                    </div>
+                </div>
+                <div class="featured-tags">
+                    <span class="tag">CSR</span>
+                    <span class="tag">Strategic Planning</span>
+                    <span class="tag">Sustainability</span>
+                </div>
+                <div class="featured-links">
+                    <a href="#" onclick="openVideoModal(); return false;" class="btn-primary" style="padding: 14px 24px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M8 5v14l11-7z"/></svg>
+                        Watch Presentation
+                    </a>
+                    <a href="./redwood_presentation.pdf" target="_blank" class="btn-secondary" style="padding: 14px 24px;">View PDF</a>
+                </div>
+            </div>
+            <div class="video-preview" onclick="openVideoModal()">
+                <img src="./images/redwood-thumb.jpg" alt="Redwood Materials Presentation" onerror="this.style.display='none'">
+                <div class="play-button">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 3: Personal Ops Dashboard -->
+        <div class="featured-project">
+            <div class="featured-content">
+                <div class="featured-number">03</div>
+                <div class="featured-tag">Data Visualization / IoT</div>
+                <h3 class="featured-title">Personal Ops Dashboard</h3>
+                <p class="featured-subtitle">Raspberry Pi Self-Optimization System</p>
+                <p class="featured-desc">24/7 productivity tracking system running on Raspberry Pi. Tracks personal metrics, habits, and goals with real-time visualizations. If I optimize my own life with this rigor, imagine what I can build for your company.</p>
+                <div class="featured-stats">
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">24/7</div>
+                        <div class="featured-stat-label">Tracking</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">Q1 '26</div>
+                        <div class="featured-stat-label">Launch</div>
+                    </div>
+                    <div class="featured-stat">
+                        <div class="featured-stat-value">Live</div>
+                        <div class="featured-stat-label">Status</div>
+                    </div>
+                </div>
+                <div class="featured-tags">
+                    <span class="tag">Chart.js</span>
+                    <span class="tag">Raspberry Pi</span>
+                    <span class="tag">IoT</span>
+                    <span class="tag">Python</span>
+                </div>
+                <div class="featured-links">
+                    <a href="./personal-ops-dashboard/dashboard.html" class="btn-primary" style="padding: 14px 24px;">View Dashboard</a>
+                    <a href="./personal-ops-dashboard/" class="btn-secondary" style="padding: 14px 24px;">Read More</a>
+                </div>
+            </div>
+            <div class="dashboard-preview">
+                <img src="./personal-ops-dashboard/preview.png" alt="Personal Ops Dashboard Preview" onerror="this.parentElement.innerHTML='<div style=&quot;padding: 60px; text-align: center; color: var(--text-muted);&quot;><div style=&quot;font-size: 3rem; margin-bottom: 10px;&quot;>📊</div>Live Dashboard Preview</div>'">
+            </div>
+        </div>
+    </section>
+
+    <!-- All Projects Section -->
+    <section class="all-projects-section">
+        <button class="toggle-projects-btn" onclick="toggleAllProjects()">
+            <span>View All Projects</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+            </svg>
+        </button>
+
+        <div class="collapsible-projects" id="allProjects">
+            <!-- Filter Buttons -->
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+                <button class="filter-btn" data-filter="automation">Automation</button>
+                <button class="filter-btn" data-filter="data">Data & Analytics</button>
+                <button class="filter-btn" data-filter="ai">AI & Trading</button>
+                <button class="filter-btn" data-filter="operations">Operations</button>
+            </div>
+
+            <div class="projects-grid">
 
             <!-- PerformIQ -->
             <div class="project-card" data-category="ai operations">
@@ -1248,41 +1718,6 @@
                     <div class="project-links">
                         <a href="./apollo-hubspot-handoff/dashboard.html" class="project-btn project-btn-primary">View Dashboard</a>
                         <a href="./apollo-hubspot-handoff/" class="project-btn project-btn-secondary">See Code</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personal Ops Dashboard -->
-            <div class="project-card" data-category="data operations">
-                <div class="project-header">
-                    <div class="project-category">Data Visualization / IoT</div>
-                    <div class="project-title">Personal Ops Dashboard</div>
-                    <div class="project-company">Raspberry Pi Self-Optimization</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc">24/7 productivity tracking system running on Raspberry Pi. If I optimize my own life with this rigor, imagine what I can build for your company.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">24/7</div>
-                            <div class="stat-label">Tracking</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Q1 '26</div>
-                            <div class="stat-label">Launch</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Live</div>
-                            <div class="stat-label">Status</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Chart.js</span>
-                        <span class="tag">Raspberry Pi</span>
-                        <span class="tag">IoT</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="./personal-ops-dashboard/dashboard.html" class="project-btn project-btn-primary">View Dashboard</a>
-                        <a href="./personal-ops-dashboard/" class="project-btn project-btn-secondary">Read More</a>
                     </div>
                 </div>
             </div>
@@ -1525,40 +1960,7 @@
                 </div>
             </div>
 
-            <!-- Redwood Materials CSR Strategy -->
-            <div class="project-card" data-category="strategy">
-                <div class="project-header">
-                    <div class="project-category">Strategy / Sustainability</div>
-                    <div class="project-title">Redwood Materials CSR Strategy</div>
-                    <div class="project-company">Strategic Proposal</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc">Comprehensive proposal for scaling battery recycling initiatives through education, innovation, and access programs.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">CSR</div>
-                            <div class="stat-label">Strategy</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">EV</div>
-                            <div class="stat-label">Battery</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Scale</div>
-                            <div class="stat-label">Focus</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">CSR</span>
-                        <span class="tag">Strategy</span>
-                        <span class="tag">Sustainability</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" onclick="openVideoModal(); return false;" class="project-btn project-btn-primary">Watch Video</a>
-                        <a href="./redwood_presentation.pdf" target="_blank" class="project-btn project-btn-secondary">View PDF</a>
-                    </div>
-                </div>
-            </div>
+        </div>
         </div>
     </section>
 
@@ -1742,6 +2144,20 @@
                 closeVideoModal();
             }
         });
+
+        // Toggle All Projects Section
+        function toggleAllProjects() {
+            const btn = document.querySelector('.toggle-projects-btn');
+            const projects = document.getElementById('allProjects');
+            btn.classList.toggle('active');
+            projects.classList.toggle('show');
+
+            if (projects.classList.contains('show')) {
+                btn.querySelector('span').textContent = 'Hide Projects';
+            } else {
+                btn.querySelector('span').textContent = 'View All Projects';
+            }
+        }
 
         // Close modal on Escape key
         document.addEventListener('keydown', function(e) {
