@@ -1,0 +1,5 @@
+{
+  "name": "Chime Pulse: Narrative Engine",
+  "description": "A self-learning editorial system powered by Gemini 2.0. It generates narrative variations, runs synthetic A/B tests against AI personas (Investors, Users, Policymakers), and predicts Reputation, Reach, and Resonance KPIs.",
+  "requestFramePermissions": []
+}
