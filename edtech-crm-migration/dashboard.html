@@ -178,9 +178,9 @@
         </div>
 
         <div class="possibilities-section">
-            <div class="possibilities-title">🚀 What You Can Build From Here</div>
+            <div class="possibilities-title">🚀 What I Can Build From Here</div>
             <p style="opacity: 0.9; margin-bottom: 25px; font-size: 1.05rem;">
-                This is just the foundation. Here's what we can layer on top:
+                This is just the foundation. Here's what I can layer on top:
             </p>
             <div class="possibilities-grid">
                 <div class="possibility-item">
@@ -312,13 +312,14 @@
         // Course Popularity Chart
         const courseCtx = document.getElementById('courseChart').getContext('2d');
         new Chart(courseCtx, {
-            type: 'horizontalBar',
+            type: 'bar',
             data: {
-                labels: ['Python Fundamentals', 'Data Science', 'Web Development', 'Machine Learning', 'AI Engineering'],
+                labels: ['Product Management Fundamentals', 'Business Analytics & SQL', 'UX/UI Design Bootcamp', 'Digital Marketing Strategy', 'Financial Modeling', 'Agile & Scrum Certification', 'Data Visualization (Tableau)', 'Leadership & Management'],
                 datasets: [{
                     label: 'Students Enrolled',
-                    data: [1247, 982, 876, 654, 423],
-                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#ffd700']
+                    data: [1247, 1089, 982, 876, 721, 654, 543, 423],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#ffd700', '#10b981', '#3b82f6', '#8b5cf6'],
+                    borderRadius: 6
                 }]
             },
             options: {
@@ -326,8 +327,15 @@
                 responsive: true,
                 maintainAspectRatio: true,
                 scales: {
-                    x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                    y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                    x: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        title: { display: true, text: 'Students Enrolled', color: '#fff' }
+                    },
+                    y: {
+                        ticks: { color: '#fff', font: { size: 11 } },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
                 },
                 plugins: {
                     legend: { display: false }
