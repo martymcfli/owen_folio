@@ -991,76 +991,32 @@
             gap: 15px;
         }
 
-        /* Screenshot Gallery */
+        /* Screenshot Gallery - Single Featured Image */
         .featured-gallery {
             position: relative;
-            height: 400px;
-            perspective: 1000px;
-        }
-
-        .gallery-item {
-            position: absolute;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow-xl);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
             border: 2px solid var(--border-color);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: floatGallery 6s ease-in-out infinite;
         }
 
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .gallery-item:nth-child(1) {
-            width: 280px;
-            height: 200px;
-            top: 0;
-            left: 0;
-            z-index: 3;
-            animation: floatGallery1 8s ease-in-out infinite;
-        }
-
-        .gallery-item:nth-child(2) {
-            width: 320px;
-            height: 220px;
-            top: 80px;
-            right: 0;
-            z-index: 2;
-            animation: floatGallery2 9s ease-in-out infinite;
-        }
-
-        .gallery-item:nth-child(3) {
-            width: 260px;
-            height: 180px;
-            bottom: 0;
-            left: 50px;
-            z-index: 1;
-            animation: floatGallery3 7s ease-in-out infinite;
-        }
-
-        .gallery-item:hover {
-            z-index: 10;
-            transform: scale(1.1) translateY(-10px);
+        .featured-gallery:hover {
+            transform: translateY(-10px) scale(1.02);
             box-shadow: 0 30px 60px rgba(20, 184, 166, 0.3);
             border-color: var(--accent-primary);
         }
 
-        @keyframes floatGallery1 {
-            0%, 100% { transform: translateY(0) rotate(-2deg); }
-            50% { transform: translateY(-15px) rotate(0deg); }
+        .featured-gallery img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
-        @keyframes floatGallery2 {
-            0%, 100% { transform: translateY(0) rotate(2deg); }
-            50% { transform: translateY(-20px) rotate(0deg); }
-        }
-
-        @keyframes floatGallery3 {
-            0%, 100% { transform: translateY(0) rotate(-1deg); }
-            50% { transform: translateY(-12px) rotate(1deg); }
+        @keyframes floatGallery {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
         }
 
         /* Video Preview for Redwood */
@@ -1200,21 +1156,6 @@
             .featured-project:nth-child(even) {
                 direction: ltr;
             }
-            .featured-gallery {
-                height: 300px;
-            }
-            .gallery-item:nth-child(1) {
-                width: 200px;
-                height: 150px;
-            }
-            .gallery-item:nth-child(2) {
-                width: 220px;
-                height: 160px;
-            }
-            .gallery-item:nth-child(3) {
-                width: 180px;
-                height: 130px;
-            }
         }
 
         @media (max-width: 768px) {
@@ -1226,9 +1167,6 @@
             }
             .featured-stat-value {
                 font-size: 1.5rem;
-            }
-            .featured-gallery {
-                height: 250px;
             }
         }
 
@@ -1434,15 +1372,7 @@
                 </div>
             </div>
             <div class="featured-gallery">
-                <div class="gallery-item">
-                    <img src="./images/heatmap-ai-chat.png" alt="AI Chat Assistant">
-                </div>
-                <div class="gallery-item">
-                    <img src="./images/heatmap-radar.png" alt="Culture Score Radar Chart">
-                </div>
-                <div class="gallery-item">
-                    <img src="./images/heatmap-bubble.png" alt="Company Comparison Bubble Chart">
-                </div>
+                <img src="./images/heatmap-ai-chat.png" alt="Culture Heat Map - AI Chat Interface">
             </div>
         </div>
 
@@ -1523,7 +1453,7 @@
                 </div>
             </div>
             <div class="dashboard-preview">
-                <img src="./personal-ops-dashboard/preview.png" alt="Personal Ops Dashboard Preview" onerror="this.parentElement.innerHTML='<div style=&quot;padding: 60px; text-align: center; color: var(--text-muted);&quot;><div style=&quot;font-size: 3rem; margin-bottom: 10px;&quot;>📊</div>Live Dashboard Preview</div>'">
+                <img src="./images/personal-ops-preview.png" alt="Personal Ops Dashboard Preview">
             </div>
         </div>
     </section>
