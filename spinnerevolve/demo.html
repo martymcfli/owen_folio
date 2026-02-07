@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpinnerEvolve - AI Evolutionary Animation Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #020202;
+            --bg-secondary: #080808;
+            --border: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #666666;
+            --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: #000;
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .logo-text span {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 5s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header-info {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #222;
+            border-color: #333;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .evolve-btn {
+            height: 32px;
+            padding: 0 16px;
+            background: white;
+            border: 1px solid white;
+            border-radius: 4px;
+            color: black;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .evolve-btn:hover {
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .evolve-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Main Content */
+        .main {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding-top: 56px;
+        }
+
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            background: #000;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            min-height: 0;
+        }
+
+        .canvas-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .canvas-panel:first-child {
+            border-right: 1px solid var(--border);
+        }
+
+        .canvas-panel:hover .select-overlay {
+            opacity: 1;
+        }
+
+        .canvas-panel.single {
+            border-right: none;
+        }
+
+        .select-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: grayscale(100%);
+        }
+
+        .select-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            padding: 12px 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .spinner-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .variant-label {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .variant-label.blue { color: var(--accent-blue); }
+        .variant-label.purple { color: var(--accent-purple); }
+
+        /* Terminal Panel */
+        .terminal {
+            height: 200px;
+            background: var(--bg-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: #050505;
+        }
+
+        .terminal-tabs {
+            display: flex;
+            gap: 16px;
+        }
+
+        .terminal-tab {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-tab.active {
+            color: white;
+            border-color: white;
+        }
+
+        .terminal-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .stat-value.blue { color: var(--accent-blue); }
+        .stat-value.purple { color: var(--accent-purple); }
+
+        .terminal-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-prompt {
+            color: var(--accent-purple);
+        }
+
+        .terminal-text {
+            color: var(--text-secondary);
+        }
+
+        .terminal-highlight {
+            color: var(--accent-blue);
+        }
+
+        .terminal-success {
+            color: #22c55e;
+        }
+
+        /* Landing Overlay */
+        .landing-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 200;
+            padding: 32px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .landing-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .landing-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .landing-title span {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 5s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        .landing-desc {
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin-bottom: 32px;
+            line-height: 1.8;
+        }
+
+        .landing-desc strong {
+            color: white;
+        }
+
+        .start-btn {
+            padding: 16px 48px;
+            background: white;
+            border: none;
+            border-radius: 4px;
+            color: black;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255,255,255,0.3);
+        }
+
+        .landing-footer {
+            margin-top: 48px;
+            font-size: 10px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .landing-footer a {
+            color: var(--text-secondary);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* Streaming Overlay */
+        .streaming-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .streaming-overlay.active {
+            opacity: 1;
+        }
+
+        .streaming-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .streaming-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        .streaming-dot.blue { background: var(--accent-blue); }
+        .streaming-dot.purple { background: var(--accent-purple); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .streaming-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .streaming-label.blue { color: var(--accent-blue); }
+        .streaming-label.purple { color: var(--accent-purple); }
+
+        .streaming-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .streaming-reason {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.6;
+            padding-left: 12px;
+            border-left: 2px solid #333;
+        }
+
+        .streaming-code {
+            flex: 1;
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .streaming-code pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #555;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: white;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Demo Footer */
+        .demo-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            z-index: 50;
+        }
+
+        .demo-footer a {
+            color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .canvas-area {
+                flex-direction: column;
+            }
+            .canvas-panel:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .terminal {
+                height: 150px;
+            }
+            .landing-title {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-text">Spinner<span>Evolve</span></span>
+            <span class="header-info" id="headerInfo">Gemini 3 Flash Live Coding</span>
+        </div>
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn" disabled>&lt;</button>
+            <button class="evolve-btn" id="evolveBtn">Evolve</button>
+            <button class="nav-btn" id="nextBtn" disabled>&gt;</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="canvas-area" id="canvasArea">
+            <!-- Variant A -->
+            <div class="canvas-panel" id="panelA" onclick="selectVariant('a')">
+                <span class="variant-label blue">Variant A</span>
+                <div class="spinner-container">
+                    <div id="canvasA" class="spinner-canvas"></div>
+                </div>
+                <div class="select-overlay">
+                    <span class="select-label">Select Variant A</span>
+                </div>
+                <div class="streaming-overlay" id="streamA">
+                    <div class="streaming-header">
+                        <div class="streaming-dot blue"></div>
+                        <span class="streaming-label blue">Generating Mutation...</span>
+                    </div>
+                    <div class="streaming-name" id="nameA">Prismatic Helix</div>
+                    <div class="streaming-reason" id="reasonA">Inspired by DNA double helix structures, featuring counter-rotating arcs with prismatic color separation...</div>
+                    <div class="streaming-code">
+                        <pre id="codeA">p.setup = () => {
+  p.createCanvas(400, 400);
+  p.colorMode(p.HSB, 360, 100, 100);
+  p.noFill();
+  p.strokeCap(p.ROUND);
+};<span class="cursor-blink"></span></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variant B -->
+            <div class="canvas-panel" id="panelB" onclick="selectVariant('b')">
+                <span class="variant-label purple">Variant B</span>
+                <div class="spinner-container">
+                    <div id="canvasB" class="spinner-canvas"></div>
+                </div>
+                <div class="select-overlay">
+                    <span class="select-label">Select Variant B</span>
+                </div>
+                <div class="streaming-overlay" id="streamB">
+                    <div class="streaming-header">
+                        <div class="streaming-dot purple"></div>
+                        <span class="streaming-label purple">Generating Mutation...</span>
+                    </div>
+                    <div class="streaming-name" id="nameB">Quantum Pulse</div>
+                    <div class="streaming-reason" id="reasonB">Simulating quantum particle behavior with probabilistic positioning and wave function collapse visualization...</div>
+                    <div class="streaming-code">
+                        <pre id="codeB">p.setup = () => {
+  p.createCanvas(400, 400);
+  p.colorMode(p.HSB, 360, 100, 100);
+  p.noFill();
+};<span class="cursor-blink"></span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal -->
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-tabs">
+                    <span class="terminal-tab active">Console</span>
+                    <span class="terminal-tab">History</span>
+                    <span class="terminal-tab">Stats</span>
+                </div>
+                <div class="terminal-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Generation</span>
+                        <span class="stat-value" id="genCount">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">TPS</span>
+                        <span class="stat-value blue" id="tpsValue">245</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Mutations</span>
+                        <span class="stat-value purple" id="mutationCount">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="terminal-content" id="terminalContent">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-text">SpinnerEvolve v1.0 initialized</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-text">Gemini 3 Flash API <span class="terminal-success">connected</span></span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-text">Progenitor loaded: <span class="terminal-highlight">Material Kinetic</span></span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-text">Ready to evolve. Click <span class="terminal-highlight">EVOLVE</span> to generate variants.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Landing Overlay -->
+    <div class="landing-overlay" id="landingOverlay">
+        <h1 class="landing-title">SPINNER <span>EVOLVE</span></h1>
+        <p class="landing-desc">
+            A new way to develop. A/B test real-time code generations.
+            <br><br>
+            <strong>Gemini 3 Flash</strong> evolves the perfect loading spinner.
+            <br>
+            <em style="color: #555; font-size: 12px;">So fast you barely need a loading spinner!</em>
+        </p>
+        <button class="start-btn" onclick="startEvolving()">Start Evolving</button>
+        <div class="landing-footer">
+            <a href="https://omccormick.com" target="_blank">Back to Portfolio</a>
+        </div>
+    </div>
+
+    <script>
+        // Spinner configurations - pre-made variations
+        const spinnerVariants = [
+            {
+                name: "Material Kinetic",
+                reason: "The Progenitor. A perfect loop based on Material Design 3's indeterminate progress indicator.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    p.rotate(t * 0.0005);
+                    const sineVal = p.sin(t * 0.002);
+                    const arcLen = p.map(sineVal, -1, 1, p.radians(20), p.radians(280));
+                    const hue = (t * 0.05) % 360;
+                    p.stroke(hue, 80, 100);
+                    p.arc(0, 0, 200, 200, 0, arcLen);
+                }
+            },
+            {
+                name: "Prismatic Helix",
+                reason: "DNA-inspired double helix with counter-rotating arcs and prismatic color separation.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    for (let i = 0; i < 3; i++) {
+                        p.push();
+                        p.rotate(t * 0.001 * (i % 2 === 0 ? 1 : -1));
+                        const hue = (t * 0.03 + i * 120) % 360;
+                        p.stroke(hue, 70, 100);
+                        const arcLen = p.map(p.sin(t * 0.003 + i), -1, 1, p.radians(30), p.radians(150));
+                        p.arc(0, 0, 180 - i * 40, 180 - i * 40, 0, arcLen);
+                        p.pop();
+                    }
+                }
+            },
+            {
+                name: "Quantum Pulse",
+                reason: "Particle behavior simulation with probabilistic positioning and wave function visualization.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    const particles = 8;
+                    for (let i = 0; i < particles; i++) {
+                        const angle = (i / particles) * p.TWO_PI + t * 0.002;
+                        const radius = 80 + p.sin(t * 0.005 + i) * 30;
+                        const x = p.cos(angle) * radius;
+                        const y = p.sin(angle) * radius;
+                        const hue = (t * 0.02 + i * 45) % 360;
+                        p.fill(hue, 80, 100, 0.8);
+                        p.noStroke();
+                        const size = 10 + p.sin(t * 0.01 + i * 0.5) * 5;
+                        p.ellipse(x, y, size, size);
+                    }
+                }
+            },
+            {
+                name: "Orbital Cascade",
+                reason: "Nested orbital rings with gravitational pull effects and momentum transfer.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    for (let ring = 0; ring < 4; ring++) {
+                        const radius = 40 + ring * 35;
+                        const speed = 0.002 / (ring + 1);
+                        const hue = (ring * 60 + t * 0.02) % 360;
+                        p.noFill();
+                        p.stroke(hue, 60, 100, 0.3);
+                        p.ellipse(0, 0, radius * 2, radius * 2);
+                        const angle = t * speed * (ring % 2 === 0 ? 1 : -1);
+                        const x = p.cos(angle) * radius;
+                        const y = p.sin(angle) * radius;
+                        p.fill(hue, 80, 100);
+                        p.noStroke();
+                        p.ellipse(x, y, 12 - ring * 2, 12 - ring * 2);
+                    }
+                }
+            },
+            {
+                name: "Nebula Spiral",
+                reason: "Cosmic gas cloud formation with logarithmic spiral arms and stellar core.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    p.rotate(t * 0.0003);
+                    const arms = 3;
+                    for (let a = 0; a < arms; a++) {
+                        p.push();
+                        p.rotate((a / arms) * p.TWO_PI);
+                        for (let i = 0; i < 50; i++) {
+                            const angle = i * 0.15;
+                            const radius = i * 2;
+                            const x = p.cos(angle) * radius;
+                            const y = p.sin(angle) * radius;
+                            const hue = (280 + i * 2 + t * 0.02) % 360;
+                            const alpha = p.map(i, 0, 50, 1, 0.1);
+                            p.fill(hue, 70, 100, alpha);
+                            p.noStroke();
+                            p.ellipse(x, y, 4, 4);
+                        }
+                        p.pop();
+                    }
+                    p.fill(60, 100, 100);
+                    p.ellipse(0, 0, 15, 15);
+                }
+            },
+            {
+                name: "Fractal Bloom",
+                reason: "Recursive petal generation with golden ratio spacing and color inheritance.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    const petals = 12;
+                    for (let i = 0; i < petals; i++) {
+                        const angle = (i / petals) * p.TWO_PI;
+                        const offset = p.sin(t * 0.003 + i * 0.5) * 20;
+                        p.push();
+                        p.rotate(angle + t * 0.0005);
+                        const hue = (i * 30 + t * 0.02) % 360;
+                        p.fill(hue, 60, 100, 0.6);
+                        p.noStroke();
+                        p.ellipse(60 + offset, 0, 40, 15);
+                        p.pop();
+                    }
+                }
+            },
+            {
+                name: "Hexagonal Grid",
+                reason: "Honeycomb tessellation with wave propagation and cellular automata principles.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    const size = 25;
+                    for (let q = -3; q <= 3; q++) {
+                        for (let r = -3; r <= 3; r++) {
+                            const x = size * (3/2 * q);
+                            const y = size * (p.sqrt(3)/2 * q + p.sqrt(3) * r);
+                            const dist = p.sqrt(x*x + y*y);
+                            const wave = p.sin(dist * 0.05 - t * 0.005);
+                            const hue = (wave * 60 + 200 + t * 0.02) % 360;
+                            const alpha = p.map(wave, -1, 1, 0.2, 0.8);
+                            if (dist < 120) {
+                                p.fill(hue, 70, 100, alpha);
+                                p.noStroke();
+                                p.push();
+                                p.translate(x, y);
+                                p.beginShape();
+                                for (let i = 0; i < 6; i++) {
+                                    const angle = i * p.PI / 3;
+                                    p.vertex(p.cos(angle) * size * 0.5 * (0.8 + wave * 0.2), p.sin(angle) * size * 0.5 * (0.8 + wave * 0.2));
+                                }
+                                p.endShape(p.CLOSE);
+                                p.pop();
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                name: "Chromatic Rings",
+                reason: "Concentric ring system with phase-shifted rotations and spectral color mapping.",
+                draw: (p, t) => {
+                    p.clear();
+                    p.translate(p.width/2, p.height/2);
+                    for (let i = 0; i < 6; i++) {
+                        p.push();
+                        p.rotate(t * 0.001 * (i + 1) * (i % 2 === 0 ? 1 : -1));
+                        const hue = (i * 60 + t * 0.03) % 360;
+                        p.noFill();
+                        p.stroke(hue, 80, 100, 0.7);
+                        p.strokeWeight(3);
+                        const radius = 30 + i * 25;
+                        const arcStart = p.sin(t * 0.002 + i) * p.PI;
+                        const arcEnd = arcStart + p.PI * 0.7;
+                        p.arc(0, 0, radius, radius, arcStart, arcEnd);
+                        p.pop();
+                    }
+                }
+            }
+        ];
+
+        let p5InstanceA = null;
+        let p5InstanceB = null;
+        let currentVariantA = 0;
+        let currentVariantB = 1;
+        let generation = 1;
+        let isGenerating = false;
+        let hasStarted = false;
+
+        function createP5Instance(containerId, variantIndex) {
+            const container = document.getElementById(containerId);
+            const variant = spinnerVariants[variantIndex];
+
+            return new p5((p) => {
+                p.setup = () => {
+                    const canvas = p.createCanvas(300, 300);
+                    canvas.parent(containerId);
+                    p.colorMode(p.HSB, 360, 100, 100, 1);
+                    p.noFill();
+                    p.strokeCap(p.ROUND);
+                    p.strokeWeight(12);
+                };
+
+                p.draw = () => {
+                    variant.draw(p, p.millis());
+                };
+            });
+        }
+
+        function startEvolving() {
+            document.getElementById('landingOverlay').classList.add('hidden');
+            hasStarted = true;
+
+            // Initialize first spinners
+            p5InstanceA = createP5Instance('canvasA', 0);
+            p5InstanceB = createP5Instance('canvasB', 1);
+
+            evolve();
+        }
+
+        function evolve() {
+            if (isGenerating) return;
+            isGenerating = true;
+
+            const evolveBtn = document.getElementById('evolveBtn');
+            evolveBtn.disabled = true;
+            evolveBtn.textContent = 'Processing...';
+
+            // Show streaming overlays
+            document.getElementById('streamA').classList.add('active');
+            document.getElementById('streamB').classList.add('active');
+
+            // Pick two random variants
+            const availableIndices = [...Array(spinnerVariants.length).keys()];
+            currentVariantA = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+            currentVariantB = availableIndices.filter(i => i !== currentVariantA)[Math.floor(Math.random() * (availableIndices.length - 1))];
+
+            // Update streaming content
+            document.getElementById('nameA').textContent = spinnerVariants[currentVariantA].name;
+            document.getElementById('reasonA').textContent = spinnerVariants[currentVariantA].reason;
+            document.getElementById('nameB').textContent = spinnerVariants[currentVariantB].name;
+            document.getElementById('reasonB').textContent = spinnerVariants[currentVariantB].reason;
+
+            // Simulate generation delay
+            setTimeout(() => {
+                // Remove old instances
+                if (p5InstanceA) p5InstanceA.remove();
+                if (p5InstanceB) p5InstanceB.remove();
+
+                // Create new instances
+                p5InstanceA = createP5Instance('canvasA', currentVariantA);
+                p5InstanceB = createP5Instance('canvasB', currentVariantB);
+
+                // Hide streaming overlays
+                document.getElementById('streamA').classList.remove('active');
+                document.getElementById('streamB').classList.remove('active');
+
+                // Update stats
+                document.getElementById('tpsValue').textContent = Math.floor(200 + Math.random() * 100);
+
+                // Add terminal log
+                addTerminalLog(`Generation ${generation} complete: <span class="terminal-highlight">${spinnerVariants[currentVariantA].name}</span> vs <span class="terminal-highlight">${spinnerVariants[currentVariantB].name}</span>`);
+
+                isGenerating = false;
+                evolveBtn.disabled = false;
+                evolveBtn.textContent = 'Evolve';
+            }, 2000);
+        }
+
+        function selectVariant(variant) {
+            if (isGenerating || !hasStarted) return;
+
+            const selectedVariant = variant === 'a' ? currentVariantA : currentVariantB;
+            const selectedName = spinnerVariants[selectedVariant].name;
+
+            generation++;
+            document.getElementById('genCount').textContent = generation;
+            document.getElementById('mutationCount').textContent = generation - 1;
+
+            addTerminalLog(`Selected: <span class="terminal-success">${selectedName}</span>. Evolving next generation...`);
+
+            evolve();
+        }
+
+        function addTerminalLog(message) {
+            const content = document.getElementById('terminalContent');
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.innerHTML = `<span class="terminal-prompt">$</span><span class="terminal-text">${message}</span>`;
+            content.appendChild(line);
+            content.scrollTop = content.scrollHeight;
+        }
+
+        // Button handlers
+        document.getElementById('evolveBtn').addEventListener('click', () => {
+            if (hasStarted) {
+                evolve();
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            // History navigation (demo only shows current)
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            // History navigation (demo only shows current)
+        });
+    </script>
+</body>
+</html>

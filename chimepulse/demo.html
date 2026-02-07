@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chime Pulse - Narrative Intelligence Engine</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --chime-green: #3DDC97;
+            --chime-deep: #06231E;
+            --chime-dark: #0A1612;
+            --glass-bg: rgba(6, 35, 30, 0.8);
+            --glass-border: rgba(61, 220, 151, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0A1612 0%, #06231E 50%, #0A1612 100%);
+            color: #f4f4f5;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: var(--chime-dark);
+            border-right: 1px solid var(--glass-border);
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--chime-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #000;
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            color: var(--chime-green);
+        }
+
+        .version {
+            font-size: 0.65rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            color: #888;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(61, 220, 151, 0.1);
+            color: var(--chime-green);
+        }
+
+        .nav-item.active {
+            border-left: 3px solid var(--chime-green);
+        }
+
+        .live-feed {
+            position: fixed;
+            top: 0;
+            left: 240px;
+            right: 0;
+            height: 50px;
+            background: var(--chime-dark);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            gap: 30px;
+            z-index: 50;
+        }
+
+        .feed-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--chime-green);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--chime-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .feed-metric {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .feed-metric span {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .feed-metric .up { color: var(--chime-green); }
+        .feed-metric .down { color: #ef4444; }
+
+        .user-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            margin-top: 50px;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .header h1 span {
+            font-weight: 700;
+            color: var(--chime-green);
+        }
+
+        .header-subtitle {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .ai-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--chime-green);
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ai-btn:hover {
+            box-shadow: 0 0 30px rgba(61, 220, 151, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--chime-green);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .panel-title svg {
+            color: var(--chime-green);
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            font-size: 0.6rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--chime-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .chart-container {
+            height: 280px;
+        }
+
+        .radar-container {
+            height: 250px;
+        }
+
+        .kpi-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .kpi-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .kpi-card:hover {
+            border-color: var(--chime-green);
+            background: rgba(61, 220, 151, 0.05);
+        }
+
+        .kpi-label {
+            font-size: 0.65rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .kpi-trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .kpi-trend.up { color: var(--chime-green); }
+        .kpi-trend.stable { color: #888; }
+
+        .kpi-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .insights-panel {
+            position: relative;
+        }
+
+        .insight-row {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .insight-row:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .insight-confidence {
+            width: 45px;
+            height: 45px;
+            background: var(--chime-deep);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--chime-green);
+            flex-shrink: 0;
+        }
+
+        .insight-text {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+        .campaigns-list {
+            list-style: none;
+        }
+
+        .campaign-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .campaign-item:hover {
+            padding-left: 10px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .campaign-item:last-child {
+            border-bottom: none;
+        }
+
+        .campaign-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .campaign-status {
+            font-size: 0.6rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .campaign-status.live {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        .campaign-status.draft {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+
+        .campaign-status.review {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .campaigns-header {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--chime-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .system-status {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .system-label {
+            font-size: 0.65rem;
+            color: #444;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .system-bar {
+            height: 4px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .system-progress {
+            height: 100%;
+            width: 24%;
+            background: var(--chime-green);
+            border-radius: 2px;
+            animation: load 2s ease-in-out infinite;
+        }
+
+        @keyframes load {
+            0%, 100% { width: 20%; }
+            50% { width: 30%; }
+        }
+
+        .competitor-legend {
+            font-size: 0.65rem;
+            color: #666;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .competitor-legend span:first-child { color: var(--chime-green); }
+        .competitor-legend span:last-child { color: #a855f7; }
+
+        /* AI Chat Modal */
+        .ai-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-modal.active { display: flex; }
+
+        .ai-chat {
+            width: 500px;
+            max-height: 600px;
+            background: var(--chime-dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .ai-chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .ai-chat-close {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .ai-chat-body {
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .ai-message {
+            margin-bottom: 15px;
+        }
+
+        .ai-message.assistant {
+            background: rgba(61, 220, 151, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 3px solid var(--chime-green);
+        }
+
+        .ai-message p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .ai-chat-input {
+            padding: 20px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .ai-chat-input button {
+            padding: 12px 20px;
+            background: var(--chime-green);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .back-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .back-link:hover {
+            border-color: var(--chime-green);
+            color: var(--chime-green);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">C</div>
+            <div>
+                <div class="logo-text"><span>PULSE</span></div>
+                <div class="version">OS v4.2</div>
+            </div>
+        </div>
+
+        <div class="nav-item active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Command Center
+        </div>
+        <div class="nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Generative Core
+        </div>
+        <div class="nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            Deep Metrics
+        </div>
+
+        <div class="system-status">
+            <div class="system-label">System Load</div>
+            <div class="system-bar">
+                <div class="system-progress"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.6rem; color: #444;">
+                <span>ONLINE</span>
+                <span>24ms</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Feed Bar -->
+    <div class="live-feed">
+        <div class="feed-indicator">
+            <div class="pulse-dot"></div>
+            LIVE FEED
+        </div>
+        <div class="feed-metric">BTC <span>$94,230</span> <span class="up">↑ 1.2%</span></div>
+        <div class="feed-metric">CHIME_SENTIMENT <span>88.4</span> <span class="up">↑ 0.5%</span></div>
+        <div class="feed-metric">IPO_MENTIONS <span>1,284</span> <span class="up">↑</span></div>
+        <div class="user-info">
+            <span>DIR. STRATEGIC EDITORIAL</span>
+            <strong>Owen M.</strong>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>Executive <span>Overview</span></h1>
+                <p class="header-subtitle">Real-time narrative tracking & reputational velocity</p>
+            </div>
+            <div class="header-actions">
+                <button class="ai-btn" onclick="openAIChat()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5A2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5a2.5 2.5 0 0 0-2.5-2.5z"/></svg>
+                    AI ANALYST CORE
+                    <span style="animation: pulse 1s infinite;">✦</span>
+                </button>
+                <div class="status-badge">Q3 OKR: +15% RES</div>
+                <div class="status-badge">MARKET: BULLISH</div>
+            </div>
+        </div>
+
+        <!-- Bento Grid -->
+        <div class="bento-grid">
+            <!-- Main Chart -->
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        Narrative Resonance Velocity
+                    </div>
+                    <div class="live-badge">Real-time Intel</div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="velocityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Radar Chart -->
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="12 2 15.09 9.26 22 10.27 17 15.14 18.18 22 12 18.77 5.82 22 7 15.14 2 10.27 8.91 9.26 12 2"/></svg>
+                        Competitor Matrix
+                    </div>
+                </div>
+                <div class="competitor-legend">
+                    <span>■ Chime (Green)</span> vs. <span>■ Industry Avg (Purple)</span>
+                </div>
+                <div class="radar-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- KPI Stack -->
+            <div class="kpi-stack">
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    </div>
+                    <div class="kpi-label">Share of Voice</div>
+                    <div class="kpi-value">34.2%<span class="kpi-trend up">+2.1%</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <div class="kpi-label">Brand Sentiment</div>
+                    <div class="kpi-value">8.4/10<span class="kpi-trend up">+0.3</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3DDC97" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="kpi-label">Crisis Probability</div>
+                    <div class="kpi-value" style="color: var(--chime-green);">Low<span class="kpi-trend stable">Stable</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="bottom-row">
+            <div class="glass-panel insights-panel">
+                <div class="panel-title" style="margin-bottom: 20px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: var(--chime-green);"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                    Strategic AI Observations
+                </div>
+                <div class="insight-row">
+                    <div class="insight-confidence">98%</div>
+                    <p class="insight-text">Correlational spike detected: 'No Fees' messaging resonates 40% higher when paired with 'Inflation' news cycle.</p>
+                </div>
+                <div class="insight-row">
+                    <div class="insight-confidence">85%</div>
+                    <p class="insight-text">Audience Shift: Gen Z engagement on LinkedIn surpassing Twitter for 'Career Growth' content.</p>
+                </div>
+                <div class="insight-row">
+                    <div class="insight-confidence">92%</div>
+                    <p class="insight-text">Competitor Alert: Cash App launching similar SpotMe feature. Recommend accelerating differentiation messaging.</p>
+                </div>
+            </div>
+
+            <div class="glass-panel" style="background: linear-gradient(135deg, rgba(61, 220, 151, 0.1), transparent); border-color: rgba(61, 220, 151, 0.3);">
+                <div class="campaigns-header">Active Narrative Campaigns</div>
+                <ul class="campaigns-list">
+                    <li class="campaign-item">
+                        <span class="campaign-name">Summer '26 SpotMe</span>
+                        <span class="campaign-status live">LIVE</span>
+                    </li>
+                    <li class="campaign-item">
+                        <span class="campaign-name">IPO Roadshow Prep</span>
+                        <span class="campaign-status draft">DRAFT</span>
+                    </li>
+                    <li class="campaign-item">
+                        <span class="campaign-name">Credit Builder V4</span>
+                        <span class="campaign-status review">REVIEW</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Modal -->
+    <div class="ai-modal" id="aiModal">
+        <div class="ai-chat">
+            <div class="ai-chat-header">
+                <div class="ai-chat-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--chime-green)"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                    AI Analyst Core
+                </div>
+                <button class="ai-chat-close" onclick="closeAIChat()">&times;</button>
+            </div>
+            <div class="ai-chat-body">
+                <div class="ai-message assistant">
+                    <p>Good morning, Owen. I've analyzed the overnight narrative shifts. Three key observations:</p>
+                    <p style="margin-top: 10px;"><strong>1.</strong> Your Share of Voice increased 2.1% following the SpotMe campaign launch.</p>
+                    <p><strong>2.</strong> Competitor sentiment for Cash App dropped 3.2% after their service outage.</p>
+                    <p><strong>3.</strong> IPO-related mentions are up 15% week-over-week. Recommend preparing Q&A briefings.</p>
+                    <p style="margin-top: 10px; color: var(--chime-green);">Would you like me to generate a detailed competitive analysis report?</p>
+                </div>
+            </div>
+            <div class="ai-chat-input">
+                <input type="text" placeholder="Ask the AI Analyst...">
+                <button>Send</button>
+            </div>
+        </div>
+    </div>
+
+    <a href="../index.html#projects" class="back-link">← Back to Portfolio</a>
+
+    <script>
+        // Velocity Chart
+        const velocityCtx = document.getElementById('velocityChart').getContext('2d');
+        new Chart(velocityCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Reach',
+                    data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+                    borderColor: '#3DDC97',
+                    backgroundColor: 'rgba(61, 220, 151, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3
+                }, {
+                    label: 'Resonance',
+                    data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#666' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#666' }
+                    }
+                }
+            }
+        });
+
+        // Radar Chart
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Trust', 'Innovation', 'Support', 'Fees', 'Speed', 'App'],
+                datasets: [{
+                    label: 'Chime',
+                    data: [120, 98, 86, 99, 85, 65],
+                    borderColor: '#3DDC97',
+                    backgroundColor: 'rgba(61, 220, 151, 0.2)',
+                    borderWidth: 2
+                }, {
+                    label: 'Industry Avg',
+                    data: [110, 130, 130, 100, 90, 85],
+                    borderColor: '#A855F7',
+                    backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    r: {
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        angleLines: { color: 'rgba(255,255,255,0.1)' },
+                        ticks: { display: false },
+                        pointLabels: { color: '#888', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        function openAIChat() {
+            document.getElementById('aiModal').classList.add('active');
+        }
+
+        function closeAIChat() {
+            document.getElementById('aiModal').classList.remove('active');
+        }
+
+        document.getElementById('aiModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAIChat();
+        });
+    </script>
+</body>
+</html>
