@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeDrive — Navigation × Soundtrack Sync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #020617;
+            --bg-900: #0f172a;
+            --bg-800: #1e293b;
+            --bg-700: #334155;
+            --text: #f8fafc;
+            --text-400: #94a3b8;
+            --text-500: #64748b;
+            --text-600: #475569;
+            --neon-purple: #d946ef;
+            --neon-cyan: #06b6d4;
+            --neon-lime: #84cc16;
+            --spotify: #1DB954;
+            --apple: #FA243C;
+        }
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection { background: rgba(217,70,239,0.3); }
+
+        /* ============ SETUP SCREEN ============ */
+        .setup-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 40px 20px;
+        }
+        .setup-screen .amb-1 {
+            position: absolute;
+            top: -80px;
+            left: -80px;
+            width: 400px;
+            height: 400px;
+            background: rgba(217,70,239,0.08);
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float1 8s ease-in-out infinite;
+        }
+        .setup-screen .amb-2 {
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: rgba(6,182,212,0.05);
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: float2 10s ease-in-out infinite;
+        }
+        @keyframes float1 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(30px,20px);} }
+        @keyframes float2 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(-20px,-30px);} }
+
+        .setup-header {
+            text-align: center;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+        .setup-header h1 {
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(to right, var(--neon-cyan), #fff, var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .setup-header .tagline {
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-500);
+            margin-bottom: 16px;
+        }
+        .setup-header .quote {
+            font-size: 12px;
+            font-style: italic;
+            color: var(--text-600);
+            font-weight: 400;
+        }
+
+        .glass-panel {
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 32px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 60px rgba(217,70,239,0.06);
+        }
+
+        /* Music service buttons */
+        .service-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-500);
+            margin-bottom: 10px;
+            padding-left: 2px;
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .service-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--bg-700);
+            background: rgba(15,23,42,0.5);
+            color: var(--text-500);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .service-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text-400); }
+        .service-btn.spotify-active {
+            background: rgba(29,185,84,0.15);
+            border-color: var(--spotify);
+            color: var(--spotify);
+        }
+        .service-btn.apple-active {
+            background: rgba(250,36,60,0.15);
+            border-color: var(--apple);
+            color: var(--apple);
+        }
+        .service-btn .check-mark {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 10px;
+        }
+        .service-btn .spin-loader {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin: 24px 0;
+        }
+
+        /* Route inputs */
+        .route-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .route-line {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            bottom: 40px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-purple));
+            opacity: 0.25;
+        }
+        .input-wrap {
+            position: relative;
+        }
+        .input-dot {
+            position: absolute;
+            left: 12px;
+            top: 14px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .input-dot.cyan {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 8px rgba(6,182,212,0.4);
+        }
+        .input-dot.purple {
+            background: var(--neon-purple);
+            box-shadow: 0 0 8px rgba(217,70,239,0.4);
+        }
+        .route-input {
+            width: 100%;
+            background: rgba(15,23,42,0.5);
+            border: 1px solid var(--bg-700);
+            border-radius: 12px;
+            padding: 12px 44px 12px 32px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .route-input::placeholder { color: var(--text-600); }
+        .route-input:focus { border-color: var(--neon-cyan); }
+        .route-input.dest:focus { border-color: var(--neon-purple); }
+        .gps-btn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            padding: 6px;
+            background: none;
+            border: none;
+            color: var(--text-500);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .gps-btn:hover { color: var(--neon-cyan); background: rgba(6,182,212,0.08); }
+
+        /* Vibe input */
+        .vibe-section { margin-bottom: 24px; }
+        .vibe-input {
+            width: 100%;
+            background: rgba(15,23,42,0.5);
+            border: 1px solid var(--bg-700);
+            border-radius: 12px;
+            padding: 12px 16px 12px 38px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .vibe-input::placeholder { color: var(--text-600); }
+        .vibe-input:focus { border-color: #fff; }
+        .vibe-wrap {
+            position: relative;
+        }
+        .vibe-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 13px;
+            color: var(--text-500);
+        }
+
+        /* Vibe presets */
+        .vibe-presets {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .vibe-chip {
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--bg-700);
+            background: transparent;
+            color: var(--text-500);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .vibe-chip:hover {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+        }
+        .vibe-chip.active {
+            border-color: var(--neon-purple);
+            background: rgba(217,70,239,0.1);
+            color: var(--neon-purple);
+        }
+
+        /* Start button */
+        .start-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .start-btn.ready {
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            color: white;
+            box-shadow: 0 8px 30px rgba(217,70,239,0.25);
+        }
+        .start-btn.ready:hover { opacity: 0.9; transform: translateY(-1px); }
+        .start-btn.disabled {
+            background: var(--bg-800);
+            color: var(--text-600);
+            cursor: not-allowed;
+        }
+        .start-btn.loading {
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            color: white;
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .setup-footer {
+            text-align: center;
+            margin-top: 28px;
+            position: relative;
+            z-index: 1;
+        }
+        .setup-footer p {
+            font-size: 11px;
+            color: var(--text-600);
+        }
+
+        /* ============ LOADING SCREEN ============ */
+        .loading-screen {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .loading-screen.active { display: flex; }
+        .loading-vinyl {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--neon-cyan), var(--neon-purple), var(--neon-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 3s linear infinite;
+            margin-bottom: 32px;
+            box-shadow: 0 0 40px rgba(217,70,239,0.3);
+        }
+        .loading-vinyl .inner {
+            width: 40px;
+            height: 40px;
+            background: var(--bg);
+            border-radius: 50%;
+            border: 2px solid var(--bg-700);
+        }
+        .loading-screen h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .loading-screen p {
+            font-size: 13px;
+            color: var(--text-500);
+        }
+        .loading-steps {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .loading-step {
+            font-size: 12px;
+            color: var(--text-600);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+        .loading-step.done { color: var(--neon-cyan); }
+        .loading-step .step-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-600);
+        }
+        .loading-step.done .step-dot { background: var(--neon-cyan); }
+
+        /* ============ DRIVE MODE ============ */
+        .drive-screen {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .drive-screen.active { display: flex; }
+
+        .drive-bg-1 {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: rgba(217,70,239,0.12);
+            border-radius: 50%;
+            filter: blur(100px);
+            transition: all 1s;
+        }
+        .drive-bg-1.playing { transform: translateX(-50%) scale(1.15); opacity: 0.25; }
+        .drive-bg-2 {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: rgba(6,182,212,0.08);
+            border-radius: 50%;
+            filter: blur(80px);
+            transition: all 1s ease 0.3s;
+        }
+        .drive-bg-2.playing { transform: scale(1.25); }
+
+        /* Drive header */
+        .drive-header {
+            position: relative;
+            z-index: 10;
+            padding: 24px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: linear-gradient(to bottom, rgba(2,6,23,0.9), transparent);
+        }
+        .nav-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--neon-cyan);
+            margin-bottom: 4px;
+        }
+        .dest-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .dest-summary {
+            font-size: 13px;
+            color: var(--text-400);
+            max-width: 300px;
+            margin-top: 4px;
+        }
+        .arrival-countdown {
+            text-align: right;
+        }
+        .arrival-countdown .big-num {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+        .arrival-countdown .lbl {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: var(--text-500);
+        }
+
+        /* Player center */
+        .player-center {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 32px;
+        }
+
+        /* Vinyl disc */
+        .vinyl-container {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin-bottom: 36px;
+        }
+        .vinyl-glow {
+            position: absolute;
+            inset: -16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            filter: blur(25px);
+            opacity: 0.3;
+            transition: opacity 0.5s;
+        }
+        .vinyl-glow.playing { opacity: 0.5; animation: pulseGlow 3s ease-in-out infinite; }
+        @keyframes pulseGlow { 0%,100%{opacity:0.35;} 50%{opacity:0.55;} }
+        .vinyl-disc {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2d1b4e 0%, #0f172a 40%, #020617 100%);
+            border: 6px solid var(--bg-800);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .vinyl-disc.spinning { animation: spin 8s linear infinite; }
+        .vinyl-grooves {
+            position: absolute;
+            inset: 20px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.03);
+            box-shadow:
+                inset 0 0 0 10px rgba(255,255,255,0.015),
+                inset 0 0 0 20px rgba(255,255,255,0.01),
+                inset 0 0 0 35px rgba(255,255,255,0.015),
+                inset 0 0 0 50px rgba(255,255,255,0.01),
+                inset 0 0 0 65px rgba(255,255,255,0.02);
+        }
+        .vinyl-highlight {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 30%;
+            height: 30%;
+            background: linear-gradient(135deg, rgba(217,70,239,0.15), transparent);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+        .vinyl-center {
+            width: 70px;
+            height: 70px;
+            background: var(--bg);
+            border-radius: 50%;
+            border: 2px solid var(--bg-700);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vinyl-center svg { color: var(--text-600); }
+
+        /* Track info */
+        .track-info {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .track-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .track-artist {
+            font-size: 1.1rem;
+            color: var(--neon-cyan);
+            margin-bottom: 8px;
+        }
+        .track-reason {
+            font-size: 12px;
+            color: var(--text-500);
+            font-style: italic;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Progress bars */
+        .progress-section {
+            width: 100%;
+            max-width: 520px;
+        }
+        .progress-times {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-family: monospace;
+            color: var(--text-500);
+            margin-bottom: 6px;
+        }
+        .progress-track {
+            height: 6px;
+            background: var(--bg-800);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            transition: width 0.5s linear;
+        }
+        .sync-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-600);
+        }
+        .sync-info .sync-pct { color: var(--text-500); }
+        .sync-info .sync-pct.near { color: var(--neon-purple); }
+        .trip-progress-track {
+            height: 3px;
+            width: 100%;
+            background: var(--bg-900);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .trip-progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            border-radius: 3px;
+            transition: width 0.5s linear;
+        }
+
+        /* Playlist sidebar */
+        .playlist-toggle {
+            position: absolute;
+            bottom: 100px;
+            right: 24px;
+            z-index: 20;
+            padding: 8px 14px;
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: var(--text-400);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .playlist-toggle:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+        .playlist-drawer {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 340px;
+            background: rgba(2,6,23,0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255,255,255,0.06);
+            z-index: 30;
+            transform: translateX(100%);
+            transition: transform 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .playlist-drawer.open { transform: translateX(0); }
+        .playlist-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .playlist-header h4 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-400);
+        }
+        .playlist-close {
+            background: none;
+            border: none;
+            color: var(--text-500);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+        }
+        .playlist-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .pl-track {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .pl-track:hover { background: rgba(255,255,255,0.03); }
+        .pl-track.current { background: rgba(217,70,239,0.08); }
+        .pl-track.played { opacity: 0.4; }
+        .pl-num {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-600);
+            min-width: 20px;
+            text-align: center;
+        }
+        .pl-track.current .pl-num { color: var(--neon-purple); }
+        .pl-track-info { flex: 1; }
+        .pl-track-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .pl-track-artist {
+            font-size: 11px;
+            color: var(--text-500);
+        }
+        .pl-track-dur {
+            font-size: 11px;
+            color: var(--text-600);
+            font-variant-numeric: tabular-nums;
+        }
+        .pl-eq {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 14px;
+        }
+        .pl-eq span {
+            width: 3px;
+            background: var(--neon-purple);
+            border-radius: 1px;
+            animation: eq 0.8s ease-in-out infinite;
+        }
+        .pl-eq span:nth-child(1) { height: 4px; animation-delay: 0s; }
+        .pl-eq span:nth-child(2) { height: 10px; animation-delay: 0.2s; }
+        .pl-eq span:nth-child(3) { height: 6px; animation-delay: 0.4s; }
+        @keyframes eq { 0%,100%{height:20%;} 50%{height:100%;} }
+
+        /* Controls */
+        .controls-bar {
+            position: relative;
+            z-index: 10;
+            padding: 24px 32px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+        }
+        .ctrl-text-btn {
+            background: none;
+            border: none;
+            color: var(--text-500);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .ctrl-text-btn:hover { color: white; }
+        .play-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 25px rgba(255,255,255,0.15);
+        }
+        .play-btn:hover { transform: scale(1.05); }
+        .play-btn svg { color: var(--bg); width: 28px; height: 28px; }
+        .skip-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 8px;
+        }
+        .skip-btn:hover { color: var(--neon-cyan); }
+        .skip-btn svg { width: 24px; height: 24px; }
+
+        /* Arrival overlay */
+        .arrival-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 100;
+            background: rgba(2,6,23,0.85);
+            backdrop-filter: blur(20px);
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 1s ease;
+        }
+        .arrival-overlay.active { display: flex; }
+        @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+        .arrival-content { text-align: center; }
+        .arrival-content h2 {
+            font-size: clamp(3rem, 8vw, 4rem);
+            font-weight: 700;
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .arrival-content p {
+            font-size: 1.25rem;
+            margin-bottom: 32px;
+        }
+        .arrival-content button {
+            padding: 14px 32px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 9999px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .arrival-content button:hover { background: rgba(255,255,255,0.15); }
+
+        /* Demo badge */
+        .demo-badge {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            background: rgba(2,6,23,0.92);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-500);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+        }
+        .demo-badge .db-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--neon-purple);
+            animation: pulseGlow 2s infinite;
+        }
+        .demo-badge a { color: var(--neon-cyan); text-decoration: none; font-weight: 600; }
+        .demo-badge a:hover { text-decoration: underline; }
+
+        @media (max-width: 640px) {
+            .drive-header { padding: 16px 20px; }
+            .dest-name { font-size: 1.2rem; }
+            .arrival-countdown .big-num { font-size: 2rem; }
+            .vinyl-container { width: 180px; height: 180px; }
+            .vinyl-center { width: 50px; height: 50px; }
+            .track-title { font-size: 1.2rem; }
+            .playlist-drawer { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== SETUP SCREEN ========== -->
+<div class="setup-screen" id="setupScreen">
+    <div class="amb-1"></div>
+    <div class="amb-2"></div>
+
+    <div class="setup-header">
+        <h1>VibeDrive</h1>
+        <div class="tagline">Navigation &times; Soundtrack Sync</div>
+        <div class="quote">"When the soundtrack is perfectly timed, life becomes a movie."</div>
+    </div>
+
+    <div class="glass-panel">
+        <!-- Music Service -->
+        <div class="service-label">Connect Music Account</div>
+        <div class="service-grid">
+            <button class="service-btn" id="spotifyBtn" onclick="connectService('Spotify')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>
+                Spotify
+            </button>
+            <button class="service-btn" id="appleBtn" onclick="connectService('Apple Music')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                Music
+            </button>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Route -->
+        <div class="route-group">
+            <div class="route-line"></div>
+            <div class="input-wrap">
+                <span class="input-dot cyan"></span>
+                <input type="text" class="route-input" id="originInput" placeholder="Start Location" value="Brooklyn, NY">
+                <button class="gps-btn" onclick="useGPS()" title="Use Current Location">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                </button>
+            </div>
+            <div class="input-wrap">
+                <span class="input-dot purple"></span>
+                <input type="text" class="route-input dest" id="destInput" placeholder="Destination" value="Montauk, NY">
+            </div>
+        </div>
+
+        <!-- Vibe -->
+        <div class="vibe-section">
+            <div class="service-label">Soundtrack Vibe</div>
+            <div class="vibe-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+                <input type="text" class="vibe-input" id="vibeInput" placeholder="e.g. Sunset Drive, 90s Hip Hop, Cinematic" value="Sunset Drive">
+            </div>
+            <div class="vibe-presets">
+                <button class="vibe-chip active" onclick="setVibe(this, 'Sunset Drive')">Sunset Drive</button>
+                <button class="vibe-chip" onclick="setVibe(this, 'Late Night Synthwave')">Synthwave</button>
+                <button class="vibe-chip" onclick="setVibe(this, '90s Hip Hop Cruise')">90s Hip Hop</button>
+                <button class="vibe-chip" onclick="setVibe(this, 'Cinematic Road Trip')">Cinematic</button>
+                <button class="vibe-chip" onclick="setVibe(this, 'Indie Coffee Shop')">Indie Chill</button>
+            </div>
+        </div>
+
+        <!-- Start -->
+        <button class="start-btn ready" id="startBtn" onclick="startTrip()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Start Drive
+        </button>
+    </div>
+
+    <div class="setup-footer">
+        <p>Powered by Gemini 2.5 Flash &amp; Google Maps</p>
+    </div>
+</div>
+
+<!-- ========== LOADING ========== -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-vinyl"><div class="inner"></div></div>
+    <h3>Syncing your route...</h3>
+    <p>Matching playlist duration to your drive time</p>
+    <div class="loading-steps">
+        <div class="loading-step" id="step1"><span class="step-dot"></span> Calculating route via Google Maps</div>
+        <div class="loading-step" id="step2"><span class="step-dot"></span> Analyzing destination vibe</div>
+        <div class="loading-step" id="step3"><span class="step-dot"></span> Curating perfectly-timed playlist</div>
+        <div class="loading-step" id="step4"><span class="step-dot"></span> Syncing arrival anthem</div>
+    </div>
+</div>
+
+<!-- ========== DRIVE MODE ========== -->
+<div class="drive-screen" id="driveScreen">
+    <div class="drive-bg-1" id="driveBg1"></div>
+    <div class="drive-bg-2" id="driveBg2"></div>
+
+    <div class="drive-header">
+        <div>
+            <div class="nav-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Navigating To
+            </div>
+            <div class="dest-name" id="driveDestName"></div>
+            <div class="dest-summary" id="driveDestSummary"></div>
+        </div>
+        <div class="arrival-countdown">
+            <div class="big-num" id="arrivalMin"></div>
+            <div class="lbl">Min Arrival</div>
+        </div>
+    </div>
+
+    <div class="player-center">
+        <div class="vinyl-container">
+            <div class="vinyl-glow" id="vinylGlow"></div>
+            <div class="vinyl-disc" id="vinylDisc">
+                <div class="vinyl-grooves"></div>
+                <div class="vinyl-highlight"></div>
+                <div class="vinyl-center">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="track-info">
+            <div class="track-title" id="trackTitle"></div>
+            <div class="track-artist" id="trackArtist"></div>
+            <div class="track-reason" id="trackReason"></div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-times">
+                <span id="trackElapsed">0:00</span>
+                <span id="trackDuration">0:00</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="trackProgressBar" style="width:0%"></div>
+            </div>
+            <div class="sync-info">
+                <span>Playlist Sync</span>
+                <span class="sync-pct" id="syncPct">0% to Destination</span>
+            </div>
+            <div class="trip-progress-track">
+                <div class="trip-progress-fill" id="tripProgressBar" style="width:0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Playlist toggle -->
+    <button class="playlist-toggle" onclick="togglePlaylist()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Playlist
+    </button>
+
+    <!-- Playlist drawer -->
+    <div class="playlist-drawer" id="playlistDrawer">
+        <div class="playlist-header">
+            <h4>Up Next</h4>
+            <button class="playlist-close" onclick="togglePlaylist()">&times;</button>
+        </div>
+        <div class="playlist-list" id="playlistList"></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+        <button class="ctrl-text-btn" onclick="endTrip()">End Trip</button>
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">
+            <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <button class="skip-btn" onclick="skipTrack()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        </button>
+    </div>
+
+    <!-- Arrival overlay -->
+    <div class="arrival-overlay" id="arrivalOverlay">
+        <div class="arrival-content">
+            <h2>ARRIVED</h2>
+            <p>Perfect Timing.</p>
+            <button onclick="endTrip()">New Trip</button>
+        </div>
+    </div>
+</div>
+
+<!-- Demo badge -->
+<div class="demo-badge">
+    <span class="db-dot"></span>
+    Demo Mode &mdash; <a href="https://github.com/martymcfli/vibedrive" target="_blank">View Source</a>
+</div>
+
+<script>
+// ============================================
+// MOCK TRIP DATA
+// ============================================
+const MOCK_TRIPS = {
+    "Sunset Drive": {
+        context: {
+            origin: "Brooklyn, NY",
+            destination: "Montauk, NY",
+            vibe: "Sunset Drive",
+            estimatedDurationMinutes: 135,
+            destinationDetails: {
+                name: "Montauk Point, Long Island",
+                summary: "The easternmost tip of Long Island — rugged cliffs, historic lighthouse, and legendary surf breaks. The golden hour here is unreal."
+            }
+        },
+        playlist: [
+            { title: "Electric Feel", artist: "MGMT", durationSeconds: 229, reasoning: "Easing out of Brooklyn with warm, psychedelic energy — the perfect departure anthem." },
+            { title: "Myth", artist: "Beach House", durationSeconds: 244, reasoning: "Dream-pop atmosphere as the skyline fades in the rearview." },
+            { title: "Redbone", artist: "Childish Gambino", durationSeconds: 327, reasoning: "Cruising through Queens — soulful, funky, and cinematic." },
+            { title: "West Coast", artist: "Lana Del Rey", durationSeconds: 252, reasoning: "Highway vibes as you hit the open road on the LIE." },
+            { title: "Flashing Lights", artist: "Kanye West", durationSeconds: 232, reasoning: "Sun starting to angle — this track matches the golden filter perfectly." },
+            { title: "Dissolve", artist: "Absofacto", durationSeconds: 218, reasoning: "Mellow transition as suburban sprawl gives way to farmland." },
+            { title: "Do I Wanna Know?", artist: "Arctic Monkeys", durationSeconds: 272, reasoning: "Cruising through the Hamptons — effortlessly cool." },
+            { title: "Sunset Lover", artist: "Petit Biscuit", durationSeconds: 237, reasoning: "The sun is dropping — this electronic gem was made for this moment." },
+            { title: "Nights", artist: "Frank Ocean", durationSeconds: 304, reasoning: "The beat switch hits as the road narrows toward Montauk — transformative." },
+            { title: "Motion Sickness", artist: "Phoebe Bridgers", durationSeconds: 233, reasoning: "Raw, cathartic indie — perfect for the final stretch along the coast." },
+            { title: "The Less I Know The Better", artist: "Tame Impala", durationSeconds: 218, reasoning: "Psychedelic groove as the lighthouse comes into view." },
+            { title: "Midnight City", artist: "M83", durationSeconds: 244, reasoning: "The ultimate arrival anthem — that sax solo as you pull into Montauk. Goosebumps." },
+        ]
+    },
+    "Late Night Synthwave": {
+        context: {
+            origin: "Brooklyn, NY",
+            destination: "Montauk, NY",
+            vibe: "Late Night Synthwave",
+            estimatedDurationMinutes: 135,
+            destinationDetails: {
+                name: "Montauk Point, Long Island",
+                summary: "Empty highways, neon reflections, and the endless night sky leading to the edge of the world."
+            }
+        },
+        playlist: [
+            { title: "Nightcall", artist: "Kavinsky", durationSeconds: 258, reasoning: "The definitive late-night driving opener. No explanation needed." },
+            { title: "Tech Noir", artist: "Gunship", durationSeconds: 282, reasoning: "Pure 80s retrofuturism as the city lights streak past." },
+            { title: "A Real Hero", artist: "College & Electric Youth", durationSeconds: 265, reasoning: "Ethereal and haunting — the Drive soundtrack energy." },
+            { title: "Turbo Killer", artist: "Carpenter Brut", durationSeconds: 233, reasoning: "Dark, aggressive synthwave for the highway sprint." },
+            { title: "Days of Thunder", artist: "The Midnight", durationSeconds: 301, reasoning: "Soaring synths and saxophone as the suburbs fall away." },
+            { title: "Blinding Lights", artist: "The Weeknd", durationSeconds: 200, reasoning: "Modern synthwave crossover — impossible not to drive faster." },
+            { title: "Resonance", artist: "HOME", durationSeconds: 213, reasoning: "Dreamy, nostalgic — the perfect mid-drive meditation." },
+            { title: "Running in the Night", artist: "FM-84 ft. Ollie Wride", durationSeconds: 271, reasoning: "Warm, emotional synthwave as the coast road opens up." },
+            { title: "Acid Rain", artist: "Lorn", durationSeconds: 244, reasoning: "Dark ambient tones for the final isolated stretch." },
+            { title: "Outro", artist: "M83", durationSeconds: 302, reasoning: "Cinematic crescendo — the lighthouse appears through the mist." },
+            { title: "Breathing Underwater", artist: "Metric", durationSeconds: 298, reasoning: "Arrival anthem — pulsing energy as you reach the edge." },
+        ]
+    }
+};
+
+// Default trip for any custom vibe
+const DEFAULT_TRIP = MOCK_TRIPS["Sunset Drive"];
+
+// ============================================
+// APP STATE
+// ============================================
+let selectedService = '';
+let currentTrip = null;
+let isPlaying = false;
+let currentTrackIndex = 0;
+let trackProgress = 0;
+let tripElapsed = 0;
+let tripDurationSec = 0;
+let ticker = null;
+let playlistOpen = false;
+
+// ============================================
+// SETUP FUNCTIONS
+// ============================================
+function connectService(name) {
+    const btn = name === 'Spotify' ? document.getElementById('spotifyBtn') : document.getElementById('appleBtn');
+    const otherBtn = name === 'Spotify' ? document.getElementById('appleBtn') : document.getElementById('spotifyBtn');
+
+    if (selectedService === name) {
+        selectedService = '';
+        btn.className = 'service-btn';
+        btn.innerHTML = name === 'Spotify'
+            ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg> Spotify'
+            : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Music';
+        return;
+    }
+
+    // Show loading
+    btn.innerHTML = '<span class="spin-loader"></span>';
+    otherBtn.className = 'service-btn';
+    const otherName = name === 'Spotify' ? 'Apple Music' : 'Spotify';
+    otherBtn.innerHTML = otherName === 'Spotify'
+        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg> Spotify'
+        : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Music';
+
+    setTimeout(() => {
+        selectedService = name;
+        const cls = name === 'Spotify' ? 'spotify-active' : 'apple-active';
+        btn.className = 'service-btn ' + cls;
+        const icon = name === 'Spotify'
+            ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>'
+            : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+        btn.innerHTML = '<span class="check-mark">✓</span>' + icon + ' ' + (name === 'Apple Music' ? 'Music' : name);
+    }, 1200);
+}
+
+function useGPS() {
+    document.getElementById('originInput').value = 'Current Location';
+}
+
+function setVibe(el, vibe) {
+    document.getElementById('vibeInput').value = vibe;
+    document.querySelectorAll('.vibe-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+}
+
+// ============================================
+// TRIP FLOW
+// ============================================
+function startTrip() {
+    const vibe = document.getElementById('vibeInput').value.trim();
+    if (!vibe) return;
+
+    // Show loading
+    document.getElementById('setupScreen').style.display = 'none';
+    document.getElementById('loadingScreen').classList.add('active');
+
+    // Animate loading steps
+    setTimeout(() => document.getElementById('step1').classList.add('done'), 600);
+    setTimeout(() => document.getElementById('step2').classList.add('done'), 1400);
+    setTimeout(() => document.getElementById('step3').classList.add('done'), 2200);
+    setTimeout(() => document.getElementById('step4').classList.add('done'), 2800);
+
+    setTimeout(() => {
+        // Pick trip data
+        currentTrip = MOCK_TRIPS[vibe] || DEFAULT_TRIP;
+        if (!MOCK_TRIPS[vibe]) {
+            // Customize context for custom vibes
+            currentTrip = JSON.parse(JSON.stringify(DEFAULT_TRIP));
+            currentTrip.context.vibe = vibe;
+            currentTrip.context.origin = document.getElementById('originInput').value;
+            currentTrip.context.destination = document.getElementById('destInput').value;
+        }
+
+        tripDurationSec = currentTrip.context.estimatedDurationMinutes * 60;
+        currentTrackIndex = 0;
+        trackProgress = 0;
+        tripElapsed = 0;
+        isPlaying = false;
+
+        renderDriveMode();
+        document.getElementById('loadingScreen').classList.remove('active');
+        document.getElementById('driveScreen').classList.add('active');
+
+        // Auto-start after a beat
+        setTimeout(() => { isPlaying = true; startTicker(); updatePlayState(); }, 1000);
+    }, 3200);
+}
+
+function renderDriveMode() {
+    const c = currentTrip.context;
+    document.getElementById('driveDestName').textContent = c.destinationDetails?.name || c.destination;
+    document.getElementById('driveDestSummary').textContent = c.destinationDetails?.summary || '';
+    updateTrackDisplay();
+    renderPlaylist();
+}
+
+function updateTrackDisplay() {
+    const track = currentTrip.playlist[currentTrackIndex];
+    document.getElementById('trackTitle').textContent = track.title;
+    document.getElementById('trackArtist').textContent = track.artist;
+    document.getElementById('trackReason').textContent = '"' + (track.reasoning || '') + '"';
+    document.getElementById('trackDuration').textContent = formatTime(track.durationSeconds);
+}
+
+function renderPlaylist() {
+    const list = document.getElementById('playlistList');
+    list.innerHTML = currentTrip.playlist.map((t, i) => {
+        const cls = i === currentTrackIndex ? 'current' : (i < currentTrackIndex ? 'played' : '');
+        const eq = i === currentTrackIndex && isPlaying ? '<div class="pl-eq"><span></span><span></span><span></span></div>' : '';
+        return `<div class="pl-track ${cls}" onclick="jumpToTrack(${i})">
+            <span class="pl-num">${eq || (i + 1)}</span>
+            <div class="pl-track-info">
+                <div class="pl-track-title">${t.title}</div>
+                <div class="pl-track-artist">${t.artist}</div>
+            </div>
+            <span class="pl-track-dur">${formatTime(t.durationSeconds)}</span>
+        </div>`;
+    }).join('');
+}
+
+// ============================================
+// PLAYBACK ENGINE (Accelerated: 1 real sec = 8 sim sec)
+// ============================================
+const SIM_SPEED = 8;
+
+function startTicker() {
+    if (ticker) clearInterval(ticker);
+    ticker = setInterval(() => {
+        if (!isPlaying) return;
+
+        const track = currentTrip.playlist[currentTrackIndex];
+        trackProgress += SIM_SPEED;
+        tripElapsed += SIM_SPEED;
+
+        // Track ended?
+        if (trackProgress >= track.durationSeconds) {
+            if (currentTrackIndex < currentTrip.playlist.length - 1) {
+                currentTrackIndex++;
+                trackProgress = 0;
+                updateTrackDisplay();
+                renderPlaylist();
+            } else {
+                arrive();
+                return;
+            }
+        }
+
+        // Trip ended?
+        if (tripElapsed >= tripDurationSec) {
+            arrive();
+            return;
+        }
+
+        updateProgress();
+    }, 1000);
+}
+
+function updateProgress() {
+    const track = currentTrip.playlist[currentTrackIndex];
+    const trackPct = Math.min((trackProgress / track.durationSeconds) * 100, 100);
+    const tripPct = Math.min((tripElapsed / tripDurationSec) * 100, 100);
+    const remaining = Math.max(tripDurationSec - tripElapsed, 0);
+
+    document.getElementById('trackElapsed').textContent = formatTime(trackProgress);
+    document.getElementById('trackProgressBar').style.width = trackPct + '%';
+    document.getElementById('arrivalMin').textContent = Math.ceil(remaining / 60);
+    document.getElementById('tripProgressBar').style.width = tripPct + '%';
+
+    const syncEl = document.getElementById('syncPct');
+    syncEl.textContent = tripPct.toFixed(0) + '% to Destination';
+    syncEl.className = 'sync-pct' + (tripPct > 90 ? ' near' : '');
+}
+
+function arrive() {
+    isPlaying = false;
+    if (ticker) clearInterval(ticker);
+    updatePlayState();
+    document.getElementById('arrivalOverlay').classList.add('active');
+}
+
+function togglePlay() {
+    isPlaying = !isPlaying;
+    if (isPlaying && !ticker) startTicker();
+    updatePlayState();
+    renderPlaylist();
+}
+
+function updatePlayState() {
+    const btn = document.getElementById('playIcon');
+    const bg1 = document.getElementById('driveBg1');
+    const bg2 = document.getElementById('driveBg2');
+    const glow = document.getElementById('vinylGlow');
+    const disc = document.getElementById('vinylDisc');
+
+    if (isPlaying) {
+        btn.innerHTML = '<rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/>';
+        bg1.classList.add('playing');
+        bg2.classList.add('playing');
+        glow.classList.add('playing');
+        disc.classList.add('spinning');
+    } else {
+        btn.innerHTML = '<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>';
+        bg1.classList.remove('playing');
+        bg2.classList.remove('playing');
+        glow.classList.remove('playing');
+        disc.classList.remove('spinning');
+    }
+}
+
+function skipTrack() {
+    if (currentTrackIndex < currentTrip.playlist.length - 1) {
+        currentTrackIndex++;
+        trackProgress = 0;
+        updateTrackDisplay();
+        renderPlaylist();
+        updateProgress();
+    }
+}
+
+function jumpToTrack(idx) {
+    currentTrackIndex = idx;
+    trackProgress = 0;
+    // Recalculate tripElapsed based on track position
+    let elapsed = 0;
+    for (let i = 0; i < idx; i++) elapsed += currentTrip.playlist[i].durationSeconds;
+    tripElapsed = elapsed;
+    updateTrackDisplay();
+    renderPlaylist();
+    updateProgress();
+}
+
+function togglePlaylist() {
+    playlistOpen = !playlistOpen;
+    document.getElementById('playlistDrawer').classList.toggle('open', playlistOpen);
+}
+
+function endTrip() {
+    isPlaying = false;
+    if (ticker) { clearInterval(ticker); ticker = null; }
+    document.getElementById('driveScreen').classList.remove('active');
+    document.getElementById('arrivalOverlay').classList.remove('active');
+    document.getElementById('setupScreen').style.display = '';
+
+    // Reset loading steps
+    ['step1','step2','step3','step4'].forEach(id => document.getElementById(id).classList.remove('done'));
+}
+
+function formatTime(secs) {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+// Auto-connect Spotify on load for demo polish
+setTimeout(() => connectService('Spotify'), 800);
+</script>
+</body>
+</html>
