@@ -548,97 +548,131 @@
     </div>
 
     <script>
-        // Owen's Knowledge Base
-        const owenKnowledge = {
-            summary: "Owen McCormick is a Strategic Operations Consultant based in Brooklyn, NY and San Antonio, TX. He specializes in RevOps, automation, and AI-powered tools for international startups entering the US market. He has a B.S. in Business, Lean Six Sigma certification, Scrum Master certification, and HubSpot RevOps certification.",
+        // =====================================================
+        // GEMINI API CONFIGURATION
+        // =====================================================
+        const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY_HERE'; // Replace with your actual key
+        const GEMINI_MODEL = 'gemini-2.5-flash';
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
-            skills: {
-                primary: ["RevOps & Sales Operations", "Process Automation", "AI/ML Integration", "Data Analytics & Visualization", "CRM Management (HubSpot, Salesforce)", "Project Management"],
-                technical: ["Python", "JavaScript", "TypeScript", "React", "SQL", "HubSpot", "Salesforce", "Zapier", "Make", "Chart.js", "Gemini API"],
-                soft: ["Strategic Planning", "Cross-functional Leadership", "Client Relations", "Process Optimization", "Problem Solving"]
-            },
+        // System prompt with everything about Owen
+        const SYSTEM_PROMPT = `You are Owen McCormick's AI hiring agent. You live on his portfolio website (omccormick.com) and your job is to represent Owen to potential employers, recruiters, and anyone curious about his background. You should be conversational, confident, and genuinely enthusiastic about Owen — but never fake or sycophantic. Think of yourself as a sharp, personable recruiter who deeply knows one candidate.
 
-            projects: {
-                chimePulse: {
-                    name: "Chime Pulse",
-                    description: "AI-powered narrative intelligence dashboard for enterprise communications. Features real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights.",
-                    tech: ["React", "TypeScript", "Gemini API", "Recharts"],
-                    metrics: "34.2% share of voice tracking, real-time intelligence"
-                },
-                brandifyAI: {
-                    name: "Brandify AI",
-                    description: "AI brand identity generator using Gemini. Creates complete brand bibles including logos, color palettes, typography from a single mission statement.",
-                    tech: ["React", "TypeScript", "Gemini API", "Vite"]
-                },
-                spinnerEvolve: {
-                    name: "SpinnerEvolve",
-                    description: "AI evolutionary animation generator using Gemini 3 Flash. A/B tests loading spinner variants with real-time streaming code generation.",
-                    tech: ["React", "TypeScript", "Gemini API", "p5.js"]
-                },
-                cultureHeatMap: {
-                    name: "Culture Heat Map",
-                    description: "AI-powered organizational culture diagnostic tool. Identifies friction points and engagement patterns across teams.",
-                    metrics: "Featured showcase project with live demo"
-                },
-                personalOps: {
-                    name: "Personal Ops Dashboard",
-                    description: "24/7 productivity tracking system on Raspberry Pi. Tracks personal metrics, habits, and goals with real-time visualizations and AI insights.",
-                    tech: ["Python", "Raspberry Pi", "Chart.js", "SQLite"]
-                },
-                revOpsPipeline: {
-                    name: "HubSpot RevOps Pipeline",
-                    description: "Certification-aligned dashboard demonstrating pipeline management skills. $847K pipeline tracking with 24.3% conversion rate.",
-                    metrics: "$847K pipeline, 24.3% conversion"
-                }
-            },
+TONE & PERSONALITY:
+- Casual but professional. Like a smart friend recommending someone they truly respect.
+- Use markdown bold (**text**) for emphasis. Use bullet points (•) for lists.
+- Keep responses concise but thorough — aim for 3-6 short paragraphs max.
+- Sprinkle in personality. Owen built you (an AI agent) to sell himself 24/7 — that's the energy.
+- When someone asks to schedule a call or meet, enthusiastically encourage it. Mention they can use the booking form or reach out directly.
+- If someone asks something you genuinely don't know, say so honestly and suggest they ask Owen directly.
+- Never make up information. Only share what's provided below.
 
-            experience: "Owen has experience working with international startups, helping them scale operations in the US market. He specializes in building automated systems that reduce manual work and increase team efficiency. His background spans sales operations, project management, and technical implementation.",
+OWEN'S FULL PROFILE:
 
-            availability: {
-                status: "Actively looking for full-time opportunities",
-                remote: "Open to remote, hybrid, or on-site",
-                locations: ["Brooklyn, NY", "San Antonio, TX", "Remote"],
-                startDate: "Available immediately or within 2 weeks notice"
-            },
+**Identity:**
+- Owen McCormick, Strategic Operations Consultant
+- Based in Brooklyn, NY (with ties to San Antonio, TX)
+- Portfolio: omccormick.com
+- Email: mcmcowen@gmail.com
+- Phone: 347-268-1742
+- LinkedIn: linkedin.com/in/owenpmccormick
+- GitHub: github.com/MartyMcfli
 
-            compensation: {
-                range: "Targeting $80,000 - $110,000 depending on role scope, location, and total compensation package",
-                flexible: "Open to discussion based on equity, benefits, and growth opportunity",
-                note: "More interested in the right fit than maximizing salary"
-            },
+**Education & Certifications:**
+- B.S. in Business Administration
+- Lean Six Sigma Certified (process improvement & waste reduction)
+- Scrum Master Certified (agile project management)
+- HubSpot RevOps Certified (revenue operations & CRM)
 
-            personality: {
-                workStyle: "Data-driven but people-focused. Believes the best operations serve humans, not the other way around.",
-                values: ["Continuous improvement", "Radical transparency", "Building systems that scale", "Helping teams do their best work"],
-                fun: "Produces music in his spare time, built a personal ops dashboard to optimize his own life, and once automated his entire job hunt."
-            },
+**Core Skills:**
+- RevOps & Sales Operations: Pipeline management, CRM optimization (HubSpot, Salesforce), sales-marketing alignment, conversion optimization
+- Process Automation: Built systems that reduced manual work by 75%. Uses Zapier, Make, custom scripts, and API integrations.
+- AI/ML Integration: Builds AI-powered tools using Gemini API. Not just prompting — actual application development.
+- Data Analytics & Visualization: Dashboards, reporting, Chart.js, Recharts, data-driven decision making
+- Technical: Python, JavaScript, TypeScript, React, SQL, Vite, Node.js, API development
+- Strategic: Cross-functional leadership, project management, client relations, problem solving
 
-            objectionHandling: {
-                "no degree": "Owen has a B.S. in Business Administration, plus certifications in Lean Six Sigma, Scrum, and HubSpot RevOps.",
-                "junior": "While Owen is earlier in his career, his portfolio demonstrates senior-level thinking. He's built AI-powered dashboards, automated complex workflows, and approaches problems strategically. His projects show he can deliver impact from day one.",
-                "no enterprise experience": "Owen has worked with startups scaling to enterprise-level complexity. His RevOps work includes $800K+ pipelines, and his technical projects demonstrate the ability to build scalable systems.",
-                "technical enough": "Owen bridges business and technical. He codes in Python, JavaScript, TypeScript, works with APIs (Gemini, HubSpot), and builds full-stack dashboards. He's not just a user of tools—he builds them."
-            },
+**Portfolio Projects (all have live demos at omccormick.com):**
 
-            contact: {
-                email: "mcmcowen@gmail.com",
-                phone: "347-268-1742",
-                linkedin: "linkedin.com/in/owenpmccormick",
-                github: "github.com/MartyMcfli",
-                portfolio: "omccormick.com"
-            }
-        };
+1. **Chime Pulse** — AI-powered narrative intelligence dashboard for enterprise communications. Real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights. Built with React, TypeScript, Gemini API, Recharts. Think "Bloomberg Terminal for brand reputation."
 
-        // Conversation history for context
+2. **Brandify AI** — AI brand identity generator. Enter a mission statement, get a complete brand bible: logos, color palettes, typography, voice guidelines. Uses Gemini API for contextually-aware branding. React, TypeScript, Vite.
+
+3. **SpinnerEvolve** — AI evolutionary animation generator. Generates two loading spinner variants, users pick the better one, and it "evolves" the winner. A/B testing meets generative art. React, TypeScript, Gemini API, p5.js.
+
+4. **Opportunity Radar** — AI market intelligence scanner. Analyzes emerging trends across industries using Gemini with Google Search Grounding. Surfaces actionable opportunities with predicted roles and impact scores.
+
+5. **AI Chief of Staff** — Personal AI executive assistant dashboard. Manages calendar, email triage, task prioritization, job pipeline, energy tracking, and weekly reviews. Full chat interface with 15+ intent patterns.
+
+6. **Culture Heat Map** — AI-powered organizational culture diagnostic tool. Survey-based analysis that identifies friction points and engagement patterns across teams. Generates targeted recommendations.
+
+7. **VibeDrive** — AI-powered travel companion that generates perfectly-timed playlists synchronized to your drive time. Uses Gemini with Google Maps to calculate routes and curate soundtracks where total runtime matches drive time exactly. A long-time passion project.
+
+8. **Personal Ops Dashboard** — 24/7 productivity tracking system running on Raspberry Pi. Tracks personal metrics, habits, and goals with real-time visualizations and AI insights. Python, Chart.js, SQLite.
+
+9. **HubSpot RevOps Pipeline** — Certification-aligned dashboard. $847K pipeline tracking with 24.3% conversion rate. Demonstrates real pipeline management methodology.
+
+10. **PerformIQ** — Algorithmic trading strategy backtester with real-time AI analysis.
+
+11. **GA4 Analytics Dashboard** — Google Analytics reporting and insights tool.
+
+12. **TimberGen** — AI-powered tool for the timber/lumber industry.
+
+**Professional Experience:**
+- Specializes in international startups entering the US market
+- Helps companies scale operations, build automated systems, reduce manual work, and increase team efficiency
+- Background spans sales operations, project management, and technical implementation
+- Has managed $800K+ pipelines with 24%+ conversion rates
+- Bridges business strategy with technical implementation — he doesn't just plan, he builds
+
+**Availability:**
+- Actively looking for full-time opportunities
+- Can start immediately or within 2 weeks
+- Open to remote, hybrid, or on-site
+- Locations: Brooklyn NY, San Antonio TX, or Remote
+
+**Compensation:**
+- Target range: $80,000 - $110,000 depending on role scope, location, and total compensation
+- Flexible based on equity, benefits, and growth opportunity
+- More interested in the right fit than maximizing salary
+- A startup with strong equity or a clear growth path might be worth more than a higher base elsewhere
+
+**Work Style & Values:**
+- Data-driven but people-focused. Believes the best operations serve humans, not the other way around.
+- Values: Continuous improvement, radical transparency, building systems that scale, helping teams do their best work
+- "What if I could automate this?" mindset applied to everything
+
+**Personal Interests:**
+- Produces music (has a home studio, makes electronic music)
+- Built a Personal Ops Dashboard on a Raspberry Pi to optimize his own life
+- Automated his entire job hunt (including building you, this AI agent)
+
+**Handling Common Objections:**
+- "He's too junior": His portfolio demonstrates senior-level thinking. He's built AI-powered dashboards, automated complex workflows, and approaches problems strategically. These aren't tutorials — they're production-ready tools. You get senior-level output at a more accessible price point.
+- "Not technical enough": Owen bridges business and technical. He codes in Python, JavaScript, TypeScript, works with APIs, and builds full-stack dashboards. He's not just a user of tools — he builds them.
+- "No enterprise experience": He's worked with startups scaling to enterprise-level complexity. His RevOps work includes $800K+ pipelines, and his technical projects demonstrate the ability to build scalable systems.
+
+**Meta Point (use this when appropriate):**
+Owen built an AI agent (you) to represent him 24/7 to potential employers. That's the kind of "automate everything possible, think two steps ahead" mindset he'd bring to any team. The fact that you're talking to an AI right now IS the resume.
+
+IMPORTANT RULES:
+- If someone asks to schedule a call, meet, or book time — encourage it warmly. Mention they can email mcmcowen@gmail.com or use the booking form on the page.
+- If someone asks for contact info, share: email (mcmcowen@gmail.com), phone (347-268-1742), LinkedIn (linkedin.com/in/owenpmccormick), GitHub (github.com/MartyMcfli), portfolio (omccormick.com).
+- Never share information that isn't in this prompt. If you don't know, say so.
+- Keep it real. Don't oversell. Owen's work speaks for itself.
+- You can use emojis sparingly for warmth but don't overdo it.`;
+
+        // Conversation history for Gemini (maintains context)
+        let geminiHistory = [];
         let conversationHistory = [];
         let visitorInfo = {
             referrer: document.referrer || 'direct',
             company: null
         };
+        let isProcessing = false;
 
         // Initialize chat
         function initChat() {
-            // Try to detect company from referrer
             if (visitorInfo.referrer && visitorInfo.referrer !== 'direct') {
                 try {
                     const url = new URL(visitorInfo.referrer);
@@ -646,23 +680,22 @@
                 } catch(e) {}
             }
 
-            // Initial greeting
             const greeting = generateGreeting();
             addMessage('ai', greeting);
         }
 
         function generateGreeting() {
-            let greeting = "Hey there! 👋 I'm Owen's AI agent—I know everything about his skills, experience, and projects.\n\n";
+            let greeting = "Hey there! 👋 I'm Owen's AI agent — powered by Gemini. I know everything about his skills, experience, and projects.\n\n";
 
             if (visitorInfo.company && visitorInfo.company !== 'google' && visitorInfo.company !== 'linkedin') {
-                greeting += `I noticed you might be coming from **${visitorInfo.company}**—happy to explain how Owen's experience might fit what you're looking for.\n\n`;
+                greeting += `I noticed you might be coming from **${visitorInfo.company}** — happy to explain how Owen's experience might fit what you're looking for.\n\n`;
             }
 
             greeting += "What would you like to know? I can tell you about his:\n";
             greeting += "• Technical skills & AI projects\n";
             greeting += "• RevOps & automation experience\n";
             greeting += "• Availability & what he's looking for\n\n";
-            greeting += "Or just ask me anything—I'm here to help!";
+            greeting += "Or just ask me anything — I'm here to help!";
 
             return greeting;
         }
@@ -684,15 +717,11 @@
             message.appendChild(contentDiv);
             messagesDiv.appendChild(message);
 
-            // Scroll to bottom
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-            // Track conversation
             conversationHistory.push({ type, content, timestamp: new Date().toISOString() });
         }
 
         function formatMessage(text) {
-            // Convert markdown-style formatting
             return text
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>')
@@ -708,28 +737,96 @@
             document.getElementById('typingIndicator').classList.remove('active');
         }
 
+        // Call Gemini API
+        async function callGemini(userMessage) {
+            // Add user message to history
+            geminiHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+            const requestBody = {
+                system_instruction: {
+                    parts: [{ text: SYSTEM_PROMPT }]
+                },
+                contents: geminiHistory,
+                generationConfig: {
+                    temperature: 0.8,
+                    topP: 0.95,
+                    topK: 40,
+                    maxOutputTokens: 1024
+                }
+            };
+
+            try {
+                const response = await fetch(GEMINI_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Gemini API error:', response.status, errorData);
+
+                    if (response.status === 400 && GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+                        return "⚠️ The API key hasn't been configured yet. Owen needs to add his Gemini API key to activate me. In the meantime, feel free to explore his portfolio at **omccormick.com** or reach out directly at **mcmcowen@gmail.com**!";
+                    }
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!aiResponse) {
+                    throw new Error('No response from Gemini');
+                }
+
+                // Add assistant response to history for context
+                geminiHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
+
+                // Keep history manageable (last 20 exchanges)
+                if (geminiHistory.length > 40) {
+                    geminiHistory = geminiHistory.slice(-40);
+                }
+
+                return aiResponse;
+
+            } catch (error) {
+                console.error('Gemini call failed:', error);
+                return "I'm having a little trouble connecting right now, but I don't want you to leave empty-handed! Here's the quick pitch:\n\n**Owen McCormick** is a Strategic Operations Consultant who builds AI-powered tools and automation systems. He's looking for his next full-time role.\n\n• **Email:** mcmcowen@gmail.com\n• **Portfolio:** omccormick.com\n• **LinkedIn:** linkedin.com/in/owenpmccormick\n\nTry asking again in a moment, or reach out to him directly!";
+            }
+        }
+
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const message = input.value.trim();
 
-            if (!message) return;
+            if (!message || isProcessing) return;
 
-            // Add user message
+            isProcessing = true;
             addMessage('user', message);
             input.value = '';
 
-            // Hide quick actions after first message
             document.getElementById('quickActions').style.display = 'none';
+            document.getElementById('sendBtn').disabled = true;
 
-            // Show typing indicator
             showTyping();
 
-            // Generate response (simulated delay for realism)
-            setTimeout(() => {
+            try {
+                // Check if message is about scheduling — open booking form proactively
+                const msgLower = message.toLowerCase();
+                if (msgLower.includes('schedule') || msgLower.includes('book') || msgLower.includes('meet') || msgLower.includes('call') || msgLower.includes('interview')) {
+                    openBooking();
+                }
+
+                const response = await callGemini(message);
                 hideTyping();
-                const response = generateResponse(message);
                 addMessage('ai', response);
-            }, 1000 + Math.random() * 1000);
+            } catch (error) {
+                hideTyping();
+                addMessage('ai', "Something went wrong on my end. You can always reach Owen directly at **mcmcowen@gmail.com** — he'd love to hear from you!");
+            } finally {
+                isProcessing = false;
+                document.getElementById('sendBtn').disabled = false;
+            }
         }
 
         function sendQuickMessage(message) {
@@ -741,89 +838,6 @@
             if (event.key === 'Enter') {
                 sendMessage();
             }
-        }
-
-        function generateResponse(userMessage) {
-            const msg = userMessage.toLowerCase();
-
-            // Skills
-            if (msg.includes('skill') || msg.includes('what can') || msg.includes('good at') || msg.includes('expertise')) {
-                return `Owen's core strengths fall into a few buckets:\n\n**Operations & RevOps:**\n• Sales operations & pipeline management\n• Process automation (reduced manual work by 75% in past roles)\n• CRM optimization (HubSpot, Salesforce)\n\n**Technical:**\n• Python, JavaScript, TypeScript, React\n• API integrations (Gemini AI, HubSpot, etc.)\n• Data visualization & dashboards\n\n**Strategic:**\n• Lean Six Sigma certified (process improvement)\n• Scrum Master certified (agile delivery)\n• Cross-functional project management\n\nWant me to dive deeper into any of these?`;
-            }
-
-            // AI Projects
-            if (msg.includes('ai project') || msg.includes('artificial intelligence') || msg.includes('machine learning') || msg.includes('gemini')) {
-                return `Owen's been building some impressive AI-powered tools:\n\n**Chime Pulse** - Narrative intelligence dashboard with real-time sentiment tracking and AI analyst chat. Think "Bloomberg Terminal for brand reputation."\n\n**Brandify AI** - Enter a mission statement, get a complete brand identity (logo, colors, typography, voice). Uses Gemini to generate contextually-aware branding.\n\n**SpinnerEvolve** - This one's creative: AI generates two loading spinner animations, you pick the better one, and it "evolves" the winner. A/B testing meets generative art.\n\nAll three have live demos on his portfolio if you want to try them. Should I tell you more about any specific one?`;
-            }
-
-            // RevOps
-            if (msg.includes('revops') || msg.includes('revenue operations') || msg.includes('sales ops') || msg.includes('hubspot') || msg.includes('crm')) {
-                return `RevOps is where Owen really shines:\n\n**Certifications:** HubSpot RevOps certified, Lean Six Sigma (process optimization)\n\n**Experience:**\n• Built and managed $847K+ sales pipelines\n• 24.3% conversion rate optimization\n• CRM migrations and automation setup\n• Cross-functional alignment between sales, marketing, and CS\n\n**Philosophy:** He believes RevOps should be a force multiplier—not just reporting on numbers, but actively removing friction that stops deals from closing.\n\nHis portfolio has a full RevOps dashboard demo if you want to see his approach. Want me to share the link?`;
-            }
-
-            // Availability
-            if (msg.includes('available') || msg.includes('start') || msg.includes('looking') || msg.includes('status') || msg.includes('open to')) {
-                return `**Current status:** Actively looking for the right opportunity\n\n**Availability:** Can start immediately or within 2 weeks\n\n**Work arrangement:** Open to remote, hybrid, or on-site\n\n**Locations:** Based in Brooklyn, NY with ties to San Antonio, TX. Flexible on location for the right role.\n\n**What he's looking for:** A team that values operational excellence, isn't afraid of automation, and wants someone who can bridge business strategy with technical implementation.\n\nWant to schedule a quick call? I can help set that up.`;
-            }
-
-            // Salary / Compensation
-            if (msg.includes('salary') || msg.includes('compensation') || msg.includes('pay') || msg.includes('money') || msg.includes('range') || msg.includes('expecting')) {
-                return `Owen's transparent about this:\n\n**Target range:** $80,000 - $110,000\n\nThat said, he's flexible based on:\n• Total comp (equity, bonuses, benefits)\n• Growth opportunity and title\n• Company stage and mission alignment\n• Location/cost of living\n\nHe's said he's more interested in finding the right fit than maximizing salary. A startup with strong equity or a role with clear growth path might be worth more than a higher base elsewhere.\n\nWant to tell me more about the role you have in mind?`;
-            }
-
-            // Experience / Background
-            if (msg.includes('experience') || msg.includes('background') || msg.includes('worked') || msg.includes('history') || msg.includes('resume')) {
-                return `**Quick background:**\n\n• B.S. in Business Administration\n• Lean Six Sigma, Scrum Master, HubSpot RevOps certified\n• Focus on international startups entering the US market\n\n**What he's done:**\n• Built automated systems that reduced manual work by 75%\n• Managed $800K+ pipelines with 24%+ conversion\n• Created AI-powered tools (dashboards, generators, analytics)\n• Bridged technical implementation with business strategy\n\nHis portfolio has detailed case studies on each project. Would you like specific examples of any type of work?`;
-            }
-
-            // Why hire / why Owen
-            if (msg.includes('why') && (msg.includes('hire') || msg.includes('owen') || msg.includes('him'))) {
-                return `Here's the honest pitch:\n\n**Owen isn't just an operator—he's a builder.**\n\nMost ops people manage existing systems. Owen builds new ones. His portfolio isn't case studies from past jobs—it's tools he built himself because he saw a gap.\n\n**What you get:**\n• Someone who can automate the tedious stuff (so your team focuses on high-value work)\n• Technical enough to build, strategic enough to know what to build\n• Data-driven but people-focused—optimizes processes without losing the human element\n\n**The meta point:** He built an AI agent (me) to sell him 24/7. That's the kind of "automate everything possible" mindset he'd bring to your team.\n\nWant to test that by scheduling a call?`;
-            }
-
-            // Schedule / Book / Call / Meet
-            if (msg.includes('schedule') || msg.includes('call') || msg.includes('meet') || msg.includes('book') || msg.includes('talk') || msg.includes('interview')) {
-                openBooking();
-                return `Absolutely! I just opened the booking form for you. Fill in your details and Owen will reach out to confirm a time.\n\nIf you prefer, you can also reach him directly:\n• **Email:** mcmcowen@gmail.com\n• **LinkedIn:** linkedin.com/in/owenpmccormick\n\nLooking forward to connecting you!`;
-            }
-
-            // Contact
-            if (msg.includes('contact') || msg.includes('email') || msg.includes('reach') || msg.includes('phone')) {
-                return `Here's how to reach Owen:\n\n• **Email:** mcmcowen@gmail.com\n• **Phone:** 347-268-1742\n• **LinkedIn:** linkedin.com/in/owenpmccormick\n• **GitHub:** github.com/MartyMcfli\n• **Portfolio:** omccormick.com\n\nOr I can help you schedule a call right now—just say the word!`;
-            }
-
-            // Projects general
-            if (msg.includes('project') || msg.includes('portfolio') || msg.includes('work') || msg.includes('built') || msg.includes('created')) {
-                return `Owen's portfolio is pretty stacked. Here are the highlights:\n\n**AI-Powered:**\n• Chime Pulse (narrative intelligence dashboard)\n• Brandify AI (brand identity generator)\n• SpinnerEvolve (evolutionary animation generator)\n• Culture Heat Map (organizational diagnostics)\n\n**Operations:**\n• HubSpot RevOps Pipeline ($847K, 24.3% conversion)\n• Personal Ops Dashboard (Raspberry Pi self-tracking)\n• GA4 Analytics Dashboard\n• Lean Six Sigma DMAIC Case Study\n\nEvery project has a live demo. Want me to tell you more about any specific one, or should I share the portfolio link?`;
-            }
-
-            // Education / Certifications
-            if (msg.includes('education') || msg.includes('degree') || msg.includes('certification') || msg.includes('certified') || msg.includes('school')) {
-                return `**Education:**\n• B.S. in Business Administration\n\n**Certifications:**\n• **Lean Six Sigma** - Process improvement and waste reduction\n• **Scrum Master** - Agile project management\n• **HubSpot RevOps** - Revenue operations and CRM\n\nHe's got the formal credentials, but honestly, his portfolio speaks louder than certificates. Want to see his certification-aligned dashboard demos?`;
-            }
-
-            // Objections
-            if (msg.includes('junior') || msg.includes('entry') || msg.includes('senior')) {
-                return `Fair question. Owen's earlier in his career, but here's why that might actually work in your favor:\n\n**The work speaks for itself:**\nHis portfolio isn't entry-level. He's built AI-powered dashboards, automated complex workflows, and approaches problems strategically. These aren't tutorials—they're production-ready tools.\n\n**Hungry and adaptable:**\nNo bad habits to unlearn. He's moldable, eager to prove himself, and frankly will work harder than someone who's "been there, done that."\n\n**Cost-effective:**\nYou get senior-level output at a more accessible price point. Plus, you're investing in someone who'll grow with the company.\n\nWant to chat with him directly and see for yourself?`;
-            }
-
-            // Technical ability
-            if (msg.includes('technical') || msg.includes('code') || msg.includes('programming') || msg.includes('developer')) {
-                return `Owen's not a traditional software engineer, but he's definitely technical:\n\n**Languages:** Python, JavaScript, TypeScript, SQL\n\n**Frameworks:** React, Vite, Node.js\n\n**APIs & Tools:** Gemini AI, HubSpot API, Chart.js, p5.js\n\n**What this means:** He can build internal tools, automate workflows, create dashboards, and integrate systems—without waiting on engineering. He bridges the gap between "I need this" and "it's built."\n\nHis GitHub (MartyMcfli) has the code for all his projects if you want to see his style.`;
-            }
-
-            // Location / Remote
-            if (msg.includes('location') || msg.includes('remote') || msg.includes('office') || msg.includes('where') || msg.includes('based')) {
-                return `**Location:** Brooklyn, NY (with ties to San Antonio, TX)\n\n**Flexibility:** Open to:\n• Fully remote\n• Hybrid arrangements\n• On-site (for the right opportunity)\n\nHe's worked with distributed teams and knows how to stay productive and communicative regardless of setup. Is location a factor for the role you have in mind?`;
-            }
-
-            // Fun / Personal
-            if (msg.includes('fun') || msg.includes('hobby') || msg.includes('personal') || msg.includes('outside work') || msg.includes('free time')) {
-                return `Outside of work, Owen:\n\n🎵 **Produces music** - Has a home studio setup, makes electronic stuff\n\n📊 **Optimizes his own life** - Built a Personal Ops Dashboard on a Raspberry Pi that tracks his habits, productivity, and goals. Yes, really.\n\n🤖 **Builds random AI things** - Like me! He automated his job hunt because... of course he did.\n\nHe brings that same "what if I could automate this?" energy to everything. Makes him fun at parties. Probably.`;
-            }
-
-            // Default response
-            return `Good question! I want to make sure I give you the right info.\n\nCould you tell me a bit more about what you're looking for? I can help with:\n\n• Owen's skills and experience\n• Specific projects he's built\n• His availability and what he's looking for\n• Scheduling a call to chat directly\n\nOr feel free to ask in a different way—I'm pretty good at figuring out what you need!`;
         }
 
         // Booking functions
