@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heat Flow Visualization - Geothermal Well Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111115;
+            --bg-card: #16161a;
+            --border: #2a2a30;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --accent-cyan: #00d9ff;
+            --accent-orange: #ff6b35;
+            --accent-purple: #9d4edd;
+            --gradient-thermal: linear-gradient(90deg, #0066ff 0%, #00ccff 25%, #ffcc00 50%, #ff6600 75%, #ff0000 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .logo-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Main Layout */
+        .main {
+            display: flex;
+            height: calc(100vh - 73px);
+        }
+
+        /* 3D Viewport */
+        .viewport {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, #0a1628 0%, #050a14 100%);
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Overlay Stats */
+        .stat-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(22, 22, 26, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+        }
+
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-unit {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
+
+        .stat-overlay.right {
+            left: auto;
+            right: 20px;
+        }
+
+        .stat-overlay.drawdown .stat-value {
+            color: var(--accent-orange);
+        }
+
+        /* Thermal Legend */
+        .thermal-legend {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            background: rgba(22, 22, 26, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .legend-title {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .legend-bar {
+            width: 200px;
+            height: 12px;
+            background: var(--gradient-thermal);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .legend-labels {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Transport Controls */
+        .transport {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 340px;
+            background: rgba(22, 22, 26, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .transport-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .transport-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .transport-btn.active {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        .timeline {
+            flex: 1;
+        }
+
+        .timeline-track {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .timeline-current {
+            color: var(--text-primary);
+        }
+
+        /* Control Panel */
+        .control-panel {
+            width: 320px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .panel-section {
+            margin-bottom: 28px;
+        }
+
+        .panel-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .control-value {
+            font-family: 'Space Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .stat-card-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .stat-card-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .stat-card-value.cyan { color: var(--accent-cyan); }
+        .stat-card-value.orange { color: var(--accent-orange); }
+        .stat-card-value.purple { color: var(--accent-purple); }
+
+        /* Drawdown Chart */
+        .chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .chart-title {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(0, 217, 255, 0.08);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Wellbore Visualization Helper */
+        .wellbore-diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .wellbore-svg {
+            width: 100%;
+            height: 120px;
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main {
+                flex-direction: column;
+            }
+            .control-panel {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid var(--border);
+            }
+            .transport {
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🌡️</div>
+            <div>
+                <div class="logo-text">Heat Flow Viz</div>
+                <div class="logo-sub">Geothermal Well Simulator</div>
+            </div>
+        </div>
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <!-- 3D Viewport -->
+        <div class="viewport">
+            <div id="canvas-container"></div>
+
+            <!-- Simulation Time Overlay -->
+            <div class="stat-overlay">
+                <div class="stat-label">Simulation Time</div>
+                <div class="stat-value"><span id="timeYears">1</span><span class="stat-unit">years</span></div>
+            </div>
+
+            <!-- Thermal Drawdown Overlay -->
+            <div class="stat-overlay right drawdown">
+                <div class="stat-label">Thermal Drawdown</div>
+                <div class="stat-value"><span id="drawdown">0.00</span><span class="stat-unit">°C</span></div>
+            </div>
+
+            <!-- Thermal Legend -->
+            <div class="thermal-legend">
+                <div class="legend-title">Temperature Field</div>
+                <div class="legend-bar"></div>
+                <div class="legend-labels">
+                    <span>60°C</span>
+                    <span>70°C</span>
+                    <span>80°C</span>
+                </div>
+            </div>
+
+            <!-- Transport Controls -->
+            <div class="transport">
+                <button class="transport-btn" id="playBtn" onclick="togglePlay()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path id="playIcon" d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <button class="transport-btn" onclick="resetSimulation()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                    </svg>
+                </button>
+                <div class="timeline">
+                    <div class="timeline-track" onclick="seekTimeline(event)">
+                        <div class="timeline-progress" id="timelineProgress" style="width: 2%"></div>
+                    </div>
+                    <div class="timeline-labels">
+                        <span class="timeline-current" id="currentTimeLabel">Year 1</span>
+                        <span>50 years</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="panel-section">
+                <div class="panel-title">Well Parameters</div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Wellbore Depth</span>
+                        <span class="control-value" id="depthValue">2000 m</span>
+                    </div>
+                    <input type="range" class="slider" id="depthSlider" min="1000" max="5000" value="2000" step="100" oninput="updateDepth(this.value)">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Number of Laterals</span>
+                        <span class="control-value" id="lateralsValue">3</span>
+                    </div>
+                    <input type="range" class="slider" id="lateralsSlider" min="1" max="10" value="3" oninput="updateLaterals(this.value)">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Lateral Length</span>
+                        <span class="control-value" id="lateralLengthValue">500 m</span>
+                    </div>
+                    <input type="range" class="slider" id="lateralLengthSlider" min="100" max="1000" value="500" step="50" oninput="updateLateralLength(this.value)">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Heat Extraction Rate</span>
+                        <span class="control-value" id="heatRateValue">50 kW</span>
+                    </div>
+                    <input type="range" class="slider" id="heatRateSlider" min="10" max="200" value="50" step="5" oninput="updateHeatRate(this.value)">
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="panel-title">Rock Properties</div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Thermal Conductivity</span>
+                        <span class="control-value" id="conductivityValue">2.5 W/(m·K)</span>
+                    </div>
+                    <input type="range" class="slider" id="conductivitySlider" min="1" max="5" value="2.5" step="0.1" oninput="updateConductivity(this.value)">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Animation Speed</span>
+                        <span class="control-value" id="speedValue">1.0x</span>
+                    </div>
+                    <input type="range" class="slider" id="speedSlider" min="0.1" max="10" value="1" step="0.1" oninput="updateSpeed(this.value)">
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <div class="panel-title">Simulation Stats</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-label">Current Time</div>
+                        <div class="stat-card-value cyan" id="statTime">1y 0d</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Drawdown</div>
+                        <div class="stat-card-value orange" id="statDrawdown">0.00°C</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Heat Rate</div>
+                        <div class="stat-card-value purple" id="statHeatRate">50 kW</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">Laterals</div>
+                        <div class="stat-card-value cyan" id="statLaterals">3</div>
+                    </div>
+                </div>
+
+                <!-- Drawdown Chart -->
+                <div class="chart-container">
+                    <div class="chart-title">Thermal Drawdown Over Time</div>
+                    <svg class="chart-svg" id="drawdownChart" viewBox="0 0 240 100">
+                        <defs>
+                            <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:0.3" />
+                                <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:0" />
+                            </linearGradient>
+                        </defs>
+                        <path id="chartArea" fill="url(#chartGradient)" />
+                        <path id="chartLine" fill="none" stroke="#ff6b35" stroke-width="2" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p>This tool visualizes heat extraction from a multi-lateral closed-loop geothermal well using <strong>line source theory</strong>. The 3D visualization shows temperature field evolution over time.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ============================================
+        // THREE.JS SCENE SETUP
+        // ============================================
+        let scene, camera, renderer, controls;
+        let wellbore, laterals = [];
+        let temperatureField;
+        let particles;
+
+        // Simulation State
+        let isPlaying = false;
+        let currentTime = 365 * 24 * 3600; // 1 year in seconds
+        const maxTime = 50 * 365 * 24 * 3600; // 50 years
+        let animationSpeed = 1;
+        let thermalDrawdown = 0;
+
+        // Parameters
+        let params = {
+            depth: 2000,
+            laterals: 3,
+            lateralLength: 500,
+            heatRate: 50,
+            conductivity: 2.5
+        };
+
+        // Drawdown history for chart
+        let drawdownHistory = [{time: 1, value: 0}];
+
+        function init() {
+            const container = document.getElementById('canvas-container');
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x050a14);
+            scene.fog = new THREE.Fog(0x050a14, 500, 2000);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 1, 5000);
+            camera.position.set(400, 300, 600);
+            camera.lookAt(0, -500, 0);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(100, 200, 100);
+            scene.add(directionalLight);
+
+            // Create wellbore
+            createWellbore();
+
+            // Create temperature field particles
+            createTemperatureField();
+
+            // Create ground plane
+            createGround();
+
+            // Mouse controls (simple orbit)
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+            let cameraAngle = { theta: 0.5, phi: 0.3 };
+            let cameraDistance = 800;
+
+            renderer.domElement.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            renderer.domElement.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+                cameraAngle.theta += deltaX * 0.005;
+                cameraAngle.phi = Math.max(0.1, Math.min(Math.PI / 2 - 0.1, cameraAngle.phi + deltaY * 0.005));
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+                updateCameraPosition();
+            });
+
+            renderer.domElement.addEventListener('mouseup', () => isDragging = false);
+            renderer.domElement.addEventListener('mouseleave', () => isDragging = false);
+
+            renderer.domElement.addEventListener('wheel', (e) => {
+                cameraDistance = Math.max(300, Math.min(1500, cameraDistance + e.deltaY));
+                updateCameraPosition();
+            });
+
+            function updateCameraPosition() {
+                camera.position.x = cameraDistance * Math.sin(cameraAngle.theta) * Math.cos(cameraAngle.phi);
+                camera.position.y = cameraDistance * Math.sin(cameraAngle.phi);
+                camera.position.z = cameraDistance * Math.cos(cameraAngle.theta) * Math.cos(cameraAngle.phi);
+                camera.lookAt(0, -params.depth / 4, 0);
+            }
+
+            updateCameraPosition();
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            // Start animation loop
+            animate();
+        }
+
+        function createWellbore() {
+            // Remove existing
+            if (wellbore) scene.remove(wellbore);
+            laterals.forEach(l => scene.remove(l));
+            laterals = [];
+
+            // Main wellbore
+            const wellGeometry = new THREE.CylinderGeometry(8, 8, params.depth, 16);
+            const wellMaterial = new THREE.MeshPhongMaterial({
+                color: 0x00d9ff,
+                emissive: 0x00d9ff,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.8
+            });
+            wellbore = new THREE.Mesh(wellGeometry, wellMaterial);
+            wellbore.position.y = -params.depth / 2;
+            scene.add(wellbore);
+
+            // Laterals
+            const lateralGeometry = new THREE.CylinderGeometry(5, 5, params.lateralLength, 12);
+            const lateralMaterial = new THREE.MeshPhongMaterial({
+                color: 0x00ffaa,
+                emissive: 0x00ffaa,
+                emissiveIntensity: 0.2,
+                transparent: true,
+                opacity: 0.7
+            });
+
+            for (let i = 0; i < params.laterals; i++) {
+                const lateral = new THREE.Mesh(lateralGeometry, lateralMaterial);
+                const angle = (i / params.laterals) * Math.PI * 2;
+                lateral.rotation.z = Math.PI / 2;
+                lateral.position.x = Math.cos(angle) * params.lateralLength / 2;
+                lateral.position.z = Math.sin(angle) * params.lateralLength / 2;
+                lateral.position.y = -params.depth + 100;
+                scene.add(lateral);
+                laterals.push(lateral);
+            }
+        }
+
+        function createTemperatureField() {
+            if (particles) scene.remove(particles);
+
+            const particleCount = 8000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                // Distribute in cylindrical pattern around wellbore
+                const radius = 50 + Math.random() * 400;
+                const angle = Math.random() * Math.PI * 2;
+                const depth = -Math.random() * params.depth;
+
+                positions[i * 3] = Math.cos(angle) * radius;
+                positions[i * 3 + 1] = depth;
+                positions[i * 3 + 2] = Math.sin(angle) * radius;
+
+                // Temperature-based color (will be updated in animation)
+                colors[i * 3] = 1;
+                colors[i * 3 + 1] = 0.5;
+                colors[i * 3 + 2] = 0;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 4,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+
+        function createGround() {
+            const groundGeometry = new THREE.PlaneGeometry(2000, 2000);
+            const groundMaterial = new THREE.MeshPhongMaterial({
+                color: 0x1a1a20,
+                transparent: true,
+                opacity: 0.5
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = 5;
+            scene.add(ground);
+
+            // Grid helper
+            const gridHelper = new THREE.GridHelper(2000, 40, 0x2a2a30, 0x1a1a1f);
+            gridHelper.position.y = 6;
+            scene.add(gridHelper);
+        }
+
+        function updateTemperatureField() {
+            if (!particles) return;
+
+            const positions = particles.geometry.attributes.position.array;
+            const colors = particles.geometry.attributes.color.array;
+            const years = currentTime / (365 * 24 * 3600);
+
+            // Calculate thermal drawdown based on time and parameters
+            // Simplified line source approximation
+            const alpha = params.conductivity / (2500 * 800); // thermal diffusivity
+            const Q = params.heatRate * 1000 / params.lateralLength; // W/m
+
+            let maxDrawdown = 0;
+
+            for (let i = 0; i < positions.length / 3; i++) {
+                const x = positions[i * 3];
+                const y = positions[i * 3 + 1];
+                const z = positions[i * 3 + 2];
+
+                // Distance from wellbore center
+                const r = Math.sqrt(x * x + z * z);
+
+                // Temperature change using simplified line source
+                let deltaT = 0;
+                if (r > 10) {
+                    // Well function approximation
+                    const u = (r * r) / (4 * alpha * currentTime);
+                    if (u < 10) {
+                        const W = -0.5772 - Math.log(u) + u; // Exponential integral approx
+                        deltaT = (Q / (4 * Math.PI * params.conductivity)) * W * params.laterals * 0.5;
+                        deltaT = Math.min(deltaT, 20); // Cap at 20°C
+                    }
+                }
+
+                if (r < 100) {
+                    maxDrawdown = Math.max(maxDrawdown, deltaT);
+                }
+
+                // Normalize temperature for color (80°C initial, cooling down)
+                const temp = 80 - deltaT;
+                const normalizedTemp = Math.max(0, Math.min(1, (temp - 60) / 20));
+
+                // Color mapping: blue (cold) to red (hot)
+                if (normalizedTemp < 0.5) {
+                    colors[i * 3] = normalizedTemp * 2;
+                    colors[i * 3 + 1] = normalizedTemp * 2;
+                    colors[i * 3 + 2] = 1;
+                } else {
+                    colors[i * 3] = 1;
+                    colors[i * 3 + 1] = 1 - (normalizedTemp - 0.5) * 2;
+                    colors[i * 3 + 2] = 1 - (normalizedTemp - 0.5) * 2;
+                }
+            }
+
+            particles.geometry.attributes.color.needsUpdate = true;
+            thermalDrawdown = maxDrawdown;
+
+            // Update UI
+            document.getElementById('drawdown').textContent = thermalDrawdown.toFixed(2);
+            document.getElementById('statDrawdown').textContent = thermalDrawdown.toFixed(2) + '°C';
+
+            // Update chart
+            updateDrawdownChart(years, thermalDrawdown);
+        }
+
+        function updateDrawdownChart(years, drawdown) {
+            // Add to history if new year
+            const lastYear = drawdownHistory[drawdownHistory.length - 1].time;
+            if (Math.floor(years) > lastYear) {
+                drawdownHistory.push({ time: Math.floor(years), value: drawdown });
+                if (drawdownHistory.length > 50) drawdownHistory.shift();
+            }
+
+            // Draw chart
+            const width = 240;
+            const height = 100;
+            const padding = 10;
+
+            let pathD = `M ${padding} ${height - padding}`;
+            let areaD = `M ${padding} ${height - padding}`;
+
+            drawdownHistory.forEach((point, i) => {
+                const x = padding + (point.time / 50) * (width - 2 * padding);
+                const y = height - padding - (point.value / 20) * (height - 2 * padding);
+                pathD += ` L ${x} ${y}`;
+                areaD += ` L ${x} ${y}`;
+            });
+
+            areaD += ` L ${padding + (drawdownHistory[drawdownHistory.length - 1].time / 50) * (width - 2 * padding)} ${height - padding} Z`;
+
+            document.getElementById('chartLine').setAttribute('d', pathD);
+            document.getElementById('chartArea').setAttribute('d', areaD);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (isPlaying) {
+                currentTime += 86400 * animationSpeed; // Add 1 day per frame * speed
+                if (currentTime > maxTime) currentTime = maxTime;
+                updateTimeDisplay();
+                updateTemperatureField();
+            }
+
+            // Rotate particles slightly for effect
+            if (particles) {
+                particles.rotation.y += 0.0005;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function updateTimeDisplay() {
+            const years = Math.floor(currentTime / (365 * 24 * 3600));
+            const days = Math.floor((currentTime % (365 * 24 * 3600)) / (24 * 3600));
+
+            document.getElementById('timeYears').textContent = years;
+            document.getElementById('currentTimeLabel').textContent = `Year ${years}`;
+            document.getElementById('statTime').textContent = `${years}y ${days}d`;
+
+            const progress = (currentTime / maxTime) * 100;
+            document.getElementById('timelineProgress').style.width = progress + '%';
+        }
+
+        // ============================================
+        // CONTROLS
+        // ============================================
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('playBtn');
+            const icon = document.getElementById('playIcon');
+
+            if (isPlaying) {
+                btn.classList.add('active');
+                icon.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
+            } else {
+                btn.classList.remove('active');
+                icon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+            }
+        }
+
+        function resetSimulation() {
+            currentTime = 365 * 24 * 3600;
+            thermalDrawdown = 0;
+            drawdownHistory = [{time: 1, value: 0}];
+            isPlaying = false;
+            document.getElementById('playBtn').classList.remove('active');
+            document.getElementById('playIcon').setAttribute('d', 'M8 5v14l11-7z');
+            updateTimeDisplay();
+            updateTemperatureField();
+        }
+
+        function seekTimeline(event) {
+            const rect = event.target.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percent = x / rect.width;
+            currentTime = percent * maxTime;
+            updateTimeDisplay();
+            updateTemperatureField();
+        }
+
+        function updateDepth(value) {
+            params.depth = parseInt(value);
+            document.getElementById('depthValue').textContent = value + ' m';
+            createWellbore();
+            createTemperatureField();
+        }
+
+        function updateLaterals(value) {
+            params.laterals = parseInt(value);
+            document.getElementById('lateralsValue').textContent = value;
+            document.getElementById('statLaterals').textContent = value;
+            createWellbore();
+            updateTemperatureField();
+        }
+
+        function updateLateralLength(value) {
+            params.lateralLength = parseInt(value);
+            document.getElementById('lateralLengthValue').textContent = value + ' m';
+            createWellbore();
+        }
+
+        function updateHeatRate(value) {
+            params.heatRate = parseInt(value);
+            document.getElementById('heatRateValue').textContent = value + ' kW';
+            document.getElementById('statHeatRate').textContent = value + ' kW';
+            updateTemperatureField();
+        }
+
+        function updateConductivity(value) {
+            params.conductivity = parseFloat(value);
+            document.getElementById('conductivityValue').textContent = value + ' W/(m·K)';
+            updateTemperatureField();
+        }
+
+        function updateSpeed(value) {
+            animationSpeed = parseFloat(value);
+            document.getElementById('speedValue').textContent = value + 'x';
+        }
+
+        // Initialize
+        init();
+        updateTimeDisplay();
+        updateTemperatureField();
+    </script>
+</body>
+</html>
