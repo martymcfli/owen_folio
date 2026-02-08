@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Owen's AI Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1f25;
+            --bg-chat: #1c2127;
+            --border: #2d3748;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #14b8a6;
+            --accent-hover: #0d9488;
+            --user-bubble: #14b8a6;
+            --ai-bubble: #2d3748;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent) 0%, #0d9488 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .header-info h1 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .header-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .header-right a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, var(--accent) 0%, #0d9488 100%);
+        }
+
+        .message.user .message-avatar {
+            background: var(--ai-bubble);
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.ai .message-content {
+            background: var(--ai-bubble);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: var(--user-bubble);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-content p {
+            margin-bottom: 8px;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-content ul, .message-content ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .message-content li {
+            margin-bottom: 4px;
+        }
+
+        .message-content strong {
+            color: var(--accent);
+        }
+
+        .message-content a {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            gap: 12px;
+            max-width: 85%;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            padding: 16px;
+            background: var(--ai-bubble);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .quick-action {
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-action:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 16px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 8px;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent);
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+
+        .input-wrapper input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .send-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Booking Form (Hidden by default) */
+        .booking-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .booking-overlay.active {
+            display: flex;
+        }
+
+        .booking-form {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .booking-form h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .booking-form p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .chat-container { padding: 16px; }
+            .message { max-width: 95%; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="avatar">OM</div>
+            <div class="header-info">
+                <h1>Owen's AI Agent</h1>
+                <p><span class="status-dot"></span> Online &middot; Typically replies instantly</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="https://omccormick.com" target="_blank">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                View Portfolio
+            </a>
+        </div>
+    </header>
+
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <!-- Messages will be inserted here -->
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="message-avatar" style="background: linear-gradient(135deg, var(--accent) 0%, #0d9488 100%);">🤖</div>
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div class="quick-actions" id="quickActions">
+            <button class="quick-action" onclick="sendQuickMessage('What are Owen\'s main skills?')">Main skills</button>
+            <button class="quick-action" onclick="sendQuickMessage('Tell me about his AI projects')">AI projects</button>
+            <button class="quick-action" onclick="sendQuickMessage('What\'s his experience with RevOps?')">RevOps experience</button>
+            <button class="quick-action" onclick="sendQuickMessage('Is he available for full-time roles?')">Availability</button>
+            <button class="quick-action" onclick="sendQuickMessage('What salary range is he looking for?')">Compensation</button>
+            <button class="quick-action" onclick="openBooking()">Schedule a call</button>
+        </div>
+
+        <div class="input-area">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="Ask me anything about Owen..." onkeypress="handleKeyPress(event)">
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Form Overlay -->
+    <div class="booking-overlay" id="bookingOverlay">
+        <div class="booking-form">
+            <h2>📅 Schedule a Call with Owen</h2>
+            <p>Fill out the form below and Owen will reach out to confirm a time that works for both of you.</p>
+
+            <form id="bookingForm" onsubmit="submitBooking(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name *</label>
+                        <input type="text" name="name" required placeholder="Jane Smith">
+                    </div>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <input type="text" name="company" placeholder="Acme Inc.">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" required placeholder="jane@company.com">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Role You're Hiring For</label>
+                        <input type="text" name="role" placeholder="Operations Manager">
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Time</label>
+                        <select name="timePreference">
+                            <option value="morning">Morning (9am-12pm ET)</option>
+                            <option value="afternoon">Afternoon (12pm-5pm ET)</option>
+                            <option value="evening">Evening (5pm-8pm ET)</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Anything you'd like Owen to know?</label>
+                    <textarea name="notes" placeholder="Tell me about the role, your team, or any questions you have..."></textarea>
+                </div>
+
+                <div class="booking-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeBooking()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Request Call</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Owen's Knowledge Base
+        const owenKnowledge = {
+            summary: "Owen McCormick is a Strategic Operations Consultant based in Brooklyn, NY and San Antonio, TX. He specializes in RevOps, automation, and AI-powered tools for international startups entering the US market. He has a B.S. in Business, Lean Six Sigma certification, Scrum Master certification, and HubSpot RevOps certification.",
+
+            skills: {
+                primary: ["RevOps & Sales Operations", "Process Automation", "AI/ML Integration", "Data Analytics & Visualization", "CRM Management (HubSpot, Salesforce)", "Project Management"],
+                technical: ["Python", "JavaScript", "TypeScript", "React", "SQL", "HubSpot", "Salesforce", "Zapier", "Make", "Chart.js", "Gemini API"],
+                soft: ["Strategic Planning", "Cross-functional Leadership", "Client Relations", "Process Optimization", "Problem Solving"]
+            },
+
+            projects: {
+                chimePulse: {
+                    name: "Chime Pulse",
+                    description: "AI-powered narrative intelligence dashboard for enterprise communications. Features real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights.",
+                    tech: ["React", "TypeScript", "Gemini API", "Recharts"],
+                    metrics: "34.2% share of voice tracking, real-time intelligence"
+                },
+                brandifyAI: {
+                    name: "Brandify AI",
+                    description: "AI brand identity generator using Gemini. Creates complete brand bibles including logos, color palettes, typography from a single mission statement.",
+                    tech: ["React", "TypeScript", "Gemini API", "Vite"]
+                },
+                spinnerEvolve: {
+                    name: "SpinnerEvolve",
+                    description: "AI evolutionary animation generator using Gemini 3 Flash. A/B tests loading spinner variants with real-time streaming code generation.",
+                    tech: ["React", "TypeScript", "Gemini API", "p5.js"]
+                },
+                cultureHeatMap: {
+                    name: "Culture Heat Map",
+                    description: "AI-powered organizational culture diagnostic tool. Identifies friction points and engagement patterns across teams.",
+                    metrics: "Featured showcase project with live demo"
+                },
+                personalOps: {
+                    name: "Personal Ops Dashboard",
+                    description: "24/7 productivity tracking system on Raspberry Pi. Tracks personal metrics, habits, and goals with real-time visualizations and AI insights.",
+                    tech: ["Python", "Raspberry Pi", "Chart.js", "SQLite"]
+                },
+                revOpsPipeline: {
+                    name: "HubSpot RevOps Pipeline",
+                    description: "Certification-aligned dashboard demonstrating pipeline management skills. $847K pipeline tracking with 24.3% conversion rate.",
+                    metrics: "$847K pipeline, 24.3% conversion"
+                }
+            },
+
+            experience: "Owen has experience working with international startups, helping them scale operations in the US market. He specializes in building automated systems that reduce manual work and increase team efficiency. His background spans sales operations, project management, and technical implementation.",
+
+            availability: {
+                status: "Actively looking for full-time opportunities",
+                remote: "Open to remote, hybrid, or on-site",
+                locations: ["Brooklyn, NY", "San Antonio, TX", "Remote"],
+                startDate: "Available immediately or within 2 weeks notice"
+            },
+
+            compensation: {
+                range: "Targeting $80,000 - $110,000 depending on role scope, location, and total compensation package",
+                flexible: "Open to discussion based on equity, benefits, and growth opportunity",
+                note: "More interested in the right fit than maximizing salary"
+            },
+
+            personality: {
+                workStyle: "Data-driven but people-focused. Believes the best operations serve humans, not the other way around.",
+                values: ["Continuous improvement", "Radical transparency", "Building systems that scale", "Helping teams do their best work"],
+                fun: "Produces music in his spare time, built a personal ops dashboard to optimize his own life, and once automated his entire job hunt."
+            },
+
+            objectionHandling: {
+                "no degree": "Owen has a B.S. in Business Administration, plus certifications in Lean Six Sigma, Scrum, and HubSpot RevOps.",
+                "junior": "While Owen is earlier in his career, his portfolio demonstrates senior-level thinking. He's built AI-powered dashboards, automated complex workflows, and approaches problems strategically. His projects show he can deliver impact from day one.",
+                "no enterprise experience": "Owen has worked with startups scaling to enterprise-level complexity. His RevOps work includes $800K+ pipelines, and his technical projects demonstrate the ability to build scalable systems.",
+                "technical enough": "Owen bridges business and technical. He codes in Python, JavaScript, TypeScript, works with APIs (Gemini, HubSpot), and builds full-stack dashboards. He's not just a user of tools—he builds them."
+            },
+
+            contact: {
+                email: "mcmcowen@gmail.com",
+                phone: "347-268-1742",
+                linkedin: "linkedin.com/in/owenpmccormick",
+                github: "github.com/MartyMcfli",
+                portfolio: "omccormick.com"
+            }
+        };
+
+        // Conversation history for context
+        let conversationHistory = [];
+        let visitorInfo = {
+            referrer: document.referrer || 'direct',
+            company: null
+        };
+
+        // Initialize chat
+        function initChat() {
+            // Try to detect company from referrer
+            if (visitorInfo.referrer && visitorInfo.referrer !== 'direct') {
+                try {
+                    const url = new URL(visitorInfo.referrer);
+                    visitorInfo.company = url.hostname.replace('www.', '').split('.')[0];
+                } catch(e) {}
+            }
+
+            // Initial greeting
+            const greeting = generateGreeting();
+            addMessage('ai', greeting);
+        }
+
+        function generateGreeting() {
+            let greeting = "Hey there! 👋 I'm Owen's AI agent—I know everything about his skills, experience, and projects.\n\n";
+
+            if (visitorInfo.company && visitorInfo.company !== 'google' && visitorInfo.company !== 'linkedin') {
+                greeting += `I noticed you might be coming from **${visitorInfo.company}**—happy to explain how Owen's experience might fit what you're looking for.\n\n`;
+            }
+
+            greeting += "What would you like to know? I can tell you about his:\n";
+            greeting += "• Technical skills & AI projects\n";
+            greeting += "• RevOps & automation experience\n";
+            greeting += "• Availability & what he's looking for\n\n";
+            greeting += "Or just ask me anything—I'm here to help!";
+
+            return greeting;
+        }
+
+        function addMessage(type, content) {
+            const messagesDiv = document.getElementById('messages');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = type === 'ai' ? '🤖' : '👤';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = formatMessage(content);
+
+            message.appendChild(avatar);
+            message.appendChild(contentDiv);
+            messagesDiv.appendChild(message);
+
+            // Scroll to bottom
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // Track conversation
+            conversationHistory.push({ type, content, timestamp: new Date().toISOString() });
+        }
+
+        function formatMessage(text) {
+            // Convert markdown-style formatting
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>')
+                .replace(/• /g, '&bull; ');
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('active');
+            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('active');
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+
+            // Hide quick actions after first message
+            document.getElementById('quickActions').style.display = 'none';
+
+            // Show typing indicator
+            showTyping();
+
+            // Generate response (simulated delay for realism)
+            setTimeout(() => {
+                hideTyping();
+                const response = generateResponse(message);
+                addMessage('ai', response);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('userInput').value = message;
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function generateResponse(userMessage) {
+            const msg = userMessage.toLowerCase();
+
+            // Skills
+            if (msg.includes('skill') || msg.includes('what can') || msg.includes('good at') || msg.includes('expertise')) {
+                return `Owen's core strengths fall into a few buckets:\n\n**Operations & RevOps:**\n• Sales operations & pipeline management\n• Process automation (reduced manual work by 75% in past roles)\n• CRM optimization (HubSpot, Salesforce)\n\n**Technical:**\n• Python, JavaScript, TypeScript, React\n• API integrations (Gemini AI, HubSpot, etc.)\n• Data visualization & dashboards\n\n**Strategic:**\n• Lean Six Sigma certified (process improvement)\n• Scrum Master certified (agile delivery)\n• Cross-functional project management\n\nWant me to dive deeper into any of these?`;
+            }
+
+            // AI Projects
+            if (msg.includes('ai project') || msg.includes('artificial intelligence') || msg.includes('machine learning') || msg.includes('gemini')) {
+                return `Owen's been building some impressive AI-powered tools:\n\n**Chime Pulse** - Narrative intelligence dashboard with real-time sentiment tracking and AI analyst chat. Think "Bloomberg Terminal for brand reputation."\n\n**Brandify AI** - Enter a mission statement, get a complete brand identity (logo, colors, typography, voice). Uses Gemini to generate contextually-aware branding.\n\n**SpinnerEvolve** - This one's creative: AI generates two loading spinner animations, you pick the better one, and it "evolves" the winner. A/B testing meets generative art.\n\nAll three have live demos on his portfolio if you want to try them. Should I tell you more about any specific one?`;
+            }
+
+            // RevOps
+            if (msg.includes('revops') || msg.includes('revenue operations') || msg.includes('sales ops') || msg.includes('hubspot') || msg.includes('crm')) {
+                return `RevOps is where Owen really shines:\n\n**Certifications:** HubSpot RevOps certified, Lean Six Sigma (process optimization)\n\n**Experience:**\n• Built and managed $847K+ sales pipelines\n• 24.3% conversion rate optimization\n• CRM migrations and automation setup\n• Cross-functional alignment between sales, marketing, and CS\n\n**Philosophy:** He believes RevOps should be a force multiplier—not just reporting on numbers, but actively removing friction that stops deals from closing.\n\nHis portfolio has a full RevOps dashboard demo if you want to see his approach. Want me to share the link?`;
+            }
+
+            // Availability
+            if (msg.includes('available') || msg.includes('start') || msg.includes('looking') || msg.includes('status') || msg.includes('open to')) {
+                return `**Current status:** Actively looking for the right opportunity\n\n**Availability:** Can start immediately or within 2 weeks\n\n**Work arrangement:** Open to remote, hybrid, or on-site\n\n**Locations:** Based in Brooklyn, NY with ties to San Antonio, TX. Flexible on location for the right role.\n\n**What he's looking for:** A team that values operational excellence, isn't afraid of automation, and wants someone who can bridge business strategy with technical implementation.\n\nWant to schedule a quick call? I can help set that up.`;
+            }
+
+            // Salary / Compensation
+            if (msg.includes('salary') || msg.includes('compensation') || msg.includes('pay') || msg.includes('money') || msg.includes('range') || msg.includes('expecting')) {
+                return `Owen's transparent about this:\n\n**Target range:** $80,000 - $110,000\n\nThat said, he's flexible based on:\n• Total comp (equity, bonuses, benefits)\n• Growth opportunity and title\n• Company stage and mission alignment\n• Location/cost of living\n\nHe's said he's more interested in finding the right fit than maximizing salary. A startup with strong equity or a role with clear growth path might be worth more than a higher base elsewhere.\n\nWant to tell me more about the role you have in mind?`;
+            }
+
+            // Experience / Background
+            if (msg.includes('experience') || msg.includes('background') || msg.includes('worked') || msg.includes('history') || msg.includes('resume')) {
+                return `**Quick background:**\n\n• B.S. in Business Administration\n• Lean Six Sigma, Scrum Master, HubSpot RevOps certified\n• Focus on international startups entering the US market\n\n**What he's done:**\n• Built automated systems that reduced manual work by 75%\n• Managed $800K+ pipelines with 24%+ conversion\n• Created AI-powered tools (dashboards, generators, analytics)\n• Bridged technical implementation with business strategy\n\nHis portfolio has detailed case studies on each project. Would you like specific examples of any type of work?`;
+            }
+
+            // Why hire / why Owen
+            if (msg.includes('why') && (msg.includes('hire') || msg.includes('owen') || msg.includes('him'))) {
+                return `Here's the honest pitch:\n\n**Owen isn't just an operator—he's a builder.**\n\nMost ops people manage existing systems. Owen builds new ones. His portfolio isn't case studies from past jobs—it's tools he built himself because he saw a gap.\n\n**What you get:**\n• Someone who can automate the tedious stuff (so your team focuses on high-value work)\n• Technical enough to build, strategic enough to know what to build\n• Data-driven but people-focused—optimizes processes without losing the human element\n\n**The meta point:** He built an AI agent (me) to sell him 24/7. That's the kind of "automate everything possible" mindset he'd bring to your team.\n\nWant to test that by scheduling a call?`;
+            }
+
+            // Schedule / Book / Call / Meet
+            if (msg.includes('schedule') || msg.includes('call') || msg.includes('meet') || msg.includes('book') || msg.includes('talk') || msg.includes('interview')) {
+                openBooking();
+                return `Absolutely! I just opened the booking form for you. Fill in your details and Owen will reach out to confirm a time.\n\nIf you prefer, you can also reach him directly:\n• **Email:** mcmcowen@gmail.com\n• **LinkedIn:** linkedin.com/in/owenpmccormick\n\nLooking forward to connecting you!`;
+            }
+
+            // Contact
+            if (msg.includes('contact') || msg.includes('email') || msg.includes('reach') || msg.includes('phone')) {
+                return `Here's how to reach Owen:\n\n• **Email:** mcmcowen@gmail.com\n• **Phone:** 347-268-1742\n• **LinkedIn:** linkedin.com/in/owenpmccormick\n• **GitHub:** github.com/MartyMcfli\n• **Portfolio:** omccormick.com\n\nOr I can help you schedule a call right now—just say the word!`;
+            }
+
+            // Projects general
+            if (msg.includes('project') || msg.includes('portfolio') || msg.includes('work') || msg.includes('built') || msg.includes('created')) {
+                return `Owen's portfolio is pretty stacked. Here are the highlights:\n\n**AI-Powered:**\n• Chime Pulse (narrative intelligence dashboard)\n• Brandify AI (brand identity generator)\n• SpinnerEvolve (evolutionary animation generator)\n• Culture Heat Map (organizational diagnostics)\n\n**Operations:**\n• HubSpot RevOps Pipeline ($847K, 24.3% conversion)\n• Personal Ops Dashboard (Raspberry Pi self-tracking)\n• GA4 Analytics Dashboard\n• Lean Six Sigma DMAIC Case Study\n\nEvery project has a live demo. Want me to tell you more about any specific one, or should I share the portfolio link?`;
+            }
+
+            // Education / Certifications
+            if (msg.includes('education') || msg.includes('degree') || msg.includes('certification') || msg.includes('certified') || msg.includes('school')) {
+                return `**Education:**\n• B.S. in Business Administration\n\n**Certifications:**\n• **Lean Six Sigma** - Process improvement and waste reduction\n• **Scrum Master** - Agile project management\n• **HubSpot RevOps** - Revenue operations and CRM\n\nHe's got the formal credentials, but honestly, his portfolio speaks louder than certificates. Want to see his certification-aligned dashboard demos?`;
+            }
+
+            // Objections
+            if (msg.includes('junior') || msg.includes('entry') || msg.includes('senior')) {
+                return `Fair question. Owen's earlier in his career, but here's why that might actually work in your favor:\n\n**The work speaks for itself:**\nHis portfolio isn't entry-level. He's built AI-powered dashboards, automated complex workflows, and approaches problems strategically. These aren't tutorials—they're production-ready tools.\n\n**Hungry and adaptable:**\nNo bad habits to unlearn. He's moldable, eager to prove himself, and frankly will work harder than someone who's "been there, done that."\n\n**Cost-effective:**\nYou get senior-level output at a more accessible price point. Plus, you're investing in someone who'll grow with the company.\n\nWant to chat with him directly and see for yourself?`;
+            }
+
+            // Technical ability
+            if (msg.includes('technical') || msg.includes('code') || msg.includes('programming') || msg.includes('developer')) {
+                return `Owen's not a traditional software engineer, but he's definitely technical:\n\n**Languages:** Python, JavaScript, TypeScript, SQL\n\n**Frameworks:** React, Vite, Node.js\n\n**APIs & Tools:** Gemini AI, HubSpot API, Chart.js, p5.js\n\n**What this means:** He can build internal tools, automate workflows, create dashboards, and integrate systems—without waiting on engineering. He bridges the gap between "I need this" and "it's built."\n\nHis GitHub (MartyMcfli) has the code for all his projects if you want to see his style.`;
+            }
+
+            // Location / Remote
+            if (msg.includes('location') || msg.includes('remote') || msg.includes('office') || msg.includes('where') || msg.includes('based')) {
+                return `**Location:** Brooklyn, NY (with ties to San Antonio, TX)\n\n**Flexibility:** Open to:\n• Fully remote\n• Hybrid arrangements\n• On-site (for the right opportunity)\n\nHe's worked with distributed teams and knows how to stay productive and communicative regardless of setup. Is location a factor for the role you have in mind?`;
+            }
+
+            // Fun / Personal
+            if (msg.includes('fun') || msg.includes('hobby') || msg.includes('personal') || msg.includes('outside work') || msg.includes('free time')) {
+                return `Outside of work, Owen:\n\n🎵 **Produces music** - Has a home studio setup, makes electronic stuff\n\n📊 **Optimizes his own life** - Built a Personal Ops Dashboard on a Raspberry Pi that tracks his habits, productivity, and goals. Yes, really.\n\n🤖 **Builds random AI things** - Like me! He automated his job hunt because... of course he did.\n\nHe brings that same "what if I could automate this?" energy to everything. Makes him fun at parties. Probably.`;
+            }
+
+            // Default response
+            return `Good question! I want to make sure I give you the right info.\n\nCould you tell me a bit more about what you're looking for? I can help with:\n\n• Owen's skills and experience\n• Specific projects he's built\n• His availability and what he's looking for\n• Scheduling a call to chat directly\n\nOr feel free to ask in a different way—I'm pretty good at figuring out what you need!`;
+        }
+
+        // Booking functions
+        function openBooking() {
+            document.getElementById('bookingOverlay').classList.add('active');
+        }
+
+        function closeBooking() {
+            document.getElementById('bookingOverlay').classList.remove('active');
+        }
+
+        function submitBooking(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // In production, this would send to a backend/email service
+            // For now, we'll show a confirmation and log the data
+            console.log('Booking request:', data);
+            console.log('Conversation history:', conversationHistory);
+
+            closeBooking();
+
+            addMessage('ai', `Perfect! I've sent your request to Owen. Here's what he'll receive:\n\n• **Name:** ${data.name}\n• **Company:** ${data.company || 'Not specified'}\n• **Email:** ${data.email}\n• **Role:** ${data.role || 'Not specified'}\n• **Preferred time:** ${data.timePreference}\n\nHe typically responds within 24 hours. In the meantime, feel free to keep chatting with me or explore his portfolio!\n\n*Psst: He also gets a transcript of our conversation, so he'll come prepared.* 😉`);
+
+            form.reset();
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initChat);
+    </script>
+</body>
+</html>
