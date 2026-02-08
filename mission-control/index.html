@@ -1,0 +1,2149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control - AI-Powered Launch Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0f1629;
+            --bg-card: #111827;
+            --bg-elevated: #1f2937;
+            --border: #1e293b;
+            --border-hover: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-teal: #14b8a6;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #22c55e;
+            --accent-yellow: #eab308;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #14b8a6 0%, #3b82f6 50%, #8b5cf6 100%);
+            --gradient-success: linear-gradient(135deg, #22c55e 0%, #14b8a6 100%);
+            --gradient-warning: linear-gradient(135deg, #f97316 0%, #eab308 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #ec4899 100%);
+            --glow-teal: 0 0 30px rgba(20, 184, 166, 0.3);
+            --glow-blue: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Grid */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(20, 184, 166, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20, 184, 166, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow-1 {
+            top: -200px;
+            right: -200px;
+            background: var(--accent-teal);
+        }
+
+        .bg-glow-2 {
+            bottom: -200px;
+            left: -200px;
+            background: var(--accent-purple);
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: var(--glow-teal);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .launch-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .launch-selector:hover {
+            border-color: var(--accent-teal);
+        }
+
+        .launch-selector-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+        }
+
+        .launch-selector-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .launch-selector-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+        }
+
+        .launch-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 280px;
+            display: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .launch-dropdown.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .launch-option {
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .launch-option:hover {
+            background: var(--bg-elevated);
+        }
+
+        .launch-option.active {
+            background: rgba(20, 184, 166, 0.15);
+        }
+
+        .launch-option-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .launch-option-status.green { background: var(--accent-green); }
+        .launch-option-status.yellow { background: var(--accent-yellow); }
+        .launch-option-status.red { background: var(--accent-red); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 4px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .view-btn.active {
+            background: var(--accent-teal);
+            color: white;
+        }
+
+        .view-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-teal);
+        }
+
+        /* Main Content */
+        .main {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Grid Spans */
+        .span-3 { grid-column: span 3; }
+        .span-4 { grid-column: span 4; }
+        .span-5 { grid-column: span 5; }
+        .span-6 { grid-column: span 6; }
+        .span-7 { grid-column: span 7; }
+        .span-8 { grid-column: span 8; }
+        .span-12 { grid-column: span 12; }
+        .row-2 { grid-row: span 2; }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-title-icon {
+            font-size: 16px;
+        }
+
+        .card-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-live {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--accent-green);
+        }
+
+        .badge-ai {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent-purple);
+        }
+
+        /* Countdown Card */
+        .countdown-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .countdown-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .countdown-unit {
+            text-align: center;
+        }
+
+        .countdown-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 48px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .countdown-unit-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .countdown-separator {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .launch-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .launch-status.on-track {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .launch-status.at-risk {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .launch-status.delayed {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.green { background: var(--accent-green); }
+        .status-dot.orange { background: var(--accent-orange); }
+        .status-dot.red { background: var(--accent-red); }
+
+        /* Overall Progress Ring */
+        .progress-ring-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 180px;
+            height: 180px;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+
+        .progress-ring .bg {
+            stroke: var(--border);
+        }
+
+        .progress-ring .progress {
+            stroke: url(#progressGradient);
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .progress-ring .value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-ring .number {
+            font-size: 42px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-ring .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .overall-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .overall-stat {
+            text-align: center;
+        }
+
+        .overall-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .overall-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Team Readiness */
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .team-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .team-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .team-icon.engineering { background: rgba(59, 130, 246, 0.15); }
+        .team-icon.design { background: rgba(236, 72, 153, 0.15); }
+        .team-icon.content { background: rgba(249, 115, 22, 0.15); }
+        .team-icon.security { background: rgba(34, 197, 94, 0.15); }
+        .team-icon.analytics { background: rgba(139, 92, 246, 0.15); }
+        .team-icon.marketing { background: rgba(234, 179, 8, 0.15); }
+        .team-icon.qa { background: rgba(20, 184, 166, 0.15); }
+        .team-icon.legal { background: rgba(100, 116, 139, 0.15); }
+
+        .team-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .team-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .team-percent {
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .team-percent.complete { color: var(--accent-green); }
+        .team-percent.good { color: var(--accent-teal); }
+        .team-percent.warning { color: var(--accent-yellow); }
+        .team-percent.danger { color: var(--accent-red); }
+
+        .team-bar {
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .team-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .team-bar-fill.complete { background: var(--gradient-success); }
+        .team-bar-fill.good { background: linear-gradient(90deg, var(--accent-teal), var(--accent-blue)); }
+        .team-bar-fill.warning { background: var(--gradient-warning); }
+        .team-bar-fill.danger { background: var(--gradient-danger); }
+
+        .team-owner {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* AI Summary */
+        .ai-summary {
+            position: relative;
+        }
+
+        .ai-summary-content {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .ai-summary-content strong {
+            color: var(--text-primary);
+        }
+
+        .ai-summary-content .highlight {
+            color: var(--accent-teal);
+            font-weight: 600;
+        }
+
+        .ai-summary-content .warning-text {
+            color: var(--accent-orange);
+        }
+
+        .ai-summary-content .success-text {
+            color: var(--accent-green);
+        }
+
+        .ai-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .ai-action-btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-action-btn.primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .ai-action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-teal);
+        }
+
+        .ai-action-btn.secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .ai-action-btn.secondary:hover {
+            border-color: var(--accent-teal);
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            gap: 4px;
+            padding: 4px 8px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Blockers */
+        .blockers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .blocker-item {
+            padding: 16px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: all 0.2s ease;
+        }
+
+        .blocker-item:hover {
+            transform: translateX(4px);
+        }
+
+        .blocker-item.critical {
+            border-left-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .blocker-item.warning {
+            border-left-color: var(--accent-yellow);
+            background: rgba(234, 179, 8, 0.05);
+        }
+
+        .blocker-item.resolved {
+            border-left-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.05);
+            opacity: 0.7;
+        }
+
+        .blocker-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .blocker-severity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .blocker-severity.critical { color: var(--accent-red); }
+        .blocker-severity.warning { color: var(--accent-yellow); }
+        .blocker-severity.resolved { color: var(--accent-green); }
+
+        .blocker-eta {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .blocker-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .blocker-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .blocker-owner {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .blocker-dept {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .activity-feed::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .activity-feed::-webkit-scrollbar-track {
+            background: var(--bg-elevated);
+            border-radius: 4px;
+        }
+
+        .activity-feed::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.commit { background: rgba(59, 130, 246, 0.15); }
+        .activity-icon.approval { background: rgba(34, 197, 94, 0.15); }
+        .activity-icon.deploy { background: rgba(139, 92, 246, 0.15); }
+        .activity-icon.review { background: rgba(249, 115, 22, 0.15); }
+        .activity-icon.milestone { background: rgba(20, 184, 166, 0.15); }
+        .activity-icon.alert { background: rgba(239, 68, 68, 0.15); }
+
+        .activity-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .activity-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .activity-text .tag {
+            color: var(--accent-teal);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Dependency Graph */
+        .dependency-graph {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .dep-node {
+            position: absolute;
+            padding: 12px 18px;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .dep-node:hover {
+            border-color: var(--accent-teal);
+            transform: scale(1.05);
+            box-shadow: var(--glow-teal);
+        }
+
+        .dep-node.complete {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .dep-node.in-progress {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .dep-node.blocked {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .dep-node.pending {
+            border-color: var(--border);
+            opacity: 0.6;
+        }
+
+        .dep-lines {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .dep-lines svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .dep-lines line {
+            stroke: var(--border);
+            stroke-width: 2;
+            stroke-dasharray: 6 4;
+        }
+
+        .dep-lines line.active {
+            stroke: var(--accent-teal);
+            stroke-dasharray: none;
+            animation: flowLine 1s linear infinite;
+        }
+
+        @keyframes flowLine {
+            from { stroke-dashoffset: 20; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-track {
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            right: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 4px;
+            transform: translateY(-50%);
+        }
+
+        .timeline-progress {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .timeline-milestones {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .milestone {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .milestone-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 3px solid var(--border);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .milestone.complete .milestone-dot {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .milestone.in-progress .milestone-dot {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .milestone.pending .milestone-dot {
+            background: var(--bg-elevated);
+        }
+
+        .milestone-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .milestone-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .milestone-status {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .milestone.complete .milestone-status { color: var(--accent-green); }
+        .milestone.in-progress .milestone-status { color: var(--accent-blue); }
+        .milestone.pending .milestone-status { color: var(--text-muted); }
+
+        /* Stakeholder Comms */
+        .stakeholder-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stakeholder-tab {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stakeholder-tab.active {
+            background: var(--accent-teal);
+            border-color: var(--accent-teal);
+            color: white;
+        }
+
+        .stakeholder-tab:hover:not(.active) {
+            border-color: var(--accent-teal);
+            color: var(--text-primary);
+        }
+
+        .comm-item {
+            padding: 16px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .comm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .comm-recipient {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comm-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .comm-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .comm-preview {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Quick Actions Panel */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .quick-action {
+            padding: 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .quick-action:hover {
+            border-color: var(--accent-teal);
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .quick-action-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Launch Checklist */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: var(--bg-card);
+        }
+
+        .checklist-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item.checked .checklist-checkbox {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .checklist-text {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .checklist-item.checked .checklist-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .checklist-owner {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .span-3 { grid-column: span 4; }
+            .span-4 { grid-column: span 6; }
+            .span-5 { grid-column: span 6; }
+            .span-7 { grid-column: span 12; }
+            .span-8 { grid-column: span 12; }
+        }
+
+        @media (max-width: 900px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 {
+                grid-column: span 1;
+            }
+            .header-center {
+                display: none;
+            }
+            .countdown-value {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- SVG Definitions -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#14b8a6" />
+                <stop offset="50%" style="stop-color:#3b82f6" />
+                <stop offset="100%" style="stop-color:#8b5cf6" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🚀</div>
+                <div class="logo-text">MISSION <span>CONTROL</span></div>
+            </div>
+
+            <div class="header-center">
+                <div class="launch-selector" onclick="toggleLaunchDropdown()">
+                    <div class="launch-selector-dot" id="launchDot"></div>
+                    <span class="launch-selector-name" id="currentLaunchName">V2.0 Platform Release</span>
+                    <span class="launch-selector-arrow">▼</span>
+                </div>
+                <div class="launch-dropdown" id="launchDropdown">
+                    <div class="launch-option active" onclick="selectLaunch(0)">
+                        <div class="launch-option-status green"></div>
+                        <span>V2.0 Platform Release</span>
+                    </div>
+                    <div class="launch-option" onclick="selectLaunch(1)">
+                        <div class="launch-option-status yellow"></div>
+                        <span>Mobile App Launch</span>
+                    </div>
+                    <div class="launch-option" onclick="selectLaunch(2)">
+                        <div class="launch-option-status green"></div>
+                        <span>Enterprise Tier</span>
+                    </div>
+                    <div class="launch-option" onclick="selectLaunch(3)">
+                        <div class="launch-option-status red"></div>
+                        <span>GDPR Compliance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="view-toggle">
+                    <button class="view-btn active" onclick="setView('detailed')">Detailed</button>
+                    <button class="view-btn" onclick="setView('executive')">Executive</button>
+                </div>
+                <a href="../index.html" class="back-link">
+                    ← Back to Portfolio
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="bento-grid">
+            <!-- Countdown Timer -->
+            <div class="bento-card span-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">⏱️</span>
+                        T-Minus Launch
+                    </div>
+                    <span class="card-badge badge-live">LIVE</span>
+                </div>
+                <div class="countdown-container">
+                    <div class="countdown-display">
+                        <div class="countdown-unit">
+                            <div class="countdown-value" id="days">14</div>
+                            <div class="countdown-unit-label">Days</div>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit">
+                            <div class="countdown-value" id="hours">06</div>
+                            <div class="countdown-unit-label">Hours</div>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit">
+                            <div class="countdown-value" id="minutes">23</div>
+                            <div class="countdown-unit-label">Min</div>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit">
+                            <div class="countdown-value" id="seconds">45</div>
+                            <div class="countdown-unit-label">Sec</div>
+                        </div>
+                    </div>
+                    <div class="launch-status on-track" id="launchStatus">
+                        <div class="status-dot green"></div>
+                        ON TRACK
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overall Progress -->
+            <div class="bento-card span-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">📊</span>
+                        Launch Readiness
+                    </div>
+                </div>
+                <div class="progress-ring-container">
+                    <div class="progress-ring">
+                        <svg viewBox="0 0 180 180">
+                            <circle class="bg" cx="90" cy="90" r="78"></circle>
+                            <circle class="progress" cx="90" cy="90" r="78"
+                                stroke-dasharray="490"
+                                stroke-dashoffset="64"
+                                id="progressCircle"></circle>
+                        </svg>
+                        <div class="value">
+                            <div class="number" id="overallPercent">87%</div>
+                            <div class="label">Complete</div>
+                        </div>
+                    </div>
+                    <div class="overall-stats">
+                        <div class="overall-stat">
+                            <div class="overall-stat-value" id="tasksComplete">142</div>
+                            <div class="overall-stat-label">Tasks Done</div>
+                        </div>
+                        <div class="overall-stat">
+                            <div class="overall-stat-value" id="tasksRemaining">21</div>
+                            <div class="overall-stat-label">Remaining</div>
+                        </div>
+                        <div class="overall-stat">
+                            <div class="overall-stat-value" id="blockerCount">3</div>
+                            <div class="overall-stat-label">Blockers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bento-card span-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">⚡</span>
+                        Quick Actions
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="generateBrief()">
+                        <div class="quick-action-icon">🤖</div>
+                        <div class="quick-action-label">Generate Brief</div>
+                    </div>
+                    <div class="quick-action" onclick="showSlackUpdate()">
+                        <div class="quick-action-icon">💬</div>
+                        <div class="quick-action-label">Post Update</div>
+                    </div>
+                    <div class="quick-action" onclick="showBlockerModal()">
+                        <div class="quick-action-icon">🚨</div>
+                        <div class="quick-action-label">Flag Blocker</div>
+                    </div>
+                    <div class="quick-action" onclick="exportReport()">
+                        <div class="quick-action-icon">📄</div>
+                        <div class="quick-action-label">Export Report</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Readiness -->
+            <div class="bento-card span-5 row-2">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">👥</span>
+                        Team Readiness
+                    </div>
+                </div>
+                <div class="team-list" id="teamList">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- AI Summary -->
+            <div class="bento-card span-7">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">🤖</span>
+                        AI Status Summary
+                    </div>
+                    <span class="card-badge badge-ai">AI-POWERED</span>
+                </div>
+                <div class="ai-summary">
+                    <div class="ai-summary-content" id="aiSummary">
+                        <strong>Launch is <span class="highlight">87% ready</span></strong> with 14 days remaining.
+
+                        <br><br>
+
+                        <strong>3 blockers need attention:</strong>
+                        <span class="warning-text">Analytics SDK deployment</span> is blocked pending DevOps review (ETA: 2 days),
+                        marketing copy awaits <span class="warning-text">legal sign-off</span> (ETA: 1 day),
+                        and the press kit needs 2 more visual assets.
+
+                        <br><br>
+
+                        <strong>Wins today:</strong> <span class="success-text">Security audit passed</span>,
+                        <span class="success-text">Design assets finalized</span>, and QA approved API v2 endpoints.
+
+                        <br><br>
+
+                        <strong>Recommended action:</strong> Escalate Analytics SDK blocker to VP Engineering to maintain launch timeline.
+                    </div>
+                    <div class="ai-actions">
+                        <button class="ai-action-btn primary" onclick="regenerateSummary()">
+                            <span>✨</span> Regenerate
+                        </button>
+                        <button class="ai-action-btn secondary" onclick="copyToClipboard()">
+                            <span>📋</span> Copy to Clipboard
+                        </button>
+                        <button class="ai-action-btn secondary" onclick="shareToSlack()">
+                            <span>💬</span> Share to Slack
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blockers & Risks -->
+            <div class="bento-card span-7">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">🚨</span>
+                        Blockers & Risks
+                    </div>
+                </div>
+                <div class="blockers-list" id="blockersList">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Dependency Graph -->
+            <div class="bento-card span-5">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">🔗</span>
+                        Dependency Map
+                    </div>
+                </div>
+                <div class="dependency-graph" id="depGraph">
+                    <div class="dep-lines">
+                        <svg>
+                            <line x1="90" y1="45" x2="200" y2="45" class="active"></line>
+                            <line x1="90" y1="45" x2="90" y2="120"></line>
+                            <line x1="200" y1="45" x2="310" y2="120"></line>
+                            <line x1="90" y1="120" x2="200" y2="195"></line>
+                            <line x1="200" y1="120" x2="200" y2="195"></line>
+                            <line x1="310" y1="120" x2="310" y2="195"></line>
+                            <line x1="200" y1="195" x2="310" y2="195"></line>
+                        </svg>
+                    </div>
+                    <div class="dep-node complete" style="left: 30px; top: 30px;">API v2 ✓</div>
+                    <div class="dep-node in-progress" style="left: 160px; top: 30px;">SDK Update</div>
+                    <div class="dep-node complete" style="left: 30px; top: 105px;">Docs ✓</div>
+                    <div class="dep-node in-progress" style="left: 160px; top: 105px;">QA Testing</div>
+                    <div class="dep-node blocked" style="left: 270px; top: 105px;">Analytics</div>
+                    <div class="dep-node pending" style="left: 95px; top: 180px;">Marketing</div>
+                    <div class="dep-node pending" style="left: 220px; top: 180px;">Press Kit</div>
+                    <div class="dep-node pending" style="left: 345px; top: 180px;">🚀 Launch</div>
+                </div>
+            </div>
+
+            <!-- Milestone Timeline -->
+            <div class="bento-card span-12">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">📅</span>
+                        Milestone Timeline
+                    </div>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-track">
+                        <div class="timeline-progress" id="timelineProgress" style="width: 65%;"></div>
+                    </div>
+                    <div class="timeline-milestones" id="timelineMilestones">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Feed -->
+            <div class="bento-card span-4 row-2">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">📡</span>
+                        Live Activity
+                    </div>
+                    <span class="card-badge badge-live">LIVE</span>
+                </div>
+                <div class="activity-feed" id="activityFeed">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Launch Checklist -->
+            <div class="bento-card span-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">✅</span>
+                        Pre-Launch Checklist
+                    </div>
+                </div>
+                <div class="checklist" id="checklist">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Stakeholder Comms -->
+            <div class="bento-card span-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">📣</span>
+                        Stakeholder Comms
+                    </div>
+                </div>
+                <div class="stakeholder-tabs">
+                    <button class="stakeholder-tab active" onclick="setCommTab('recent')">Recent</button>
+                    <button class="stakeholder-tab" onclick="setCommTab('scheduled')">Scheduled</button>
+                    <button class="stakeholder-tab" onclick="setCommTab('draft')">Drafts</button>
+                </div>
+                <div id="commsList">
+                    <div class="comm-item">
+                        <div class="comm-header">
+                            <div class="comm-recipient">
+                                <div class="comm-avatar">JC</div>
+                                <span>CEO Weekly Update</span>
+                            </div>
+                            <div class="comm-time">2h ago</div>
+                        </div>
+                        <div class="comm-preview">Launch on track. 87% complete. 3 blockers being actively managed...</div>
+                    </div>
+                    <div class="comm-item">
+                        <div class="comm-header">
+                            <div class="comm-recipient">
+                                <div class="comm-avatar">🔔</div>
+                                <span>#launch-v2 Channel</span>
+                            </div>
+                            <div class="comm-time">4h ago</div>
+                        </div>
+                        <div class="comm-preview">Security audit complete! ✅ One less blocker. Great work @james...</div>
+                    </div>
+                    <div class="comm-item">
+                        <div class="comm-header">
+                            <div class="comm-recipient">
+                                <div class="comm-avatar">📧</div>
+                                <span>Board Update Email</span>
+                            </div>
+                            <div class="comm-time">Yesterday</div>
+                        </div>
+                        <div class="comm-preview">Q1 Product Launch Status: V2.0 release progressing well with Feb 22 target...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ============================================
+        // DATA
+        // ============================================
+        const launches = [
+            {
+                id: 0,
+                name: "V2.0 Platform Release",
+                launchDate: new Date('2026-02-22T09:00:00'),
+                status: "on-track",
+                overall: 87,
+                tasksComplete: 142,
+                tasksRemaining: 21,
+                teams: [
+                    { name: "Engineering", icon: "⚙️", class: "engineering", progress: 94, owner: "Mike Chen", status: "good" },
+                    { name: "Design", icon: "🎨", class: "design", progress: 100, owner: "Sarah Kim", status: "complete" },
+                    { name: "QA", icon: "🧪", class: "qa", progress: 82, owner: "Tom Wilson", status: "good" },
+                    { name: "Security", icon: "🔒", class: "security", progress: 100, owner: "James Wu", status: "complete" },
+                    { name: "Analytics", icon: "📊", class: "analytics", progress: 65, owner: "Emma Davis", status: "danger" },
+                    { name: "Content", icon: "📝", class: "content", progress: 78, owner: "Alex Rivera", status: "warning" },
+                    { name: "Marketing", icon: "📣", class: "marketing", progress: 80, owner: "Lisa Park", status: "warning" },
+                    { name: "Legal", icon: "⚖️", class: "legal", progress: 90, owner: "David Lee", status: "good" }
+                ],
+                blockers: [
+                    { severity: "critical", title: "Analytics SDK deployment blocked", description: "Waiting on DevOps infrastructure review", owner: "Mike Chen", dept: "Engineering", eta: "2 days" },
+                    { severity: "warning", title: "Marketing copy needs legal review", description: "Terms update for new features", owner: "Lisa Park", dept: "Legal", eta: "1 day" },
+                    { severity: "warning", title: "Press kit missing 2 visual assets", description: "Hero images for announcement", owner: "Sarah Kim", dept: "Design", eta: "3 days" },
+                    { severity: "resolved", title: "Security audit complete", description: "All vulnerabilities addressed", owner: "James Wu", dept: "Security", resolvedAt: "Today 2:30 PM" }
+                ],
+                milestones: [
+                    { name: "Kickoff", date: "Jan 15", status: "complete" },
+                    { name: "Design Lock", date: "Jan 28", status: "complete" },
+                    { name: "Dev Complete", date: "Feb 5", status: "complete" },
+                    { name: "QA Sign-off", date: "Feb 12", status: "in-progress" },
+                    { name: "Go/No-Go", date: "Feb 18", status: "pending" },
+                    { name: "Launch 🚀", date: "Feb 22", status: "pending" }
+                ],
+                activities: [
+                    { type: "commit", icon: "💻", text: "<strong>Sarah Kim</strong> pushed <span class='tag'>fix #2341</span> - Button alignment on mobile", time: "2 min ago" },
+                    { type: "approval", icon: "✅", text: "<strong>Legal</strong> approved Terms of Service v3.2", time: "15 min ago" },
+                    { type: "deploy", icon: "🚀", text: "<strong>DevOps</strong> deployed API v2.1.4 to staging", time: "32 min ago" },
+                    { type: "review", icon: "👀", text: "<strong>QA Team</strong> completed regression suite - 847/850 passed", time: "1 hour ago" },
+                    { type: "milestone", icon: "🎯", text: "<strong>Design assets</strong> finalized and uploaded to CDN", time: "2 hours ago" },
+                    { type: "approval", icon: "✅", text: "<strong>Security</strong> signed off on penetration test results", time: "3 hours ago" },
+                    { type: "commit", icon: "💻", text: "<strong>Mike Chen</strong> merged <span class='tag'>feature/analytics-v2</span>", time: "4 hours ago" },
+                    { type: "alert", icon: "⚠️", text: "<strong>Analytics SDK</strong> flagged as blocked - awaiting review", time: "5 hours ago" }
+                ],
+                checklist: [
+                    { text: "Security audit passed", checked: true, owner: "James" },
+                    { text: "Performance benchmarks met", checked: true, owner: "Mike" },
+                    { text: "Documentation complete", checked: true, owner: "Alex" },
+                    { text: "Rollback plan tested", checked: true, owner: "DevOps" },
+                    { text: "Customer support briefed", checked: false, owner: "Lisa" },
+                    { text: "Press release approved", checked: false, owner: "Marketing" },
+                    { text: "Analytics tracking verified", checked: false, owner: "Emma" },
+                    { text: "Go/No-Go meeting scheduled", checked: false, owner: "PM" }
+                ]
+            },
+            {
+                id: 1,
+                name: "Mobile App Launch",
+                launchDate: new Date('2026-03-15T09:00:00'),
+                status: "at-risk",
+                overall: 62,
+                tasksComplete: 89,
+                tasksRemaining: 54,
+                teams: [
+                    { name: "Engineering", icon: "⚙️", class: "engineering", progress: 68, owner: "Mike Chen", status: "warning" },
+                    { name: "Design", icon: "🎨", class: "design", progress: 85, owner: "Sarah Kim", status: "good" },
+                    { name: "QA", icon: "🧪", class: "qa", progress: 45, owner: "Tom Wilson", status: "danger" },
+                    { name: "Security", icon: "🔒", class: "security", progress: 70, owner: "James Wu", status: "warning" },
+                    { name: "Marketing", icon: "📣", class: "marketing", progress: 55, owner: "Lisa Park", status: "warning" }
+                ],
+                blockers: [
+                    { severity: "critical", title: "iOS App Store approval delayed", description: "Privacy policy clarification needed", owner: "Legal", dept: "Legal", eta: "5 days" },
+                    { severity: "critical", title: "Push notification service unstable", description: "Firebase integration issues", owner: "Mike Chen", dept: "Engineering", eta: "3 days" }
+                ],
+                milestones: [
+                    { name: "Kickoff", date: "Jan 20", status: "complete" },
+                    { name: "Design Lock", date: "Feb 10", status: "complete" },
+                    { name: "Beta Release", date: "Feb 25", status: "in-progress" },
+                    { name: "App Store Submit", date: "Mar 5", status: "pending" },
+                    { name: "Launch 🚀", date: "Mar 15", status: "pending" }
+                ],
+                activities: [
+                    { type: "alert", icon: "⚠️", text: "<strong>App Store</strong> review flagged privacy policy issue", time: "1 hour ago" },
+                    { type: "commit", icon: "💻", text: "<strong>Mobile Team</strong> fixed crash on Android 12", time: "2 hours ago" }
+                ],
+                checklist: [
+                    { text: "iOS beta testing complete", checked: true, owner: "QA" },
+                    { text: "Android beta testing complete", checked: false, owner: "QA" },
+                    { text: "App Store screenshots ready", checked: false, owner: "Design" },
+                    { text: "Privacy policy updated", checked: false, owner: "Legal" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Enterprise Tier",
+                launchDate: new Date('2026-04-01T09:00:00'),
+                status: "on-track",
+                overall: 45,
+                tasksComplete: 67,
+                tasksRemaining: 82,
+                teams: [
+                    { name: "Engineering", icon: "⚙️", class: "engineering", progress: 52, owner: "Mike Chen", status: "warning" },
+                    { name: "Sales", icon: "💼", class: "marketing", progress: 70, owner: "John Smith", status: "warning" },
+                    { name: "Security", icon: "🔒", class: "security", progress: 35, owner: "James Wu", status: "danger" }
+                ],
+                blockers: [
+                    { severity: "warning", title: "SOC 2 certification in progress", description: "Audit scheduled for next week", owner: "James Wu", dept: "Security", eta: "2 weeks" }
+                ],
+                milestones: [
+                    { name: "Planning", date: "Jan 10", status: "complete" },
+                    { name: "Architecture", date: "Feb 1", status: "complete" },
+                    { name: "Development", date: "Mar 1", status: "in-progress" },
+                    { name: "SOC 2 Cert", date: "Mar 15", status: "pending" },
+                    { name: "Launch 🚀", date: "Apr 1", status: "pending" }
+                ],
+                activities: [
+                    { type: "milestone", icon: "🎯", text: "<strong>Architecture review</strong> approved by CTO", time: "Yesterday" }
+                ],
+                checklist: [
+                    { text: "SSO integration complete", checked: true, owner: "Engineering" },
+                    { text: "RBAC implemented", checked: false, owner: "Engineering" },
+                    { text: "Enterprise pricing finalized", checked: false, owner: "Sales" }
+                ]
+            },
+            {
+                id: 3,
+                name: "GDPR Compliance",
+                launchDate: new Date('2026-02-28T09:00:00'),
+                status: "delayed",
+                overall: 34,
+                tasksComplete: 28,
+                tasksRemaining: 54,
+                teams: [
+                    { name: "Engineering", icon: "⚙️", class: "engineering", progress: 40, owner: "Mike Chen", status: "danger" },
+                    { name: "Legal", icon: "⚖️", class: "legal", progress: 55, owner: "David Lee", status: "warning" },
+                    { name: "Security", icon: "🔒", class: "security", progress: 25, owner: "James Wu", status: "danger" }
+                ],
+                blockers: [
+                    { severity: "critical", title: "Data retention policy needs revision", description: "Legal team reviewing EU requirements", owner: "David Lee", dept: "Legal", eta: "1 week" },
+                    { severity: "critical", title: "User data export feature incomplete", description: "API not meeting latency requirements", owner: "Mike Chen", dept: "Engineering", eta: "10 days" }
+                ],
+                milestones: [
+                    { name: "Assessment", date: "Jan 5", status: "complete" },
+                    { name: "Policy Draft", date: "Jan 25", status: "complete" },
+                    { name: "Implementation", date: "Feb 15", status: "in-progress" },
+                    { name: "Audit", date: "Feb 25", status: "pending" },
+                    { name: "Deadline ⚠️", date: "Feb 28", status: "pending" }
+                ],
+                activities: [
+                    { type: "alert", icon: "🚨", text: "<strong>GDPR deadline</strong> at risk - escalated to leadership", time: "30 min ago" }
+                ],
+                checklist: [
+                    { text: "Privacy policy updated", checked: true, owner: "Legal" },
+                    { text: "Cookie consent implemented", checked: true, owner: "Engineering" },
+                    { text: "Data export API complete", checked: false, owner: "Engineering" },
+                    { text: "Right to deletion implemented", checked: false, owner: "Engineering" }
+                ]
+            }
+        ];
+
+        let currentLaunch = 0;
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        function init() {
+            renderLaunch(currentLaunch);
+            startCountdown();
+            simulateActivity();
+        }
+
+        function renderLaunch(index) {
+            const launch = launches[index];
+
+            // Update header
+            document.getElementById('currentLaunchName').textContent = launch.name;
+            updateLaunchDot(launch.status);
+
+            // Update countdown target
+            window.launchDate = launch.launchDate;
+
+            // Update overall stats
+            document.getElementById('overallPercent').textContent = launch.overall + '%';
+            document.getElementById('tasksComplete').textContent = launch.tasksComplete;
+            document.getElementById('tasksRemaining').textContent = launch.tasksRemaining;
+            document.getElementById('blockerCount').textContent = launch.blockers.filter(b => b.severity !== 'resolved').length;
+
+            // Update progress ring
+            const circumference = 2 * Math.PI * 78;
+            const offset = circumference - (launch.overall / 100) * circumference;
+            document.getElementById('progressCircle').style.strokeDashoffset = offset;
+
+            // Update launch status
+            updateLaunchStatus(launch.status);
+
+            // Render teams
+            renderTeams(launch.teams);
+
+            // Render blockers
+            renderBlockers(launch.blockers);
+
+            // Render milestones
+            renderMilestones(launch.milestones);
+
+            // Render activities
+            renderActivities(launch.activities);
+
+            // Render checklist
+            renderChecklist(launch.checklist);
+
+            // Update AI summary
+            updateAISummary(launch);
+        }
+
+        function updateLaunchDot(status) {
+            const dot = document.getElementById('launchDot');
+            dot.className = 'launch-selector-dot';
+            if (status === 'on-track') dot.style.background = 'var(--accent-green)';
+            else if (status === 'at-risk') dot.style.background = 'var(--accent-orange)';
+            else dot.style.background = 'var(--accent-red)';
+        }
+
+        function updateLaunchStatus(status) {
+            const el = document.getElementById('launchStatus');
+            el.className = 'launch-status';
+            const dot = el.querySelector('.status-dot');
+
+            if (status === 'on-track') {
+                el.classList.add('on-track');
+                dot.className = 'status-dot green';
+                el.innerHTML = '<div class="status-dot green"></div> ON TRACK';
+            } else if (status === 'at-risk') {
+                el.classList.add('at-risk');
+                dot.className = 'status-dot orange';
+                el.innerHTML = '<div class="status-dot orange"></div> AT RISK';
+            } else {
+                el.classList.add('delayed');
+                dot.className = 'status-dot red';
+                el.innerHTML = '<div class="status-dot red"></div> DELAYED';
+            }
+        }
+
+        function renderTeams(teams) {
+            const container = document.getElementById('teamList');
+            container.innerHTML = teams.map(team => {
+                let statusClass = team.status;
+                let percentClass = team.progress === 100 ? 'complete' :
+                                   team.progress >= 80 ? 'good' :
+                                   team.progress >= 60 ? 'warning' : 'danger';
+                return `
+                    <div class="team-item">
+                        <div class="team-icon ${team.class}">${team.icon}</div>
+                        <div class="team-info">
+                            <div class="team-header">
+                                <div class="team-name">${team.name}</div>
+                                <div class="team-percent ${percentClass}">${team.progress}%</div>
+                            </div>
+                            <div class="team-bar">
+                                <div class="team-bar-fill ${percentClass}" style="width: ${team.progress}%"></div>
+                            </div>
+                            <div class="team-owner">Owner: ${team.owner}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderBlockers(blockers) {
+            const container = document.getElementById('blockersList');
+            container.innerHTML = blockers.map(blocker => `
+                <div class="blocker-item ${blocker.severity}">
+                    <div class="blocker-header">
+                        <div class="blocker-severity ${blocker.severity}">
+                            ${blocker.severity === 'critical' ? '🔴 CRITICAL' :
+                              blocker.severity === 'warning' ? '🟡 WARNING' : '🟢 RESOLVED'}
+                        </div>
+                        <div class="blocker-eta">${blocker.eta || blocker.resolvedAt || ''}</div>
+                    </div>
+                    <div class="blocker-title">${blocker.title}</div>
+                    <div class="blocker-meta">
+                        <div class="blocker-owner">👤 ${blocker.owner}</div>
+                        <div class="blocker-dept">🏢 ${blocker.dept}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMilestones(milestones) {
+            const container = document.getElementById('timelineMilestones');
+            const completeCount = milestones.filter(m => m.status === 'complete').length;
+            const inProgressCount = milestones.filter(m => m.status === 'in-progress').length;
+            const progress = ((completeCount + inProgressCount * 0.5) / milestones.length) * 100;
+
+            document.getElementById('timelineProgress').style.width = progress + '%';
+
+            container.innerHTML = milestones.map(m => `
+                <div class="milestone ${m.status}">
+                    <div class="milestone-dot">
+                        ${m.status === 'complete' ? '✓' : m.status === 'in-progress' ? '◐' : ''}
+                    </div>
+                    <div class="milestone-name">${m.name}</div>
+                    <div class="milestone-date">${m.date}</div>
+                    <div class="milestone-status">
+                        ${m.status === 'complete' ? 'Complete' :
+                          m.status === 'in-progress' ? 'In Progress' : 'Pending'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderActivities(activities) {
+            const container = document.getElementById('activityFeed');
+            container.innerHTML = activities.map(a => `
+                <div class="activity-item">
+                    <div class="activity-icon ${a.type}">${a.icon}</div>
+                    <div class="activity-content">
+                        <div class="activity-text">${a.text}</div>
+                        <div class="activity-time">${a.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderChecklist(checklist) {
+            const container = document.getElementById('checklist');
+            container.innerHTML = checklist.map((item, i) => `
+                <div class="checklist-item ${item.checked ? 'checked' : ''}" onclick="toggleChecklist(${i})">
+                    <div class="checklist-checkbox">${item.checked ? '✓' : ''}</div>
+                    <div class="checklist-text">${item.text}</div>
+                    <div class="checklist-owner">${item.owner}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateAISummary(launch) {
+            const summaries = {
+                'on-track': `<strong>Launch is <span class="highlight">${launch.overall}% ready</span></strong> with ${Math.ceil((launch.launchDate - new Date()) / (1000 * 60 * 60 * 24))} days remaining.
+
+                <br><br>
+
+                ${launch.blockers.filter(b => b.severity !== 'resolved').length > 0 ?
+                    `<strong>${launch.blockers.filter(b => b.severity !== 'resolved').length} blockers need attention:</strong> ${launch.blockers.filter(b => b.severity !== 'resolved').map(b => `<span class="warning-text">${b.title}</span>`).join(', ')}.` :
+                    '<strong>No active blockers!</strong> All systems go.'}
+
+                <br><br>
+
+                <strong>Team Status:</strong> ${launch.teams.filter(t => t.progress === 100).length} teams at 100%, ${launch.teams.filter(t => t.progress < 70).length} teams need acceleration.
+
+                <br><br>
+
+                <strong>Recommended action:</strong> ${launch.blockers.filter(b => b.severity === 'critical').length > 0 ?
+                    `Escalate ${launch.blockers.find(b => b.severity === 'critical').title} to leadership.` :
+                    'Continue current pace - on track for successful launch.'}`,
+
+                'at-risk': `<strong>⚠️ Launch is <span class="warning-text">AT RISK</span></strong> at ${launch.overall}% completion.
+
+                <br><br>
+
+                <strong>Critical Issues:</strong> ${launch.blockers.filter(b => b.severity === 'critical').map(b => `<span class="warning-text">${b.title}</span>`).join(', ')}.
+
+                <br><br>
+
+                <strong>Teams Behind:</strong> ${launch.teams.filter(t => t.progress < 60).map(t => t.name).join(', ')} need immediate attention.
+
+                <br><br>
+
+                <strong>Recommended action:</strong> Schedule emergency sync with all stakeholders. Consider scope reduction or timeline adjustment.`,
+
+                'delayed': `<strong>🚨 Launch is <span class="warning-text">DELAYED</span></strong> - only ${launch.overall}% complete.
+
+                <br><br>
+
+                <strong>Critical blockers preventing progress:</strong> ${launch.blockers.filter(b => b.severity === 'critical').map(b => `<span class="warning-text">${b.title}</span> (${b.eta})`).join('; ')}.
+
+                <br><br>
+
+                <strong>Immediate Actions Required:</strong>
+                <br>1. Executive escalation meeting
+                <br>2. Re-baseline timeline
+                <br>3. Communicate delay to stakeholders
+
+                <br><br>
+
+                <strong>Risk:</strong> Current trajectory will miss deadline by 7-10 days.`
+            };
+
+            document.getElementById('aiSummary').innerHTML = summaries[launch.status];
+        }
+
+        // ============================================
+        // COUNTDOWN
+        // ============================================
+        window.launchDate = launches[0].launchDate;
+
+        function startCountdown() {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = window.launchDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // ============================================
+        // INTERACTIONS
+        // ============================================
+        function toggleLaunchDropdown() {
+            document.getElementById('launchDropdown').classList.toggle('active');
+        }
+
+        function selectLaunch(index) {
+            currentLaunch = index;
+
+            // Update dropdown options
+            document.querySelectorAll('.launch-option').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+
+            document.getElementById('launchDropdown').classList.remove('active');
+            renderLaunch(index);
+        }
+
+        function setView(view) {
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === view);
+            });
+            // Could toggle between detailed/executive views here
+        }
+
+        function toggleChecklist(index) {
+            launches[currentLaunch].checklist[index].checked = !launches[currentLaunch].checklist[index].checked;
+            renderChecklist(launches[currentLaunch].checklist);
+        }
+
+        function setCommTab(tab) {
+            document.querySelectorAll('.stakeholder-tab').forEach(t => {
+                t.classList.toggle('active', t.textContent.toLowerCase() === tab);
+            });
+        }
+
+        // ============================================
+        // AI & ACTIONS
+        // ============================================
+        function regenerateSummary() {
+            const summaryEl = document.getElementById('aiSummary');
+            summaryEl.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+
+            setTimeout(() => {
+                updateAISummary(launches[currentLaunch]);
+            }, 1500);
+        }
+
+        function generateBrief() {
+            alert('📋 Generating executive brief...\n\nIn a full implementation, this would create a formatted PDF or email summary for stakeholders.');
+        }
+
+        function showSlackUpdate() {
+            alert('💬 Compose Slack Update\n\nThis would open a modal to compose and send a status update to your team Slack channel.');
+        }
+
+        function showBlockerModal() {
+            alert('🚨 Flag New Blocker\n\nThis would open a form to log a new blocker with severity, owner, ETA, and impact assessment.');
+        }
+
+        function exportReport() {
+            alert('📄 Export Report\n\nThis would generate a comprehensive PDF/CSV report of the current launch status for stakeholders.');
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('aiSummary').innerText;
+            navigator.clipboard.writeText(text);
+            alert('✅ Summary copied to clipboard!');
+        }
+
+        function shareToSlack() {
+            alert('💬 Sharing to #launch-v2...\n\nIn production, this would post the AI summary directly to Slack.');
+        }
+
+        // ============================================
+        // LIVE ACTIVITY SIMULATION
+        // ============================================
+        function simulateActivity() {
+            const activities = [
+                { type: "commit", icon: "💻", text: "<strong>Backend Team</strong> deployed cache optimization", time: "Just now" },
+                { type: "approval", icon: "✅", text: "<strong>PM</strong> approved user story UAT-2341", time: "Just now" },
+                { type: "review", icon: "👀", text: "<strong>Code review</strong> completed for PR #892", time: "Just now" },
+                { type: "deploy", icon: "🚀", text: "<strong>CI/CD</strong> completed staging deployment", time: "Just now" },
+                { type: "milestone", icon: "🎯", text: "<strong>API docs</strong> published to developer portal", time: "Just now" }
+            ];
+
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const activity = activities[Math.floor(Math.random() * activities.length)];
+                    const feed = document.getElementById('activityFeed');
+                    const newItem = document.createElement('div');
+                    newItem.className = 'activity-item';
+                    newItem.style.opacity = '0';
+                    newItem.innerHTML = `
+                        <div class="activity-icon ${activity.type}">${activity.icon}</div>
+                        <div class="activity-content">
+                            <div class="activity-text">${activity.text}</div>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    `;
+                    feed.insertBefore(newItem, feed.firstChild);
+                    setTimeout(() => newItem.style.opacity = '1', 10);
+
+                    // Keep feed manageable
+                    if (feed.children.length > 10) {
+                        feed.removeChild(feed.lastChild);
+                    }
+                }
+            }, 5000);
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.launch-selector') && !e.target.closest('.launch-dropdown')) {
+                document.getElementById('launchDropdown').classList.remove('active');
+            }
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
