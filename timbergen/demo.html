@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimberGen Architect - AI Timber Frame Visualization</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --border: #475569;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #22d3ee;
+            --accent-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 span {
+            color: var(--accent-cyan);
+        }
+
+        .logo p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-select:focus, .form-textarea:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 100%);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-primary);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 211, 238, 0.3);
+        }
+
+        .generate-btn.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .generate-btn .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(15, 23, 42, 0.3);
+            border-top-color: var(--bg-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .api-badge {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--accent-cyan);
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Image Area */
+        .image-area {
+            flex: 1;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .generated-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .placeholder {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .placeholder-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(34, 211, 238, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+        }
+
+        .placeholder h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .placeholder p {
+            color: #64748b;
+            font-size: 14px;
+            max-width: 400px;
+        }
+
+        /* Specs Panel */
+        .specs-panel {
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            padding: 32px;
+            max-height: 45vh;
+            overflow-y: auto;
+        }
+
+        .specs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .specs-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .specs-header h3 span {
+            color: var(--accent-cyan);
+        }
+
+        .spec-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .spec-tag {
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .spec-tag.highlight {
+            background: rgba(34, 211, 238, 0.15);
+            color: var(--accent-cyan);
+        }
+
+        /* Spec Grid */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .spec-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .spec-card h4 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spec-card h4::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: var(--accent-cyan);
+            border-radius: 2px;
+        }
+
+        .spec-list {
+            list-style: none;
+        }
+
+        .spec-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .spec-list li:last-child {
+            border-bottom: none;
+        }
+
+        .spec-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .spec-value {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .spec-notes {
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 24px;
+        }
+
+        .loading-text {
+            font-size: 14px;
+            font-family: monospace;
+            color: var(--accent-cyan);
+            animation: pulse 1.5s infinite;
+        }
+
+        .loading-subtext {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Demo Notice */
+        .demo-notice {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            max-width: 300px;
+        }
+
+        .demo-notice strong {
+            color: var(--accent-cyan);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .app { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+            .specs-panel { max-height: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>🪵 Timber<span>Gen</span></h1>
+                <p>Architectural AI Suite</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Architectural Style</label>
+                <select class="form-select" id="styleSelect">
+                    <option value="Traditional English">Traditional English</option>
+                    <option value="Japanese (Minka)">Japanese (Minka)</option>
+                    <option value="Normandy/French">Normandy/French</option>
+                    <option value="American Barn">American Barn</option>
+                    <option value="Modern Hybrid">Modern Hybrid</option>
+                    <option value="Gothic Revival">Gothic Revival</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Primary Material</label>
+                <select class="form-select" id="woodSelect">
+                    <option value="White Oak">White Oak</option>
+                    <option value="Douglas Fir">Douglas Fir</option>
+                    <option value="Eastern White Pine">Eastern White Pine</option>
+                    <option value="Hemlock">Hemlock</option>
+                    <option value="Reclaimed Barn Wood">Reclaimed Barn Wood</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Vision Description</label>
+                <textarea class="form-textarea" id="promptInput" placeholder="Describe your dream structure... e.g., 'A cozy cabin with a loft and large cathedral windows overlooking a lake.'">A grand mountain retreat with exposed hammer beams, a stone fireplace, and floor-to-ceiling windows facing a snow-capped peak.</textarea>
+            </div>
+
+            <button class="generate-btn" id="generateBtn" onclick="generateDesign()">
+                Generate Schematics
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <div class="api-badge">GEMINI-3-PRO // INTEGRATED</div>
+                <a href="https://omccormick.com" class="back-link">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back to Portfolio
+                </a>
+            </header>
+
+            <div class="image-area" id="imageArea">
+                <!-- Placeholder State -->
+                <div class="placeholder" id="placeholder">
+                    <div class="placeholder-icon">🏗️</div>
+                    <h2>Ready to Design</h2>
+                    <p>Enter your vision details in the panel to generate a high-fidelity timber frame visualization and engineering specification.</p>
+                </div>
+
+                <!-- Generated Image (hidden by default, shown after generation) -->
+                <img src="" alt="Generated timber frame visualization" class="generated-image" id="generatedImage" style="display: none;">
+
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">RENDERING ARCHITECTURE...</div>
+                    <div class="loading-subtext">CALCULATING LOADS & JOINERY</div>
+                </div>
+
+                <!-- Demo Notice -->
+                <div class="demo-notice" id="demoNotice" style="display: none;">
+                    <strong>Demo Mode:</strong> This showcase uses a sample image. The live version generates unique visualizations via Gemini 3 Pro API.
+                </div>
+            </div>
+
+            <!-- Specs Panel (hidden until generation) -->
+            <div class="specs-panel" id="specsPanel" style="display: none;">
+                <div class="specs-header">
+                    <h3>📐 <span>Blueprint Specification</span></h3>
+                    <div class="spec-tags">
+                        <span class="spec-tag highlight" id="specStyle">Traditional English</span>
+                        <span class="spec-tag" id="specWood">White Oak</span>
+                    </div>
+                </div>
+
+                <div class="spec-grid">
+                    <!-- Structural Components -->
+                    <div class="spec-card">
+                        <h4>Structural Components</h4>
+                        <ul class="spec-list" id="componentsList">
+                            <li>
+                                <span class="spec-name">Principal Rafters</span>
+                                <span class="spec-value">8" × 12" × 24'</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">Tie Beams</span>
+                                <span class="spec-value">10" × 10" × 28'</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">King Posts</span>
+                                <span class="spec-value">8" × 8" × 6'</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">Wall Plates</span>
+                                <span class="spec-value">6" × 8" continuous</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">Corner Posts</span>
+                                <span class="spec-value">10" × 10" × 12'</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Joinery Details -->
+                    <div class="spec-card">
+                        <h4>Joinery Details</h4>
+                        <ul class="spec-list" id="joineryList">
+                            <li>
+                                <span class="spec-name">Mortise & Tenon</span>
+                                <span class="spec-value">Primary connections</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">Dovetail Half-Lap</span>
+                                <span class="spec-value">Tie beam to post</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">Wedged Through-Tenon</span>
+                                <span class="spec-value">King post assembly</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">Scarf Joint</span>
+                                <span class="spec-value">Beam extensions</span>
+                            </li>
+                            <li>
+                                <span class="spec-name">Tusk Tenon</span>
+                                <span class="spec-value">Floor joists</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Engineering Notes -->
+                    <div class="spec-card" style="grid-column: span 2;">
+                        <h4>Engineering Notes</h4>
+                        <p class="spec-notes" id="engineeringNotes">
+                            This Traditional English hammer beam design utilizes a triangulated load path system, transferring roof loads through the principal rafters to the hammer beams, then to the wall posts. White Oak is recommended for its exceptional strength-to-weight ratio (specific gravity 0.68) and natural resistance to decay. All primary joints should be secured with 1" seasoned oak pegs. Consider a 15% moisture content tolerance for the timber to allow for seasonal movement. The span-to-depth ratio of the principal rafters (24:1) falls within acceptable limits for this species. Foundation connections should use steel bearing plates with hidden anchor bolts to maintain aesthetic integrity while ensuring structural security.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample timber frame images (royalty-free placeholders)
+        const sampleImages = [
+            'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&h=675&fit=crop',
+            'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1200&h=675&fit=crop',
+            'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&h=675&fit=crop',
+            'https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=1200&h=675&fit=crop'
+        ];
+
+        // Spec variations based on style
+        const specsByStyle = {
+            'Traditional English': {
+                components: [
+                    { name: 'Principal Rafters', value: '8" × 12" × 24\'' },
+                    { name: 'Tie Beams', value: '10" × 10" × 28\'' },
+                    { name: 'King Posts', value: '8" × 8" × 6\'' },
+                    { name: 'Hammer Beams', value: '10" × 8" × 4\'' },
+                    { name: 'Wall Plates', value: '6" × 8" continuous' }
+                ],
+                joinery: [
+                    { name: 'Mortise & Tenon', value: 'Primary connections' },
+                    { name: 'Dovetail Half-Lap', value: 'Tie beam to post' },
+                    { name: 'Wedged Through-Tenon', value: 'King post assembly' },
+                    { name: 'Scarf Joint', value: 'Beam extensions' }
+                ],
+                notes: 'This Traditional English hammer beam design utilizes a triangulated load path system, transferring roof loads through the principal rafters to the hammer beams, then to the wall posts. All primary joints should be secured with 1" seasoned oak pegs. The span-to-depth ratio falls within acceptable limits for this species.'
+            },
+            'Japanese (Minka)': {
+                components: [
+                    { name: 'Daikoku-bashira (Main Pillar)', value: '12" × 12" × 18\'' },
+                    { name: 'Nuki (Through Beams)', value: '4" × 8" × 24\'' },
+                    { name: 'Taruki (Rafters)', value: '3" × 4" × 16\'' },
+                    { name: 'Moya (Ridge Beam)', value: '8" × 8" × 32\'' },
+                    { name: 'Nageshi (Horizontal Rail)', value: '2" × 6" continuous' }
+                ],
+                joinery: [
+                    { name: 'Kanawa Tsugi', value: 'Beam splicing' },
+                    { name: 'Koshikake Kama Tsugi', value: 'Stepped splice' },
+                    { name: 'Okkake Daisen Tsugi', value: 'Locking rabbet' },
+                    { name: 'Mechigai Tsugi', value: 'Blind tenon' }
+                ],
+                notes: 'Japanese Minka construction emphasizes flexibility and earthquake resistance through its interlocking wooden joinery system. The absence of metal fasteners allows the structure to absorb seismic energy through controlled joint movement. Douglas Fir provides similar characteristics to traditional Japanese Hinoki cypress.'
+            },
+            'American Barn': {
+                components: [
+                    { name: 'Bent Posts', value: '8" × 8" × 16\'' },
+                    { name: 'Girts', value: '6" × 8" × 24\'' },
+                    { name: 'Purlin Plates', value: '6" × 6" × 40\'' },
+                    { name: 'Common Rafters', value: '4" × 6" × 20\'' },
+                    { name: 'Sill Beams', value: '8" × 10" × 40\'' }
+                ],
+                joinery: [
+                    { name: 'Pegged Mortise & Tenon', value: 'All major connections' },
+                    { name: 'Housed Dovetail', value: 'Girt to post' },
+                    { name: 'Bird\'s Mouth', value: 'Rafter to plate' },
+                    { name: 'Half-Lap', value: 'Plate intersections' }
+                ],
+                notes: 'American barn framing evolved for agricultural efficiency, featuring large clear-span interiors. The bent frame system allows for maximum hay storage while maintaining structural integrity. Consider adding diagonal knee braces for lateral stability in high-wind regions.'
+            }
+        };
+
+        function generateDesign() {
+            const btn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loadingOverlay');
+            const placeholder = document.getElementById('placeholder');
+            const image = document.getElementById('generatedImage');
+            const specsPanel = document.getElementById('specsPanel');
+            const demoNotice = document.getElementById('demoNotice');
+
+            const style = document.getElementById('styleSelect').value;
+            const wood = document.getElementById('woodSelect').value;
+
+            // Show loading
+            btn.classList.add('loading');
+            btn.innerHTML = '<span class="spinner"></span> Processing...';
+            loading.classList.add('active');
+
+            // Simulate generation time
+            setTimeout(() => {
+                // Hide loading, show results
+                loading.classList.remove('active');
+                placeholder.style.display = 'none';
+
+                // Show random sample image
+                const randomImage = sampleImages[Math.floor(Math.random() * sampleImages.length)];
+                image.src = randomImage;
+                image.style.display = 'block';
+                demoNotice.style.display = 'block';
+
+                // Update specs
+                document.getElementById('specStyle').textContent = style;
+                document.getElementById('specWood').textContent = wood;
+
+                // Get specs for this style (or default to Traditional English)
+                const specs = specsByStyle[style] || specsByStyle['Traditional English'];
+
+                // Update components
+                document.getElementById('componentsList').innerHTML = specs.components.map(c =>
+                    `<li><span class="spec-name">${c.name}</span><span class="spec-value">${c.value}</span></li>`
+                ).join('');
+
+                // Update joinery
+                document.getElementById('joineryList').innerHTML = specs.joinery.map(j =>
+                    `<li><span class="spec-name">${j.name}</span><span class="spec-value">${j.value}</span></li>`
+                ).join('');
+
+                // Update notes
+                document.getElementById('engineeringNotes').textContent = specs.notes;
+
+                // Show specs panel
+                specsPanel.style.display = 'block';
+
+                // Reset button
+                btn.classList.remove('loading');
+                btn.innerHTML = 'Generate Schematics';
+
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
