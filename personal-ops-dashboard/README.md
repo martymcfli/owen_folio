@@ -1,53 +1,43 @@
-# Personal Operations Dashboard (Raspberry Pi)
+# Personal Operations Dashboard
 
-**Status:** 🚧 Work in Progress
+**Raspberry Pi 4 · Always On · Real-Time Tracking**
 
-If I'm going to help companies optimize their operations, I should probably optimize my own life first. This dashboard runs 24/7 on a Raspberry Pi 4 in my apartment.
+A self-hosted productivity and life metrics dashboard running 24/7 on a headless Raspberry Pi 4. Collects data from multiple APIs, stores it locally in SQLite, and visualizes everything through a custom web interface.
 
-## What I Track
+## What It Tracks
 
-### Work Metrics
+**Work & Productivity**
 - GitHub commits per week
 - Emails sent/received (Gmail API)
 - Calendar utilization (% of week in meetings)
-- Job applications submitted
+- Job applications submitted & response rates
 
-### Health & Habits
+**Health & Habits**
 - Daily steps (Apple Health sync)
 - Workout sessions logged
 - Days since last music production session
 - Books finished this month
 
-### Finance
+**Finance**
 - Monthly spending by category (Plaid API)
 - Budget vs. actual
 - Net worth trend
 
-## Tech Stack (Planned)
+## Tech Stack
 
-- **Hardware:** Raspberry Pi 4 (4GB RAM)
-- **OS:** Raspberry Pi OS Lite (headless)
-- **Database:** SQLite (local storage)
-- **Dashboard:** Grafana (web interface)
-- **Data Collection:** Python scripts + cron jobs
-- **APIs:** Gmail, Google Calendar, GitHub, Apple Health, Plaid
+| Layer | Tool |
+|-------|------|
+| Hardware | Raspberry Pi 4 (4GB RAM) |
+| OS | Raspberry Pi OS Lite (headless) |
+| Database | SQLite |
+| Dashboard | Custom HTML/CSS/JS + Chart.js |
+| Data Collection | Python scripts + cron jobs |
+| APIs | Gmail, Google Calendar, GitHub, Apple Health, Plaid |
 
-## Why This Matters
+## Key Insight
 
-You can't improve what you don't measure. By tracking my own productivity and habits, I'm applying the same operational rigor I bring to companies.
-
-**Personal insight:** Discovered I'm 3x more productive on days with <4 hours of meetings. Now I block "focus time" aggressively.
-
-## Screenshots
-
-*Coming soon - building the dashboard this month*
-
-## Installation Guide
-
-*To be added once fully built*
+Tracking these metrics consistently revealed that days with fewer than 4 hours of meetings correlate with 3x higher deep work output. That led to aggressively blocking focus time on the calendar — a simple change with outsized impact.
 
 ---
 
-**Built by Owen McCormick** | [LinkedIn](https://linkedin.com/in/owenpmccormick) | [Portfolio](https://github.com/owenpmccormick)
-
-*Note: This is an active project. Check back for updates or follow along on LinkedIn.*
+**[View Live Dashboard](https://omccormick.com/personal-ops-dashboard/dashboard.html)** · **[Back to Portfolio](https://omccormick.com)**
