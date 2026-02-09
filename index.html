@@ -1236,6 +1236,54 @@
         .video-modal-close:hover {
             color: var(--accent-primary);
         }
+        /* Floating AI Agent CTA */
+        .floating-ai-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 24px;
+            background: var(--accent-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            box-shadow: 0 8px 30px rgba(20, 184, 166, 0.4), 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: floatPulse 3s ease-in-out infinite;
+        }
+
+        .floating-ai-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(20, 184, 166, 0.5), 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .floating-ai-btn .ai-dot {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes floatPulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 640px) {
+            .floating-ai-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 14px 20px;
+                font-size: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1257,7 +1305,7 @@
     <section class="hero" id="about">
         <div class="hero-content">
             <h1>Ops.<br>Precision.<br><span>Mastery.</span></h1>
-            <p>Building systems that scale. Automations that stick. Operations that actually work.</p>
+            <p>Building systems that scale. Automations that stick. Operations that actually work. Scroll down to explore my projects — and chat with my AI assistant in the corner.</p>
             <div class="hero-buttons">
                 <a href="#projects" class="btn-primary">
                     View Projects
@@ -1476,7 +1524,7 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                         Launch Dashboard
                     </a>
-                    <a href="#" class="btn-secondary" style="padding: 14px 24px;">View Docs</a>
+                    <a href="https://github.com/martymcfli/owen_folio" target="_blank" class="btn-secondary" style="padding: 14px 24px;">View on GitHub</a>
                 </div>
             </div>
             <div class="dashboard-preview">
@@ -1489,7 +1537,7 @@
     <section class="all-projects-section">
         <button class="toggle-projects-btn" onclick="toggleAllProjects()">
             <span class="btn-emoji">🔥</span>
-            <span>View All Projects</span>
+            <span id="toggleBtnText">View All Projects</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 9l6 6 6-6"/>
             </svg>
@@ -1645,6 +1693,42 @@
                 </div>
             </div>
 
+            <!-- Personal Ops Dashboard -->
+            <div class="project-card featured" data-category="ai data automation">
+                <div class="project-header">
+                    <div class="project-category">AI / Self-Optimization</div>
+                    <div class="project-title">Personal Ops Dashboard</div>
+                    <div class="project-company">Raspberry Pi Productivity System</div>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">24/7 personal productivity tracking system running on a Raspberry Pi. Monitors habits, energy levels, goals, and daily metrics with real-time visualizations and AI-powered insights for continuous self-improvement.</p>
+                    <div class="project-stats">
+                        <div class="stat">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Always On</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">Pi</div>
+                            <div class="stat-label">Powered</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">AI</div>
+                            <div class="stat-label">Insights</div>
+                        </div>
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Chart.js</span>
+                        <span class="tag">Raspberry Pi</span>
+                        <span class="tag">SQLite</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="./personal-ops-dashboard/" class="project-btn project-btn-primary">View Dashboard</a>
+                        <a href="https://github.com/martymcfli/owen_folio" target="_blank" class="project-btn project-btn-secondary">View on GitHub</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- VibeDrive - AI Travel Soundtrack Sync -->
             <div class="project-card featured" data-category="ai automation">
                 <div class="project-header">
@@ -1783,108 +1867,6 @@
                     <div class="project-links">
                         <a href="./apollo-hubspot-handoff/dashboard.html" class="project-btn project-btn-primary">View Dashboard</a>
                         <a href="./apollo-hubspot-handoff/" class="project-btn project-btn-secondary">See Code</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Multi-Agent Trading System -->
-            <div class="project-card" data-category="ai data">
-                <div class="project-header">
-                    <div class="project-category">AI / Financial Engineering</div>
-                    <div class="project-title">Multi-Agent Trading System</div>
-                    <div class="project-company">Callowo Stack</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc">Sophisticated multi-agent AI system for automated trading decisions. Leverages machine learning models to analyze market conditions and execute trades.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">AI</div>
-                            <div class="stat-label">Powered</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Multi</div>
-                            <div class="stat-label">Agent</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Live</div>
-                            <div class="stat-label">Trading</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">Machine Learning</span>
-                        <span class="tag">Trading</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/callowo-stack/Multi-Agent-Trading-System" target="_blank" class="project-btn project-btn-primary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Real-Time Market Dashboard -->
-            <div class="project-card" data-category="ai data">
-                <div class="project-header">
-                    <div class="project-category">AI / Real-Time Analytics</div>
-                    <div class="project-title">Real-Time Market Dashboard</div>
-                    <div class="project-company">Callowo Stack</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc">Live market data visualization dashboard with real-time price feeds, technical indicators, and portfolio performance tracking.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">Real</div>
-                            <div class="stat-label">Time</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Live</div>
-                            <div class="stat-label">Data</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Charts</div>
-                            <div class="stat-label">Analytics</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">React</span>
-                        <span class="tag">WebSocket</span>
-                        <span class="tag">D3.js</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/callowo-stack/Real-Time-Market-Dashboard" target="_blank" class="project-btn project-btn-primary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Algorithmic Trading Framework -->
-            <div class="project-card" data-category="ai automation">
-                <div class="project-header">
-                    <div class="project-category">AI / Algorithmic Trading</div>
-                    <div class="project-title">Algorithmic Trading Framework</div>
-                    <div class="project-company">Callowo Stack</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc">Comprehensive algorithmic trading framework with backtesting capabilities, strategy optimization, and risk management modules.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">Back</div>
-                            <div class="stat-label">Testing</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Risk</div>
-                            <div class="stat-label">Mgmt</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Algo</div>
-                            <div class="stat-label">Trading</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">Quantitative</span>
-                        <span class="tag">Finance</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/callowo-stack/Algorithmic-Trading-Framework" target="_blank" class="project-btn project-btn-primary">View on GitHub</a>
                     </div>
                 </div>
             </div>
@@ -2193,6 +2175,12 @@
                 </div>
                 <div class="footer-cta">
                     <a href="mailto:mcmcowen@gmail.com" class="footer-btn footer-btn-primary">Send Email</a>
+                    <a href="./hire-owen/chat.html" target="_blank" class="footer-btn footer-btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Chat with My AI Agent
+                    </a>
                 </div>
             </div>
             <div class="footer-brand">
@@ -2204,6 +2192,15 @@
             <div>Built with Precision</div>
         </div>
     </footer>
+
+    <!-- Floating AI Agent Button -->
+    <a href="./hire-owen/chat.html" class="floating-ai-btn" target="_blank">
+        <span class="ai-dot"></span>
+        Chat with Owen's AI
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+    </a>
 
     <script>
         // Project filtering
@@ -2290,9 +2287,9 @@
             projects.classList.toggle('show');
 
             if (projects.classList.contains('show')) {
-                btn.querySelector('span').textContent = 'Hide Projects';
+                document.getElementById('toggleBtnText').textContent = 'Hide Projects';
             } else {
-                btn.querySelector('span').textContent = 'View All Projects';
+                document.getElementById('toggleBtnText').textContent = 'View All Projects';
             }
         }
 
