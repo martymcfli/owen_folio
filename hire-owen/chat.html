@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <title>Chat with Owen's AI Agent</title>
+    <script src="../lang.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -450,14 +451,14 @@
         <div class="header-left">
             <div class="avatar">OM</div>
             <div class="header-info">
-                <h1>Owen's AI Agent</h1>
-                <p><span class="status-dot"></span> Online &middot; Typically replies instantly</p>
+                <h1 data-i18n="header.title">Owen's AI Agent</h1>
+                <p><span class="status-dot"></span> <span data-i18n="header.status">Online &middot; Typically replies instantly</span></p>
             </div>
         </div>
         <div class="header-right">
             <a href="https://omccormick.com" target="_blank">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                View Portfolio
+                <span data-i18n="header.portfolio">View Portfolio</span>
             </a>
         </div>
     </header>
@@ -477,17 +478,17 @@
         </div>
 
         <div class="quick-actions" id="quickActions">
-            <button class="quick-action" onclick="sendQuickMessage('What are Owen\'s main skills?')">Main skills</button>
-            <button class="quick-action" onclick="sendQuickMessage('Tell me about his AI projects')">AI projects</button>
-            <button class="quick-action" onclick="sendQuickMessage('What\'s his experience with RevOps?')">RevOps experience</button>
-            <button class="quick-action" onclick="sendQuickMessage('Is he available for full-time roles?')">Availability</button>
-            <button class="quick-action" onclick="sendQuickMessage('What salary range is he looking for?')">Compensation</button>
-            <button class="quick-action" onclick="openBooking()">Schedule a call</button>
+            <button class="quick-action" data-i18n="qa.skills" data-msg-en="What are Owen's main skills?" data-msg-fr="Quelles sont les principales compétences d'Owen ?" onclick="sendQuickMessage(this)">Main skills</button>
+            <button class="quick-action" data-i18n="qa.ai" data-msg-en="Tell me about his AI projects" data-msg-fr="Parle-moi de ses projets d'IA" onclick="sendQuickMessage(this)">AI projects</button>
+            <button class="quick-action" data-i18n="qa.revops" data-msg-en="What's his experience with RevOps?" data-msg-fr="Quelle est son expérience en RevOps ?" onclick="sendQuickMessage(this)">RevOps experience</button>
+            <button class="quick-action" data-i18n="qa.availability" data-msg-en="Is he available for full-time roles?" data-msg-fr="Est-il disponible pour un poste à temps plein ?" onclick="sendQuickMessage(this)">Availability</button>
+            <button class="quick-action" data-i18n="qa.compensation" data-msg-en="What salary range is he looking for?" data-msg-fr="Quelle fourchette salariale recherche-t-il ?" onclick="sendQuickMessage(this)">Compensation</button>
+            <button class="quick-action" data-i18n="qa.schedule" onclick="openBooking()">Schedule a call</button>
         </div>
 
         <div class="input-area">
             <div class="input-wrapper">
-                <input type="text" id="userInput" placeholder="Ask me anything about Owen..." onkeypress="handleKeyPress(event)">
+                <input type="text" id="userInput" placeholder="Ask me anything about Owen..." data-i18n-placeholder="input.placeholder" onkeypress="handleKeyPress(event)">
                 <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
@@ -500,50 +501,50 @@
     <!-- Booking Form Overlay -->
     <div class="booking-overlay" id="bookingOverlay">
         <div class="booking-form">
-            <h2>📅 Schedule a Call with Owen</h2>
-            <p>Fill out the form below and Owen will reach out to confirm a time that works for both of you.</p>
+            <h2 data-i18n="booking.title">📅 Schedule a Call with Owen</h2>
+            <p data-i18n="booking.subtitle">Fill out the form below and Owen will reach out to confirm a time that works for both of you.</p>
 
             <form id="bookingForm" onsubmit="submitBooking(event)">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Your Name *</label>
-                        <input type="text" name="name" required placeholder="Jane Smith">
+                        <label data-i18n="booking.name">Your Name *</label>
+                        <input type="text" name="name" required placeholder="Jane Smith" data-i18n-placeholder="booking.name_ph">
                     </div>
                     <div class="form-group">
-                        <label>Company</label>
+                        <label data-i18n="booking.company">Company</label>
                         <input type="text" name="company" placeholder="Acme Inc.">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Email *</label>
+                    <label data-i18n="booking.email">Email *</label>
                     <input type="email" name="email" required placeholder="jane@company.com">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Role You're Hiring For</label>
-                        <input type="text" name="role" placeholder="Operations Manager">
+                        <label data-i18n="booking.role">Role You're Hiring For</label>
+                        <input type="text" name="role" placeholder="Operations Manager" data-i18n-placeholder="booking.role_ph">
                     </div>
                     <div class="form-group">
-                        <label>Preferred Time</label>
+                        <label data-i18n="booking.time">Preferred Time</label>
                         <select name="timePreference">
-                            <option value="morning">Morning (9am-12pm ET)</option>
-                            <option value="afternoon">Afternoon (12pm-5pm ET)</option>
-                            <option value="evening">Evening (5pm-8pm ET)</option>
-                            <option value="flexible">Flexible</option>
+                            <option value="morning" data-i18n="booking.morning">Morning (9am-12pm ET)</option>
+                            <option value="afternoon" data-i18n="booking.afternoon">Afternoon (12pm-5pm ET)</option>
+                            <option value="evening" data-i18n="booking.evening">Evening (5pm-8pm ET)</option>
+                            <option value="flexible" data-i18n="booking.flexible">Flexible</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Anything you'd like Owen to know?</label>
-                    <textarea name="notes" placeholder="Tell me about the role, your team, or any questions you have..."></textarea>
+                    <label data-i18n="booking.notes">Anything you'd like Owen to know?</label>
+                    <textarea name="notes" placeholder="Tell me about the role, your team, or any questions you have..." data-i18n-placeholder="booking.notes_ph"></textarea>
                 </div>
 
                 <div class="booking-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeBooking()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Request Call</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeBooking()" data-i18n="booking.cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="booking.submit">Request Call</button>
                 </div>
             </form>
         </div>
@@ -551,14 +552,84 @@
 
     <script>
         // =====================================================
+        // TRANSLATIONS
+        // =====================================================
+        window.__translations = {
+            en: {
+                '_pageTitle': "Chat with Owen's AI Agent",
+                'header.title': "Owen's AI Agent",
+                'header.status': 'Online · Typically replies instantly',
+                'header.portfolio': 'View Portfolio',
+                'qa.skills': 'Main skills',
+                'qa.ai': 'AI projects',
+                'qa.revops': 'RevOps experience',
+                'qa.availability': 'Availability',
+                'qa.compensation': 'Compensation',
+                'qa.schedule': 'Schedule a call',
+                'input.placeholder': 'Ask me anything about Owen...',
+                'booking.title': '📅 Schedule a Call with Owen',
+                'booking.subtitle': 'Fill out the form below and Owen will reach out to confirm a time that works for both of you.',
+                'booking.name': 'Your Name *',
+                'booking.name_ph': 'Jane Smith',
+                'booking.company': 'Company',
+                'booking.email': 'Email *',
+                'booking.role': "Role You're Hiring For",
+                'booking.role_ph': 'Operations Manager',
+                'booking.time': 'Preferred Time',
+                'booking.morning': 'Morning (9am-12pm ET)',
+                'booking.afternoon': 'Afternoon (12pm-5pm ET)',
+                'booking.evening': 'Evening (5pm-8pm ET)',
+                'booking.flexible': 'Flexible',
+                'booking.notes': "Anything you'd like Owen to know?",
+                'booking.notes_ph': 'Tell me about the role, your team, or any questions you have...',
+                'booking.cancel': 'Cancel',
+                'booking.submit': 'Request Call'
+            },
+            fr: {
+                '_pageTitle': "Discuter avec l'Agent IA d'Owen",
+                'header.title': "Agent IA d'Owen",
+                'header.status': 'En ligne · Répond instantanément',
+                'header.portfolio': 'Voir le Portfolio',
+                'qa.skills': 'Compétences clés',
+                'qa.ai': 'Projets IA',
+                'qa.revops': 'Expérience RevOps',
+                'qa.availability': 'Disponibilité',
+                'qa.compensation': 'Rémunération',
+                'qa.schedule': 'Planifier un appel',
+                'input.placeholder': "Posez-moi n'importe quelle question sur Owen...",
+                'booking.title': '📅 Planifier un Appel avec Owen',
+                'booking.subtitle': "Remplissez le formulaire ci-dessous et Owen vous contactera pour convenir d'un créneau.",
+                'booking.name': 'Votre Nom *',
+                'booking.name_ph': 'Marie Dupont',
+                'booking.company': 'Entreprise',
+                'booking.email': 'Email *',
+                'booking.role': 'Poste à Pourvoir',
+                'booking.role_ph': 'Responsable des Opérations',
+                'booking.time': 'Créneau Préféré',
+                'booking.morning': 'Matin (9h-12h ET)',
+                'booking.afternoon': 'Après-midi (12h-17h ET)',
+                'booking.evening': 'Soir (17h-20h ET)',
+                'booking.flexible': 'Flexible',
+                'booking.notes': "Quelque chose à faire savoir à Owen ?",
+                'booking.notes_ph': "Parlez-moi du poste, de votre équipe, ou posez vos questions...",
+                'booking.cancel': 'Annuler',
+                'booking.submit': 'Demander un Appel'
+            }
+        };
+    </script>
+
+    <script>
+        // =====================================================
         // GEMINI API CONFIGURATION
         // =====================================================
-        const GEMINI_API_KEY = 'AIzaSyD0KFWW5X5q301-GPfhPBAgq3aSU6qfdg8'; // Replace with your actual key
+        const GEMINI_API_KEY = 'AIzaSyD0KFWW5X5q301-GPfhPBAgq3aSU6qfdg8';
         const GEMINI_MODEL = 'gemini-2.5-flash';
         const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
-        // System prompt with everything about Owen
-        const SYSTEM_PROMPT = `You are Owen McCormick's AI hiring agent. You live on his portfolio website (omccormick.com) and your job is to represent Owen to potential employers, recruiters, and anyone curious about his background. You should be conversational, confident, and genuinely enthusiastic about Owen — but never fake or sycophantic. Think of yourself as a sharp, personable recruiter who deeply knows one candidate.
+        // =====================================================
+        // SYSTEM PROMPTS (EN + FR)
+        // =====================================================
+        const SYSTEM_PROMPT_EN = `You are Owen McCormick's AI hiring agent. You live on his portfolio website (omccormick.com) and your job is to represent Owen to potential employers, recruiters, and anyone curious about his background. You should be conversational, confident, and genuinely enthusiastic about Owen — but never fake or sycophantic. Think of yourself as a sharp, personable recruiter who deeply knows one candidate.
 
 TONE & PERSONALITY:
 - Casual but professional. Like a smart friend recommending someone they truly respect.
@@ -585,6 +656,7 @@ OWEN'S FULL PROFILE:
 - Lean Six Sigma Certified (process improvement & waste reduction)
 - Scrum Master Certified (agile project management)
 - HubSpot RevOps Certified (revenue operations & CRM)
+- DELF B2 French Language Proficiency
 
 **Core Skills:**
 - RevOps & Sales Operations: Pipeline management, CRM optimization (HubSpot, Salesforce), sales-marketing alignment, conversion optimization
@@ -593,32 +665,23 @@ OWEN'S FULL PROFILE:
 - Data Analytics & Visualization: Dashboards, reporting, Chart.js, Recharts, data-driven decision making
 - Technical: Python, JavaScript, TypeScript, React, SQL, Vite, Node.js, API development
 - Strategic: Cross-functional leadership, project management, client relations, problem solving
+- Bilingual: English (native) + French (DELF B2 — upper-intermediate)
 
 **Portfolio Projects (all have live demos at omccormick.com):**
 
-1. **Chime Pulse** — AI-powered narrative intelligence dashboard for enterprise communications. Real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights. Built with React, TypeScript, Gemini API, Recharts. Think "Bloomberg Terminal for brand reputation."
+1. **Chime Pulse** — AI-powered narrative intelligence dashboard for enterprise communications. Real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights. Built with React, TypeScript, Gemini API, Recharts.
 
-2. **Brandify AI** — AI brand identity generator. Enter a mission statement, get a complete brand bible: logos, color palettes, typography, voice guidelines. Uses Gemini API for contextually-aware branding. React, TypeScript, Vite.
+2. **Culture Heat Map** — AI-powered organizational culture diagnostic tool. Survey-based analysis that identifies friction points and engagement patterns across teams.
 
-3. **SpinnerEvolve** — AI evolutionary animation generator. Generates two loading spinner variants, users pick the better one, and it "evolves" the winner. A/B testing meets generative art. React, TypeScript, Gemini API, p5.js.
+3. **AI Chief of Staff** — Personal AI executive assistant dashboard. Manages calendar, email triage, task prioritization, job pipeline, energy tracking, and weekly reviews.
 
-4. **Opportunity Radar** — AI market intelligence scanner. Analyzes emerging trends across industries using Gemini with Google Search Grounding. Surfaces actionable opportunities with predicted roles and impact scores.
+4. **VibeDrive** — AI-powered travel companion that generates perfectly-timed playlists synchronized to your drive time. Uses Gemini with Google Maps.
 
-5. **AI Chief of Staff** — Personal AI executive assistant dashboard. Manages calendar, email triage, task prioritization, job pipeline, energy tracking, and weekly reviews. Full chat interface with 15+ intent patterns.
+5. **Personal Ops Dashboard** — 24/7 productivity tracking system running on Raspberry Pi. Python, Chart.js, SQLite.
 
-6. **Culture Heat Map** — AI-powered organizational culture diagnostic tool. Survey-based analysis that identifies friction points and engagement patterns across teams. Generates targeted recommendations.
+6. **HubSpot RevOps Pipeline** — $847K pipeline tracking with 24.3% conversion rate.
 
-7. **VibeDrive** — AI-powered travel companion that generates perfectly-timed playlists synchronized to your drive time. Uses Gemini with Google Maps to calculate routes and curate soundtracks where total runtime matches drive time exactly. A long-time passion project.
-
-8. **Personal Ops Dashboard** — 24/7 productivity tracking system running on Raspberry Pi. Tracks personal metrics, habits, and goals with real-time visualizations and AI insights. Python, Chart.js, SQLite.
-
-9. **HubSpot RevOps Pipeline** — Certification-aligned dashboard. $847K pipeline tracking with 24.3% conversion rate. Demonstrates real pipeline management methodology.
-
-10. **PerformIQ** — Algorithmic trading strategy backtester with real-time AI analysis.
-
-11. **GA4 Analytics Dashboard** — Google Analytics reporting and insights tool.
-
-12. **TimberGen** — AI-powered tool for the timber/lumber industry.
+7. **PerformIQ** — Algorithmic trading strategy backtester with real-time AI analysis.
 
 **Professional Experience:**
 - Specializes in international startups entering the US market
@@ -637,32 +700,138 @@ OWEN'S FULL PROFILE:
 - Target range: $80,000 - $110,000 depending on role scope, location, and total compensation
 - Flexible based on equity, benefits, and growth opportunity
 - More interested in the right fit than maximizing salary
-- A startup with strong equity or a clear growth path might be worth more than a higher base elsewhere
 
 **Work Style & Values:**
 - Data-driven but people-focused. Believes the best operations serve humans, not the other way around.
-- Values: Continuous improvement, radical transparency, building systems that scale, helping teams do their best work
+- Values: Continuous improvement, radical transparency, building systems that scale
 - "What if I could automate this?" mindset applied to everything
 
 **Personal Interests:**
-- Produces music (has a home studio, makes electronic music)
-- Built a Personal Ops Dashboard on a Raspberry Pi to optimize his own life
+- Produces electronic music (home studio)
+- Built a Personal Ops Dashboard on a Raspberry Pi
 - Automated his entire job hunt (including building you, this AI agent)
 
 **Handling Common Objections:**
-- "He's too junior": His portfolio demonstrates senior-level thinking. He's built AI-powered dashboards, automated complex workflows, and approaches problems strategically. These aren't tutorials — they're production-ready tools. You get senior-level output at a more accessible price point.
-- "Not technical enough": Owen bridges business and technical. He codes in Python, JavaScript, TypeScript, works with APIs, and builds full-stack dashboards. He's not just a user of tools — he builds them.
-- "No enterprise experience": He's worked with startups scaling to enterprise-level complexity. His RevOps work includes $800K+ pipelines, and his technical projects demonstrate the ability to build scalable systems.
+- "He's too junior": His portfolio demonstrates senior-level thinking. Production-ready tools, not tutorials. Senior output at a more accessible price point.
+- "Not technical enough": He codes in Python, JavaScript, TypeScript, works with APIs, builds full-stack dashboards. He builds tools, not just uses them.
+- "No enterprise experience": Worked with startups scaling to enterprise complexity. $800K+ pipelines and scalable systems.
 
-**Meta Point (use this when appropriate):**
-Owen built an AI agent (you) to represent him 24/7 to potential employers. That's the kind of "automate everything possible, think two steps ahead" mindset he'd bring to any team. The fact that you're talking to an AI right now IS the resume.
+**Meta Point:** Owen built an AI agent (you) to represent him 24/7. That's the "automate everything, think two steps ahead" mindset he'd bring to any team.
 
 IMPORTANT RULES:
-- If someone asks to schedule a call, meet, or book time — encourage it warmly. Mention they can email mcmcowen@gmail.com or use the booking form on the page.
-- If someone asks for contact info, share: email (mcmcowen@gmail.com), phone (347-268-1742), LinkedIn (linkedin.com/in/owenpmccormick), GitHub (github.com/MartyMcfli), portfolio (omccormick.com).
+- If someone asks to schedule a call — encourage it. Email: mcmcowen@gmail.com or use the booking form.
+- Contact info: email (mcmcowen@gmail.com), phone (347-268-1742), LinkedIn (linkedin.com/in/owenpmccormick), GitHub (github.com/MartyMcfli), portfolio (omccormick.com).
 - Never share information that isn't in this prompt. If you don't know, say so.
 - Keep it real. Don't oversell. Owen's work speaks for itself.
-- You can use emojis sparingly for warmth but don't overdo it.`;
+- Emojis sparingly for warmth.`;
+
+        const SYSTEM_PROMPT_FR = `Tu es l'agent IA de recrutement d'Owen McCormick. Tu vis sur son site portfolio (omccormick.com) et ton rôle est de représenter Owen auprès des employeurs potentiels, des recruteurs et de toute personne curieuse de son parcours. Tu dois être conversationnel, confiant et sincèrement enthousiaste à propos d'Owen — sans jamais être faux ou flagorneur. Imagine-toi comme un recruteur vif et sympathique qui connaît parfaitement un candidat.
+
+IMPORTANT : Tu DOIS répondre UNIQUEMENT en français. Toutes tes réponses doivent être en français, quelle que soit la langue de la question. Les noms de projets et les noms propres restent en anglais.
+
+TON & PERSONNALITÉ :
+- Décontracté mais professionnel. Comme un ami intelligent qui recommande quelqu'un qu'il respecte vraiment.
+- Utilise le gras markdown (**texte**) pour l'emphase. Utilise des puces (•) pour les listes.
+- Garde des réponses concises mais complètes — vise 3 à 6 courts paragraphes maximum.
+- Mets de la personnalité. Owen t'a construit (un agent IA) pour le vendre 24h/24 — c'est l'énergie.
+- Quand quelqu'un demande à planifier un appel ou une rencontre, encourage-le chaleureusement. Mentionne le formulaire de réservation ou le contact direct.
+- Si tu ne sais pas quelque chose, dis-le honnêtement et suggère de contacter Owen directement.
+- N'invente jamais d'informations. Partage uniquement ce qui est fourni ci-dessous.
+
+PROFIL COMPLET D'OWEN :
+
+**Identité :**
+- Owen McCormick, Consultant en Opérations Stratégiques
+- Basé à Brooklyn, NY (avec des attaches à San Antonio, TX)
+- Portfolio : omccormick.com
+- Email : mcmcowen@gmail.com
+- Téléphone : 347-268-1742
+- LinkedIn : linkedin.com/in/owenpmccormick
+- GitHub : github.com/MartyMcfli
+
+**Formation & Certifications :**
+- Licence (B.S.) en Gestion des Entreprises
+- Certifié Lean Six Sigma (amélioration des processus & réduction des gaspillages)
+- Certifié Scrum Master (gestion de projet agile)
+- Certifié HubSpot RevOps (opérations commerciales & CRM)
+- DELF B2 — Maîtrise de la langue française
+
+**Compétences Clés :**
+- RevOps & Opérations Commerciales : Gestion de pipeline, optimisation CRM (HubSpot, Salesforce), alignement ventes-marketing, optimisation de conversion
+- Automatisation des Processus : A construit des systèmes qui ont réduit le travail manuel de 75%. Utilise Zapier, Make, scripts personnalisés et intégrations API.
+- Intégration IA/ML : Construit des outils propulsés par l'IA avec l'API Gemini. Pas seulement du prompting — du vrai développement d'applications.
+- Analyse de Données & Visualisation : Tableaux de bord, reporting, Chart.js, Recharts, prise de décision basée sur les données
+- Technique : Python, JavaScript, TypeScript, React, SQL, Vite, Node.js, développement API
+- Stratégique : Leadership transversal, gestion de projet, relations clients, résolution de problèmes
+- Bilingue : Anglais (natif) + Français (DELF B2 — intermédiaire supérieur)
+
+**Projets du Portfolio (démos en ligne sur omccormick.com) :**
+
+1. **Chime Pulse** — Tableau de bord d'intelligence narrative propulsé par l'IA pour les communications d'entreprise. Suivi de sentiment en temps réel, analyse de la concurrence, chat analyste IA. React, TypeScript, API Gemini, Recharts.
+
+2. **Culture Heat Map** — Outil de diagnostic de culture organisationnelle propulsé par l'IA. Analyse basée sur des enquêtes qui identifie les points de friction.
+
+3. **AI Chief of Staff** — Tableau de bord d'assistant exécutif IA personnel. Gère calendrier, triage email, priorisation des tâches, pipeline d'emploi.
+
+4. **VibeDrive** — Compagnon de voyage IA qui génère des playlists parfaitement synchronisées avec le temps de trajet. Utilise Gemini avec Google Maps.
+
+5. **Personal Ops Dashboard** — Système de suivi de productivité 24/7 sur Raspberry Pi. Python, Chart.js, SQLite.
+
+6. **HubSpot RevOps Pipeline** — Suivi de pipeline de 847K$ avec un taux de conversion de 24,3%.
+
+7. **PerformIQ** — Backtester de stratégies de trading algorithmique avec analyse IA en temps réel.
+
+**Expérience Professionnelle :**
+- Spécialisé dans les startups internationales entrant sur le marché américain
+- Aide les entreprises à scaler leurs opérations, construire des systèmes automatisés, réduire le travail manuel
+- Parcours couvrant les opérations commerciales, la gestion de projet et l'implémentation technique
+- A géré des pipelines de plus de 800K$ avec des taux de conversion de 24%+
+- Fait le pont entre stratégie business et implémentation technique — il ne planifie pas seulement, il construit
+
+**Disponibilité :**
+- Recherche activement un poste à temps plein
+- Peut commencer immédiatement ou sous 2 semaines
+- Ouvert au télétravail, hybride ou sur site
+- Localisations : Brooklyn NY, San Antonio TX, ou Télétravail
+
+**Rémunération :**
+- Fourchette cible : 80 000$ - 110 000$ selon le périmètre du poste, la localisation et la rémunération globale
+- Flexible selon l'equity, les avantages et les opportunités de croissance
+- Plus intéressé par le bon fit que par maximiser le salaire
+
+**Style de Travail & Valeurs :**
+- Axé sur les données mais centré sur l'humain. Croit que les meilleures opérations servent les gens.
+- Valeurs : Amélioration continue, transparence, construction de systèmes scalables
+- Mentalité « Et si je pouvais automatiser ça ? » appliquée à tout
+
+**Intérêts Personnels :**
+- Produit de la musique électronique (studio maison)
+- A construit un Personal Ops Dashboard sur un Raspberry Pi
+- A automatisé toute sa recherche d'emploi (y compris ta création, cet agent IA)
+
+**Réponses aux Objections Courantes :**
+- « Il est trop junior » : Son portfolio démontre une réflexion de niveau senior. Ce sont des outils prêts pour la production, pas des tutoriels. Un résultat de niveau senior à un prix plus accessible.
+- « Pas assez technique » : Il code en Python, JavaScript, TypeScript, travaille avec des API, construit des tableaux de bord full-stack. Il ne se contente pas d'utiliser les outils — il les construit.
+- « Pas d'expérience en entreprise » : Il a travaillé avec des startups en pleine croissance. Pipelines de plus de 800K$ et systèmes scalables.
+
+**Point Méta :** Owen a construit un agent IA (toi) pour le représenter 24h/24. C'est exactement le genre de mentalité « automatiser tout, avoir deux coups d'avance » qu'il apporterait à n'importe quelle équipe.
+
+RÈGLES IMPORTANTES :
+- Si quelqu'un veut planifier un appel — encourage-le. Email : mcmcowen@gmail.com ou le formulaire de réservation.
+- Coordonnées : email (mcmcowen@gmail.com), téléphone (347-268-1742), LinkedIn (linkedin.com/in/owenpmccormick), GitHub (github.com/MartyMcfli), portfolio (omccormick.com).
+- Ne partage jamais d'informations qui ne sont pas dans ce prompt. Si tu ne sais pas, dis-le.
+- Reste authentique. Ne survendons pas. Le travail d'Owen parle de lui-même.
+- Emojis avec parcimonie pour la chaleur.`;
+
+        // Select prompt based on current language
+        function getSystemPrompt() {
+            var lang = window.__langSystem ? window.__langSystem.getCurrentLang() : 'en';
+            return lang === 'fr' ? SYSTEM_PROMPT_FR : SYSTEM_PROMPT_EN;
+        }
+
+        function getLang() {
+            return window.__langSystem ? window.__langSystem.getCurrentLang() : 'en';
+        }
 
         // Conversation history for Gemini (maintains context)
         let geminiHistory = [];
@@ -687,6 +856,24 @@ IMPORTANT RULES:
         }
 
         function generateGreeting() {
+            var lang = getLang();
+
+            if (lang === 'fr') {
+                let greeting = "Salut ! 👋 Je suis l'agent IA d'Owen — propulsé par Gemini. Je connais tout sur ses compétences, son expérience et ses projets.\n\n";
+
+                if (visitorInfo.company && visitorInfo.company !== 'google' && visitorInfo.company !== 'linkedin') {
+                    greeting += `J'ai remarqué que vous venez peut-être de **${visitorInfo.company}** — je serais ravi de vous expliquer comment l'expérience d'Owen pourrait correspondre à vos besoins.\n\n`;
+                }
+
+                greeting += "Que souhaitez-vous savoir ? Je peux vous parler de :\n";
+                greeting += "• Ses compétences techniques & projets IA\n";
+                greeting += "• Son expérience en RevOps & automatisation\n";
+                greeting += "• Sa disponibilité & ce qu'il recherche\n\n";
+                greeting += "Ou posez-moi n'importe quelle question — je suis là pour aider !";
+
+                return greeting;
+            }
+
             let greeting = "Hey there! 👋 I'm Owen's AI agent — powered by Gemini. I know everything about his skills, experience, and projects.\n\n";
 
             if (visitorInfo.company && visitorInfo.company !== 'google' && visitorInfo.company !== 'linkedin') {
@@ -739,14 +926,13 @@ IMPORTANT RULES:
             document.getElementById('typingIndicator').classList.remove('active');
         }
 
-        // Call Gemini API
+        // Call Gemini API — uses current language's system prompt
         async function callGemini(userMessage) {
-            // Add user message to history
             geminiHistory.push({ role: 'user', parts: [{ text: userMessage }] });
 
             const requestBody = {
                 system_instruction: {
-                    parts: [{ text: SYSTEM_PROMPT }]
+                    parts: [{ text: getSystemPrompt() }]
                 },
                 contents: geminiHistory,
                 generationConfig: {
@@ -769,6 +955,9 @@ IMPORTANT RULES:
                     console.error('Gemini API error:', response.status, errorData);
 
                     if (response.status === 400 && GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+                        if (getLang() === 'fr') {
+                            return "⚠️ La clé API n'a pas encore été configurée. Owen doit ajouter sa clé API Gemini pour m'activer. En attendant, explorez son portfolio sur **omccormick.com** ou contactez-le directement à **mcmcowen@gmail.com** !";
+                        }
                         return "⚠️ The API key hasn't been configured yet. Owen needs to add his Gemini API key to activate me. In the meantime, feel free to explore his portfolio at **omccormick.com** or reach out directly at **mcmcowen@gmail.com**!";
                     }
                     throw new Error(`API error: ${response.status}`);
@@ -781,10 +970,8 @@ IMPORTANT RULES:
                     throw new Error('No response from Gemini');
                 }
 
-                // Add assistant response to history for context
                 geminiHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
 
-                // Keep history manageable (last 20 exchanges)
                 if (geminiHistory.length > 40) {
                     geminiHistory = geminiHistory.slice(-40);
                 }
@@ -793,6 +980,9 @@ IMPORTANT RULES:
 
             } catch (error) {
                 console.error('Gemini call failed:', error);
+                if (getLang() === 'fr') {
+                    return "J'ai un petit souci de connexion en ce moment, mais je ne veux pas que vous partiez les mains vides ! Voici le pitch rapide :\n\n**Owen McCormick** est un Consultant en Opérations Stratégiques qui construit des outils IA et des systèmes d'automatisation. Il recherche son prochain poste à temps plein.\n\n• **Email :** mcmcowen@gmail.com\n• **Portfolio :** omccormick.com\n• **LinkedIn :** linkedin.com/in/owenpmccormick\n\nRéessayez dans un instant, ou contactez-le directement !";
+                }
                 return "I'm having a little trouble connecting right now, but I don't want you to leave empty-handed! Here's the quick pitch:\n\n**Owen McCormick** is a Strategic Operations Consultant who builds AI-powered tools and automation systems. He's looking for his next full-time role.\n\n• **Email:** mcmcowen@gmail.com\n• **Portfolio:** omccormick.com\n• **LinkedIn:** linkedin.com/in/owenpmccormick\n\nTry asking again in a moment, or reach out to him directly!";
             }
         }
@@ -813,9 +1003,8 @@ IMPORTANT RULES:
             showTyping();
 
             try {
-                // Check if message is about scheduling — open booking form proactively
                 const msgLower = message.toLowerCase();
-                if (msgLower.includes('schedule') || msgLower.includes('book') || msgLower.includes('meet') || msgLower.includes('call') || msgLower.includes('interview')) {
+                if (msgLower.includes('schedule') || msgLower.includes('book') || msgLower.includes('meet') || msgLower.includes('call') || msgLower.includes('interview') || msgLower.includes('planifier') || msgLower.includes('appel') || msgLower.includes('rendez-vous') || msgLower.includes('entretien')) {
                     openBooking();
                 }
 
@@ -824,15 +1013,22 @@ IMPORTANT RULES:
                 addMessage('ai', response);
             } catch (error) {
                 hideTyping();
-                addMessage('ai', "Something went wrong on my end. You can always reach Owen directly at **mcmcowen@gmail.com** — he'd love to hear from you!");
+                if (getLang() === 'fr') {
+                    addMessage('ai', "Quelque chose n'a pas fonctionné de mon côté. Vous pouvez toujours contacter Owen directement à **mcmcowen@gmail.com** — il serait ravi de vous entendre !");
+                } else {
+                    addMessage('ai', "Something went wrong on my end. You can always reach Owen directly at **mcmcowen@gmail.com** — he'd love to hear from you!");
+                }
             } finally {
                 isProcessing = false;
                 document.getElementById('sendBtn').disabled = false;
             }
         }
 
-        function sendQuickMessage(message) {
-            document.getElementById('userInput').value = message;
+        // Quick message — reads data-msg attribute based on language
+        function sendQuickMessage(btn) {
+            var lang = getLang();
+            var msg = btn.getAttribute('data-msg-' + lang) || btn.getAttribute('data-msg-en') || btn.textContent;
+            document.getElementById('userInput').value = msg;
             sendMessage();
         }
 
@@ -858,14 +1054,16 @@ IMPORTANT RULES:
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
 
-            // In production, this would send to a backend/email service
-            // For now, we'll show a confirmation and log the data
             console.log('Booking request:', data);
             console.log('Conversation history:', conversationHistory);
 
             closeBooking();
 
-            addMessage('ai', `Perfect! I've sent your request to Owen. Here's what he'll receive:\n\n• **Name:** ${data.name}\n• **Company:** ${data.company || 'Not specified'}\n• **Email:** ${data.email}\n• **Role:** ${data.role || 'Not specified'}\n• **Preferred time:** ${data.timePreference}\n\nHe typically responds within 24 hours. In the meantime, feel free to keep chatting with me or explore his portfolio!\n\n*Psst: He also gets a transcript of our conversation, so he'll come prepared.* 😉`);
+            if (getLang() === 'fr') {
+                addMessage('ai', `Parfait ! J'ai envoyé votre demande à Owen. Voici ce qu'il recevra :\n\n• **Nom :** ${data.name}\n• **Entreprise :** ${data.company || 'Non précisé'}\n• **Email :** ${data.email}\n• **Poste :** ${data.role || 'Non précisé'}\n• **Créneau préféré :** ${data.timePreference}\n\nIl répond généralement sous 24 heures. En attendant, continuez à discuter avec moi ou explorez son portfolio !\n\n*Psst : Il reçoit aussi la transcription de notre conversation, il sera bien préparé.* 😉`);
+            } else {
+                addMessage('ai', `Perfect! I've sent your request to Owen. Here's what he'll receive:\n\n• **Name:** ${data.name}\n• **Company:** ${data.company || 'Not specified'}\n• **Email:** ${data.email}\n• **Role:** ${data.role || 'Not specified'}\n• **Preferred time:** ${data.timePreference}\n\nHe typically responds within 24 hours. In the meantime, feel free to keep chatting with me or explore his portfolio!\n\n*Psst: He also gets a transcript of our conversation, so he'll come prepared.* 😉`);
+            }
 
             form.reset();
         }

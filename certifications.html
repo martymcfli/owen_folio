@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="./favicon.png">
     <link rel="apple-touch-icon" href="./favicon.png">
-    <title>Certifications & Education - Owen McCormick</title>
+    <title>Certifications &amp; Education - Owen McCormick</title>
+    <script src="./lang.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -367,34 +368,34 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
-                Back to Portfolio
+                <span data-i18n="nav.back">Back to Portfolio</span>
             </a>
         </div>
     </nav>
 
     <section class="hero">
-        <div class="hero-tag">Verified Credentials</div>
-        <h1>Certifications & <span>Education</span></h1>
-        <p>Every credential listed on my portfolio, verified and documented. Click any certificate to view it full-size.</p>
+        <div class="hero-tag" data-i18n="hero.tag">Verified Credentials</div>
+        <h1 data-i18n-html="hero.heading">Certifications & <span>Education</span></h1>
+        <p data-i18n="hero.subtitle">Every credential listed on my portfolio, verified and documented. Click any certificate to view it full-size.</p>
     </section>
 
     <section class="credentials">
 
         <!-- EDUCATION -->
-        <div class="section-label">Education</div>
+        <div class="section-label" data-i18n="section.education">Education</div>
         <div class="cred-grid">
             <div class="cred-card">
                 <div class="cred-image" onclick="openLightbox(this)">
                     <img src="./images/certs/csu-business.png" alt="Colorado State University - Bachelor of Science in Business Management">
-                    <span class="zoom-hint">Click to enlarge</span>
+                    <span class="zoom-hint" data-i18n="ui.zoom">Click to enlarge</span>
                 </div>
                 <div class="cred-info">
                     <div class="cred-issuer">Colorado State University Global</div>
-                    <div class="cred-title">Bachelor of Science — Business Management</div>
-                    <div class="cred-detail">Cum Laude · February 2025</div>
+                    <div class="cred-title" data-i18n="csu.title">Bachelor of Science — Business Management</div>
+                    <div class="cred-detail" data-i18n="csu.detail">Cum Laude · February 2025</div>
                     <div class="cred-tags">
-                        <span class="cred-tag">B.S. Degree</span>
-                        <span class="cred-tag">Business Management</span>
+                        <span class="cred-tag" data-i18n="csu.tag1">B.S. Degree</span>
+                        <span class="cred-tag" data-i18n="csu.tag2">Business Management</span>
                         <span class="cred-tag">Cum Laude</span>
                     </div>
                 </div>
@@ -403,37 +404,37 @@
             <div class="cred-card">
                 <div class="cred-image" onclick="openLightbox(this)">
                     <img src="./images/certs/purdue-ai.png" alt="Purdue University - Generative AI for Business Transformation">
-                    <span class="zoom-hint">Click to enlarge</span>
+                    <span class="zoom-hint" data-i18n="ui.zoom">Click to enlarge</span>
                 </div>
                 <div class="cred-info">
                     <div class="cred-issuer">Purdue University × Simplilearn</div>
-                    <div class="cred-title">Generative AI for Business Transformation</div>
-                    <div class="cred-detail">Completed April 2023</div>
+                    <div class="cred-title" data-i18n="purdue.title">Generative AI for Business Transformation</div>
+                    <div class="cred-detail" data-i18n="purdue.detail">Completed April 2023</div>
                     <div class="cred-tags">
-                        <span class="cred-tag">Generative AI</span>
-                        <span class="cred-tag">Business Strategy</span>
-                        <span class="cred-tag">AI Transformation</span>
+                        <span class="cred-tag" data-i18n="purdue.tag1">Generative AI</span>
+                        <span class="cred-tag" data-i18n="purdue.tag2">Business Strategy</span>
+                        <span class="cred-tag" data-i18n="purdue.tag3">AI Transformation</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- PROFESSIONAL CERTIFICATIONS -->
-        <div class="section-label">Professional Certifications</div>
+        <div class="section-label" data-i18n="section.professional">Professional Certifications</div>
         <div class="cred-grid">
             <div class="cred-card">
                 <div class="cred-image" onclick="openLightbox(this)">
                     <img src="./images/certs/hubspot-revops.png" alt="HubSpot Revenue Operations Certification">
-                    <span class="zoom-hint">Click to enlarge</span>
+                    <span class="zoom-hint" data-i18n="ui.zoom">Click to enlarge</span>
                 </div>
                 <div class="cred-info">
                     <div class="cred-issuer">HubSpot Academy</div>
-                    <div class="cred-title">Revenue Operations Certified</div>
-                    <div class="cred-detail">Valid Feb 2026 – Mar 2027 · ID: 22a49d0e6558...</div>
+                    <div class="cred-title" data-i18n="hubspot.title">Revenue Operations Certified</div>
+                    <div class="cred-detail" data-i18n="hubspot.detail">Valid Feb 2026 – Mar 2027 · ID: 22a49d0e6558...</div>
                     <div class="cred-tags">
                         <span class="cred-tag">RevOps</span>
                         <span class="cred-tag">CRM</span>
-                        <span class="cred-tag">Pipeline Management</span>
+                        <span class="cred-tag" data-i18n="hubspot.tag3">Pipeline Management</span>
                     </div>
                 </div>
             </div>
@@ -441,16 +442,16 @@
             <div class="cred-card">
                 <div class="cred-image" onclick="openLightbox(this)">
                     <img src="./images/certs/google-analytics.png" alt="Google Analytics Certification">
-                    <span class="zoom-hint">Click to enlarge</span>
+                    <span class="zoom-hint" data-i18n="ui.zoom">Click to enlarge</span>
                 </div>
                 <div class="cred-info">
                     <div class="cred-issuer">Google</div>
-                    <div class="cred-title">Google Analytics Certification</div>
-                    <div class="cred-detail">Valid Feb 2026 – Feb 2027 · ID: 174024697</div>
+                    <div class="cred-title" data-i18n="ga.title">Google Analytics Certification</div>
+                    <div class="cred-detail" data-i18n="ga.detail">Valid Feb 2026 – Feb 2027 · ID: 174024697</div>
                     <div class="cred-tags">
                         <span class="cred-tag">Google Analytics 4</span>
-                        <span class="cred-tag">Data Analytics</span>
-                        <span class="cred-tag">Reporting</span>
+                        <span class="cred-tag" data-i18n="ga.tag2">Data Analytics</span>
+                        <span class="cred-tag" data-i18n="ga.tag3">Reporting</span>
                     </div>
                 </div>
             </div>
@@ -460,18 +461,18 @@
                 <div class="cred-image">
                     <div class="coming-soon">
                         <div class="icon">🥋</div>
-                        <p>Lean Six Sigma Green Belt</p>
-                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
+                        <p data-i18n="lss.placeholder">Lean Six Sigma Green Belt</p>
+                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;" data-i18n="ui.compiling">Certificate being compiled</p>
                     </div>
                 </div>
                 <div class="cred-info">
                     <div class="cred-issuer">Lean Six Sigma</div>
-                    <div class="cred-title">Green Belt Certified</div>
-                    <div class="cred-detail">Process Improvement & Waste Reduction</div>
+                    <div class="cred-title" data-i18n="lss.title">Green Belt Certified</div>
+                    <div class="cred-detail" data-i18n="lss.detail">Process Improvement & Waste Reduction</div>
                     <div class="cred-tags">
                         <span class="cred-tag">DMAIC</span>
-                        <span class="cred-tag">Process Optimization</span>
-                        <span class="cred-tag">Quality</span>
+                        <span class="cred-tag" data-i18n="lss.tag2">Process Optimization</span>
+                        <span class="cred-tag" data-i18n="lss.tag3">Quality</span>
                     </div>
                 </div>
             </div>
@@ -481,40 +482,37 @@
                     <div class="coming-soon">
                         <div class="icon">🔄</div>
                         <p>Professional Scrum Master I</p>
-                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
+                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;" data-i18n="ui.compiling">Certificate being compiled</p>
                     </div>
                 </div>
                 <div class="cred-info">
                     <div class="cred-issuer">Scrum.org</div>
                     <div class="cred-title">Professional Scrum Master I (PSM I)</div>
-                    <div class="cred-detail">Agile Project Management</div>
+                    <div class="cred-detail" data-i18n="psm.detail">Agile Project Management</div>
                     <div class="cred-tags">
                         <span class="cred-tag">Scrum</span>
                         <span class="cred-tag">Agile</span>
-                        <span class="cred-tag">Sprint Management</span>
+                        <span class="cred-tag" data-i18n="psm.tag3">Sprint Management</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- LANGUAGE & SPECIALTY -->
-        <div class="section-label">Language & Specialty</div>
+        <div class="section-label" data-i18n="section.language">Language & Specialty</div>
         <div class="cred-grid">
-            <div class="cred-card upcoming">
-                <div class="cred-image">
-                    <div class="coming-soon">
-                        <div class="icon">🇫🇷</div>
-                        <p>DELF B2 — French</p>
-                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
-                    </div>
+            <div class="cred-card">
+                <div class="cred-image" onclick="openLightbox(this)">
+                    <img src="./images/certs/delf-b2.jpeg" alt="DELF B2 French Language Proficiency Diploma">
+                    <span class="zoom-hint" data-i18n="ui.zoom">Click to enlarge</span>
                 </div>
                 <div class="cred-info">
                     <div class="cred-issuer">French Ministry of Education</div>
-                    <div class="cred-title">DELF B2 — French Language Proficiency</div>
-                    <div class="cred-detail">Upper-Intermediate / Independent User</div>
+                    <div class="cred-title" data-i18n="delf.title">DELF B2 — French Language Proficiency</div>
+                    <div class="cred-detail" data-i18n="delf.detail">Upper-Intermediate / Independent User</div>
                     <div class="cred-tags">
-                        <span class="cred-tag">French</span>
-                        <span class="cred-tag">B2 Level</span>
+                        <span class="cred-tag" data-i18n="delf.tag1">French</span>
+                        <span class="cred-tag" data-i18n="delf.tag2">B2 Level</span>
                         <span class="cred-tag">International</span>
                     </div>
                 </div>
@@ -524,18 +522,18 @@
                 <div class="cred-image">
                     <div class="coming-soon">
                         <div class="icon">🪵</div>
-                        <p>Timber Framing</p>
-                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
+                        <p data-i18n="timber.placeholder">Timber Framing</p>
+                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;" data-i18n="ui.compiling">Certificate being compiled</p>
                     </div>
                 </div>
                 <div class="cred-info">
-                    <div class="cred-issuer">Specialty Certification</div>
-                    <div class="cred-title">Timber Framing</div>
-                    <div class="cred-detail">Structural Timber Frame Construction</div>
+                    <div class="cred-issuer" data-i18n="timber.issuer">Specialty Certification</div>
+                    <div class="cred-title" data-i18n="timber.title">Timber Framing</div>
+                    <div class="cred-detail" data-i18n="timber.detail">Structural Timber Frame Construction</div>
                     <div class="cred-tags">
-                        <span class="cred-tag">Timber Framing</span>
-                        <span class="cred-tag">Construction</span>
-                        <span class="cred-tag">Craftsmanship</span>
+                        <span class="cred-tag" data-i18n="timber.tag1">Timber Framing</span>
+                        <span class="cred-tag" data-i18n="timber.tag2">Construction</span>
+                        <span class="cred-tag" data-i18n="timber.tag3">Craftsmanship</span>
                     </div>
                 </div>
             </div>
@@ -550,8 +548,107 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; 2026 Owen McCormick · <a href="./">Back to Portfolio</a></p>
+        <p data-i18n-html="footer.text">&copy; 2026 Owen McCormick · <a href="./">Back to Portfolio</a></p>
     </footer>
+
+    <script>
+        window.__translations = {
+            en: {
+                '_pageTitle': 'Certifications & Education - Owen McCormick',
+                'nav.back': 'Back to Portfolio',
+                'hero.tag': 'Verified Credentials',
+                'hero.heading': 'Certifications & <span>Education</span>',
+                'hero.subtitle': 'Every credential listed on my portfolio, verified and documented. Click any certificate to view it full-size.',
+                'section.education': 'Education',
+                'section.professional': 'Professional Certifications',
+                'section.language': 'Language & Specialty',
+                'ui.zoom': 'Click to enlarge',
+                'ui.compiling': 'Certificate being compiled',
+                'csu.title': 'Bachelor of Science — Business Management',
+                'csu.detail': 'Cum Laude · February 2025',
+                'csu.tag1': 'B.S. Degree',
+                'csu.tag2': 'Business Management',
+                'purdue.title': 'Generative AI for Business Transformation',
+                'purdue.detail': 'Completed April 2023',
+                'purdue.tag1': 'Generative AI',
+                'purdue.tag2': 'Business Strategy',
+                'purdue.tag3': 'AI Transformation',
+                'hubspot.title': 'Revenue Operations Certified',
+                'hubspot.detail': 'Valid Feb 2026 – Mar 2027 · ID: 22a49d0e6558...',
+                'hubspot.tag3': 'Pipeline Management',
+                'ga.title': 'Google Analytics Certification',
+                'ga.detail': 'Valid Feb 2026 – Feb 2027 · ID: 174024697',
+                'ga.tag2': 'Data Analytics',
+                'ga.tag3': 'Reporting',
+                'lss.placeholder': 'Lean Six Sigma Green Belt',
+                'lss.title': 'Green Belt Certified',
+                'lss.detail': 'Process Improvement & Waste Reduction',
+                'lss.tag2': 'Process Optimization',
+                'lss.tag3': 'Quality',
+                'psm.detail': 'Agile Project Management',
+                'psm.tag3': 'Sprint Management',
+                'delf.title': 'DELF B2 — French Language Proficiency',
+                'delf.detail': 'Upper-Intermediate / Independent User',
+                'delf.tag1': 'French',
+                'delf.tag2': 'B2 Level',
+                'timber.placeholder': 'Timber Framing',
+                'timber.issuer': 'Specialty Certification',
+                'timber.title': 'Timber Framing',
+                'timber.detail': 'Structural Timber Frame Construction',
+                'timber.tag1': 'Timber Framing',
+                'timber.tag2': 'Construction',
+                'timber.tag3': 'Craftsmanship',
+                'footer.text': '&copy; 2026 Owen McCormick · <a href="./">Back to Portfolio</a>'
+            },
+            fr: {
+                '_pageTitle': 'Certifications & Formation - Owen McCormick',
+                'nav.back': 'Retour au Portfolio',
+                'hero.tag': 'Diplômes Vérifiés',
+                'hero.heading': 'Certifications & <span>Formation</span>',
+                'hero.subtitle': 'Chaque diplôme figurant sur mon portfolio, vérifié et documenté. Cliquez sur un certificat pour l\'agrandir.',
+                'section.education': 'Formation',
+                'section.professional': 'Certifications Professionnelles',
+                'section.language': 'Langues & Spécialités',
+                'ui.zoom': 'Cliquer pour agrandir',
+                'ui.compiling': 'Certificat en cours de compilation',
+                'csu.title': 'Licence en Gestion des Entreprises',
+                'csu.detail': 'Cum Laude · Février 2025',
+                'csu.tag1': 'Licence (B.S.)',
+                'csu.tag2': 'Gestion des Entreprises',
+                'purdue.title': 'IA Générative pour la Transformation des Entreprises',
+                'purdue.detail': 'Obtenu en avril 2023',
+                'purdue.tag1': 'IA Générative',
+                'purdue.tag2': 'Stratégie d\'Entreprise',
+                'purdue.tag3': 'Transformation IA',
+                'hubspot.title': 'Certifié Revenue Operations',
+                'hubspot.detail': 'Valide fév. 2026 – mars 2027 · ID : 22a49d0e6558...',
+                'hubspot.tag3': 'Gestion de Pipeline',
+                'ga.title': 'Certifié Google Analytics',
+                'ga.detail': 'Valide fév. 2026 – fév. 2027 · ID : 174024697',
+                'ga.tag2': 'Analyse de Données',
+                'ga.tag3': 'Reporting',
+                'lss.placeholder': 'Lean Six Sigma Ceinture Verte',
+                'lss.title': 'Certifié Ceinture Verte',
+                'lss.detail': 'Amélioration des Processus & Réduction des Gaspillages',
+                'lss.tag2': 'Optimisation des Processus',
+                'lss.tag3': 'Qualité',
+                'psm.detail': 'Gestion de Projet Agile',
+                'psm.tag3': 'Gestion de Sprints',
+                'delf.title': 'DELF B2 — Maîtrise du Français',
+                'delf.detail': 'Intermédiaire Supérieur / Utilisateur Indépendant',
+                'delf.tag1': 'Français',
+                'delf.tag2': 'Niveau B2',
+                'timber.placeholder': 'Charpente Traditionnelle',
+                'timber.issuer': 'Certification Spécialisée',
+                'timber.title': 'Charpente Traditionnelle',
+                'timber.detail': 'Construction en Charpente Bois',
+                'timber.tag1': 'Charpente Bois',
+                'timber.tag2': 'Construction',
+                'timber.tag3': 'Artisanat',
+                'footer.text': '&copy; 2026 Owen McCormick · <a href="./">Retour au Portfolio</a>'
+            }
+        };
+    </script>
 
     <script>
         function openLightbox(el) {

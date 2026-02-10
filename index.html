@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="./lang.js"></script>
     <style>
         * {
             margin: 0;
@@ -1294,29 +1295,29 @@
         <div class="nav-container">
             <div class="nav-logo">Owen P. McCormick</div>
             <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="./certifications.html">Certifications</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#about" data-i18n="nav.about">About</a></li>
+                <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
+                <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
+                <li><a href="./certifications.html" data-i18n="nav.certifications">Certifications</a></li>
+                <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
             </ul>
-            <a href="mailto:mcmcowen@gmail.com" class="nav-cta">Get In Touch</a>
+            <a href="mailto:mcmcowen@gmail.com" class="nav-cta" data-i18n="nav.cta">Get In Touch</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero" id="about">
         <div class="hero-content">
-            <h1>Ops.<br>Precision.<br><span>Mastery.</span></h1>
-            <p>Building systems that scale. Automations that stick. Operations that actually work. Scroll down to explore my projects — and chat with my AI assistant in the corner.</p>
+            <h1 data-i18n-html="hero.heading">Ops.<br>Precision.<br><span>Mastery.</span></h1>
+            <p data-i18n="hero.subtitle">Building systems that scale. Automations that stick. Operations that actually work. Scroll down to explore my projects — and chat with my AI assistant in the corner.</p>
             <div class="hero-buttons">
                 <a href="#projects" class="btn-primary">
-                    View Projects
+                    <span data-i18n="hero.btn.projects">View Projects</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                 </a>
-                <a href="./cx-blog-post.html" class="btn-secondary">
+                <a href="./cx-blog-post.html" class="btn-secondary" data-i18n="hero.btn.philosophy">
                     Read My Philosophy
                 </a>
             </div>
@@ -1327,7 +1328,7 @@
                         <polyline points="7 10 12 15 17 10"/>
                         <line x1="12" y1="15" x2="12" y2="3"/>
                     </svg>
-                    Resume
+                    <span data-i18n="hero.btn.resume">Resume</span>
                 </a>
                 <a href="./presentation.pdf" target="_blank" class="btn-secondary" style="padding: 14px 24px; font-size: 0.7rem;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1335,15 +1336,15 @@
                         <line x1="8" y1="21" x2="16" y2="21"/>
                         <line x1="12" y1="17" x2="12" y2="21"/>
                     </svg>
-                    Presentation
+                    <span data-i18n="hero.btn.presentation">Presentation</span>
                 </a>
             </div>
         </div>
         <div class="hero-image">
             <img src="./images/profile.png" alt="Owen McCormick">
             <div class="hero-badge">
-                <div class="hero-badge-title">RevOps</div>
-                <div class="hero-badge-sub">& Automation</div>
+                <div class="hero-badge-title" data-i18n="hero.badge.title">RevOps</div>
+                <div class="hero-badge-sub" data-i18n="hero.badge.sub">& Automation</div>
             </div>
         </div>
     </section>
@@ -1355,23 +1356,23 @@
         <div class="skills-grid">
             <div class="skill-card">
                 <div class="skill-icon">&#9889;</div>
-                <div class="skill-title">Automation</div>
-                <div class="skill-desc">Make, System Prompt Design, LLM Evaluation</div>
+                <div class="skill-title" data-i18n="skill.auto.title">Automation</div>
+                <div class="skill-desc" data-i18n="skill.auto.desc">Make, System Prompt Design, LLM Evaluation</div>
             </div>
             <div class="skill-card">
                 <div class="skill-icon">&#128200;</div>
-                <div class="skill-title">RevOps</div>
+                <div class="skill-title" data-i18n="skill.revops.title">RevOps</div>
                 <div class="skill-desc">HubSpot, Salesforce, Google Analytics 4</div>
             </div>
             <div class="skill-card">
                 <div class="skill-icon">&#128736;</div>
-                <div class="skill-title">Project Mgmt</div>
+                <div class="skill-title" data-i18n="skill.pm.title">Project Mgmt</div>
                 <div class="skill-desc">Lean Six Sigma, PSM I, Jira, Asana</div>
             </div>
             <div class="skill-card">
                 <div class="skill-icon">&#128101;</div>
-                <div class="skill-title">Client Relations</div>
-                <div class="skill-desc">Escalation Management & Retention Strategy</div>
+                <div class="skill-title" data-i18n="skill.cr.title">Client Relations</div>
+                <div class="skill-desc" data-i18n="skill.cr.desc">Escalation Management & Retention Strategy</div>
             </div>
         </div>
     </section>
@@ -1379,19 +1380,19 @@
     <!-- Certifications Section -->
     <section class="skills" style="padding-top: 0;">
         <div class="section-header" style="margin-bottom: 40px;">
-            <div class="section-tag">Credentials</div>
-            <h2 class="section-title" style="font-size: 2rem;">Certifications & Education</h2>
+            <div class="section-tag" data-i18n="certs.tag">Credentials</div>
+            <h2 class="section-title" style="font-size: 2rem;" data-i18n="certs.title">Certifications & Education</h2>
         </div>
         <div class="skills-grid">
             <div class="skill-card">
                 <div class="skill-icon">🎓</div>
-                <div class="skill-title">B.S. Business</div>
+                <div class="skill-title" data-i18n="certs.bs.title">B.S. Business</div>
                 <div class="skill-desc">Colorado State University Global (Cum Laude)</div>
             </div>
             <div class="skill-card">
                 <div class="skill-icon">📊</div>
                 <div class="skill-title">Lean Six Sigma</div>
-                <div class="skill-desc">Green Belt Certified</div>
+                <div class="skill-desc" data-i18n="certs.lss.desc">Green Belt Certified</div>
             </div>
             <div class="skill-card">
                 <div class="skill-icon">🔄</div>
@@ -1401,11 +1402,11 @@
             <div class="skill-card">
                 <div class="skill-icon">📈</div>
                 <div class="skill-title">HubSpot RevOps</div>
-                <div class="skill-desc">Revenue Operations Certified</div>
+                <div class="skill-desc" data-i18n="certs.hs.desc">Revenue Operations Certified</div>
             </div>
         </div>
         <div style="text-align: center; margin-top: 20px;">
-            <a href="./certifications.html" class="btn-secondary" style="padding: 14px 28px; font-size: 0.75rem;">View All Credentials & Certificates</a>
+            <a href="./certifications.html" class="btn-secondary" style="padding: 14px 28px; font-size: 0.75rem;" data-i18n="certs.viewall">View All Credentials & Certificates</a>
         </div>
     </section>
 
@@ -1414,30 +1415,30 @@
     <!-- Featured Showcase Section -->
     <section class="featured-showcase" id="projects">
         <div class="section-header">
-            <div class="section-tag">Featured Work</div>
-            <h2 class="section-title">Signature Projects</h2>
+            <div class="section-tag" data-i18n="featured.tag">Featured Work</div>
+            <h2 class="section-title" data-i18n="featured.title">Signature Projects</h2>
         </div>
 
         <!-- Project 1: Culture Heat Map -->
         <div class="featured-project">
             <div class="featured-content">
                 <div class="featured-number">01</div>
-                <div class="featured-tag">Data Intelligence / AI</div>
+                <div class="featured-tag" data-i18n="p1.category">Data Intelligence / AI</div>
                 <h3 class="featured-title">Culture Heat Map</h3>
-                <p class="featured-subtitle">Company Culture Intelligence Platform</p>
-                <p class="featured-desc">Built a comprehensive platform that visualizes company culture scores across 127 organizations. Features AI-powered chatbot for company insights, interactive radar charts for culture breakdowns, and bubble visualizations comparing work-life balance vs overall ratings.</p>
+                <p class="featured-subtitle" data-i18n="p1.subtitle">Company Culture Intelligence Platform</p>
+                <p class="featured-desc" data-i18n="p1.desc">Built a comprehensive platform that visualizes company culture scores across 127 organizations. Features AI-powered chatbot for company insights, interactive radar charts for culture breakdowns, and bubble visualizations comparing work-life balance vs overall ratings.</p>
                 <div class="featured-stats">
                     <div class="featured-stat">
                         <div class="featured-stat-value">127</div>
-                        <div class="featured-stat-label">Companies</div>
+                        <div class="featured-stat-label" data-i18n="p1.stat1">Companies</div>
                     </div>
                     <div class="featured-stat">
                         <div class="featured-stat-value">1,847</div>
-                        <div class="featured-stat-label">Salaries</div>
+                        <div class="featured-stat-label" data-i18n="p1.stat2">Salaries</div>
                     </div>
                     <div class="featured-stat">
                         <div class="featured-stat-value">AI</div>
-                        <div class="featured-stat-label">Powered</div>
+                        <div class="featured-stat-label" data-i18n="p1.stat3">Powered</div>
                     </div>
                 </div>
                 <div class="featured-tags">
@@ -1447,8 +1448,8 @@
                     <span class="tag">PostgreSQL</span>
                 </div>
                 <div class="featured-links">
-                    <a href="https://cultheatmap-vt5pqowf.manus.space" target="_blank" class="btn-primary" style="padding: 14px 24px;">Live Demo</a>
-                    <a href="./culture-heatmap.html" class="btn-secondary" style="padding: 14px 24px;">Case Study</a>
+                    <a href="https://cultheatmap-vt5pqowf.manus.space" target="_blank" class="btn-primary" style="padding: 14px 24px;" data-i18n="btn.livedemo">Live Demo</a>
+                    <a href="./culture-heatmap.html" class="btn-secondary" style="padding: 14px 24px;" data-i18n="btn.casestudy">Case Study</a>
                 </div>
             </div>
             <div class="featured-gallery">
@@ -1460,22 +1461,22 @@
         <div class="featured-project">
             <div class="featured-content">
                 <div class="featured-number">02</div>
-                <div class="featured-tag">AI / Enterprise Analytics</div>
+                <div class="featured-tag" data-i18n="p2.category">AI / Enterprise Analytics</div>
                 <h3 class="featured-title">Chime Pulse</h3>
-                <p class="featured-subtitle">Narrative Intelligence Engine</p>
-                <p class="featured-desc">AI-powered narrative intelligence dashboard for enterprise communications. Features real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights. Built with React, TypeScript, and Gemini API integration.</p>
+                <p class="featured-subtitle" data-i18n="p2.subtitle">Narrative Intelligence Engine</p>
+                <p class="featured-desc" data-i18n="p2.desc">AI-powered narrative intelligence dashboard for enterprise communications. Features real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights. Built with React, TypeScript, and Gemini API integration.</p>
                 <div class="featured-stats">
                     <div class="featured-stat">
                         <div class="featured-stat-value">Gemini</div>
-                        <div class="featured-stat-label">AI Core</div>
+                        <div class="featured-stat-label" data-i18n="p2.stat1">AI Core</div>
                     </div>
                     <div class="featured-stat">
                         <div class="featured-stat-value">Real</div>
-                        <div class="featured-stat-label">Time Intel</div>
+                        <div class="featured-stat-label" data-i18n="p2.stat2">Time Intel</div>
                     </div>
                     <div class="featured-stat">
                         <div class="featured-stat-value">34.7%</div>
-                        <div class="featured-stat-label">Share of Voice</div>
+                        <div class="featured-stat-label" data-i18n="p2.stat3">Share of Voice</div>
                     </div>
                 </div>
                 <div class="featured-tags">
@@ -1487,9 +1488,9 @@
                 <div class="featured-links">
                     <a href="./chimepulse/demo.html" class="btn-primary" style="padding: 14px 24px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        Live Demo
+                        <span data-i18n="btn.livedemo">Live Demo</span>
                     </a>
-                    <a href="https://github.com/martymcfli/chimepulse" target="_blank" class="btn-secondary" style="padding: 14px 24px;">View on GitHub</a>
+                    <a href="https://github.com/martymcfli/chimepulse" target="_blank" class="btn-secondary" style="padding: 14px 24px;" data-i18n="btn.github">View on GitHub</a>
                 </div>
             </div>
             <div class="dashboard-preview">
@@ -1501,22 +1502,22 @@
         <div class="featured-project">
             <div class="featured-content">
                 <div class="featured-number">03</div>
-                <div class="featured-tag">AI / Product Launch Management</div>
+                <div class="featured-tag" data-i18n="p3.category">AI / Product Launch Management</div>
                 <h3 class="featured-title">Mission Control</h3>
-                <p class="featured-subtitle">AI-Powered Launch Command Center</p>
-                <p class="featured-desc">Real-time product launch tracking system with AI-generated status briefs, cross-team dependency mapping, risk detection, and stakeholder communications. Built to showcase how I orchestrate complex, multi-team initiatives.</p>
+                <p class="featured-subtitle" data-i18n="p3.subtitle">AI-Powered Launch Command Center</p>
+                <p class="featured-desc" data-i18n="p3.desc">Real-time product launch tracking system with AI-generated status briefs, cross-team dependency mapping, risk detection, and stakeholder communications. Built to showcase how I orchestrate complex, multi-team initiatives.</p>
                 <div class="featured-stats">
                     <div class="featured-stat">
                         <div class="featured-stat-value">4</div>
-                        <div class="featured-stat-label">Active Launches</div>
+                        <div class="featured-stat-label" data-i18n="p3.stat1">Active Launches</div>
                     </div>
                     <div class="featured-stat">
                         <div class="featured-stat-value">8</div>
-                        <div class="featured-stat-label">Teams Tracked</div>
+                        <div class="featured-stat-label" data-i18n="p3.stat2">Teams Tracked</div>
                     </div>
                     <div class="featured-stat">
                         <div class="featured-stat-value">AI</div>
-                        <div class="featured-stat-label">Powered Briefs</div>
+                        <div class="featured-stat-label" data-i18n="p3.stat3">Powered Briefs</div>
                     </div>
                 </div>
                 <div class="featured-tags">
@@ -1528,9 +1529,9 @@
                 <div class="featured-links">
                     <a href="./mission-control/index.html" class="btn-primary" style="padding: 14px 24px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                        Launch Dashboard
+                        <span data-i18n="btn.dashboard">Launch Dashboard</span>
                     </a>
-                    <a href="https://github.com/martymcfli/owen_folio" target="_blank" class="btn-secondary" style="padding: 14px 24px;">View on GitHub</a>
+                    <a href="https://github.com/martymcfli/owen_folio" target="_blank" class="btn-secondary" style="padding: 14px 24px;" data-i18n="btn.github">View on GitHub</a>
                 </div>
             </div>
             <div class="dashboard-preview">
@@ -1543,7 +1544,7 @@
     <section class="all-projects-section">
         <button class="toggle-projects-btn" onclick="toggleAllProjects()">
             <span class="btn-emoji">🔥</span>
-            <span id="toggleBtnText">View All Projects</span>
+            <span id="toggleBtnText" data-i18n="toggle.view">View All Projects</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 9l6 6 6-6"/>
             </svg>
@@ -1552,11 +1553,11 @@
         <div class="collapsible-projects" id="allProjects">
             <!-- Filter Buttons -->
             <div class="filter-container">
-                <button class="filter-btn active" data-filter="all">All Projects</button>
-                <button class="filter-btn" data-filter="automation">Automation</button>
-                <button class="filter-btn" data-filter="data">Data & Analytics</button>
-                <button class="filter-btn" data-filter="ai">AI & Trading</button>
-                <button class="filter-btn" data-filter="operations">Operations</button>
+                <button class="filter-btn active" data-filter="all" data-i18n="filter.all">All Projects</button>
+                <button class="filter-btn" data-filter="automation" data-i18n="filter.auto">Automation</button>
+                <button class="filter-btn" data-filter="data" data-i18n="filter.data">Data & Analytics</button>
+                <button class="filter-btn" data-filter="ai" data-i18n="filter.ai">AI & Trading</button>
+                <button class="filter-btn" data-filter="operations" data-i18n="filter.ops">Operations</button>
             </div>
 
             <div class="projects-grid">
@@ -1569,19 +1570,19 @@
                     <div class="project-company">WeCovr (InsurTech Startup)</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">End-to-end revenue operations pipeline with lead scoring, lifecycle management, and attribution modeling for US market expansion.</p>
+                    <p class="project-desc" data-i18n="grid.revops.desc">End-to-end revenue operations pipeline with lead scoring, lifecycle management, and attribution modeling for US market expansion.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">$842K</div>
-                            <div class="stat-label">Pipeline</div>
+                            <div class="stat-label" data-i18n="grid.revops.s1">Pipeline</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">23.8%</div>
-                            <div class="stat-label">Conversion</div>
+                            <div class="stat-label" data-i18n="grid.revops.s2">Conversion</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">-3.7 days</div>
-                            <div class="stat-label">Cycle Time</div>
+                            <div class="stat-label" data-i18n="grid.revops.s3">Cycle Time</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1590,7 +1591,7 @@
                         <span class="tag">Lead Scoring</span>
                     </div>
                     <div class="project-links">
-                        <a href="./revops-pipeline/dashboard.html" class="project-btn project-btn-primary">View Dashboard</a>
+                        <a href="./revops-pipeline/dashboard.html" class="project-btn project-btn-primary" data-i18n="btn.viewdash">View Dashboard</a>
                     </div>
                 </div>
             </div>
@@ -1603,19 +1604,19 @@
                     <div class="project-company">Trail Blazers LLC</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Full GA4 dashboard with funnel analysis, attribution modeling, and conversion optimization for $2.5M athletic brand.</p>
+                    <p class="project-desc" data-i18n="grid.ga4.desc">Full GA4 dashboard with funnel analysis, attribution modeling, and conversion optimization for $2.5M athletic brand.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">$2.41M</div>
-                            <div class="stat-label">Revenue</div>
+                            <div class="stat-label" data-i18n="grid.ga4.s1">Revenue</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">3.72%</div>
-                            <div class="stat-label">CVR</div>
+                            <div class="stat-label" data-i18n="grid.ga4.s2">CVR</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">412K</div>
-                            <div class="stat-label">Users</div>
+                            <div class="stat-label" data-i18n="grid.ga4.s3">Users</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1637,19 +1638,19 @@
                     <div class="project-company">Talstack (Nigerian EdTech)</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Lean Six Sigma DMAIC case study reducing student onboarding from 72hrs to 18hrs with root cause analysis and SPC.</p>
+                    <p class="project-desc" data-i18n="grid.dmaic.desc">Lean Six Sigma DMAIC case study reducing student onboarding from 72hrs to 18hrs with root cause analysis and SPC.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">74.8%</div>
-                            <div class="stat-label">Time Reduced</div>
+                            <div class="stat-label" data-i18n="grid.dmaic.s1">Time Reduced</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">96.3%</div>
-                            <div class="stat-label">Data Quality</div>
+                            <div class="stat-label" data-i18n="grid.dmaic.s2">Data Quality</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">37.5</div>
-                            <div class="stat-label">Hrs Saved/Wk</div>
+                            <div class="stat-label" data-i18n="grid.dmaic.s3">Hrs Saved/Wk</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1658,7 +1659,7 @@
                         <span class="tag">Process</span>
                     </div>
                     <div class="project-links">
-                        <a href="./sixsigma-dmaic/dashboard.html" class="project-btn project-btn-primary">View Case Study</a>
+                        <a href="./sixsigma-dmaic/dashboard.html" class="project-btn project-btn-primary" data-i18n="btn.casestudy">View Case Study</a>
                     </div>
                 </div>
             </div>
@@ -1671,19 +1672,19 @@
                     <div class="project-company">Personal AI Executive Assistant</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Personal AI executive assistant that aggregates calendar, email, tasks, and job search pipeline data to deliver intelligent daily briefings, priority recommendations, interview prep, and proactive suggestions.</p>
+                    <p class="project-desc" data-i18n="grid.aicos.desc">Personal AI executive assistant that aggregates calendar, email, tasks, and job search pipeline data to deliver intelligent daily briefings, priority recommendations, interview prep, and proactive suggestions.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">20+</div>
-                            <div class="stat-label">AI Responses</div>
+                            <div class="stat-label" data-i18n="grid.aicos.s1">AI Responses</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">6</div>
-                            <div class="stat-label">Data Sources</div>
+                            <div class="stat-label" data-i18n="grid.aicos.s2">Data Sources</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Live</div>
-                            <div class="stat-label">Dashboard</div>
+                            <div class="stat-label" data-i18n="grid.aicos.s3">Dashboard</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1707,19 +1708,19 @@
                     <div class="project-company">Raspberry Pi Productivity System</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">24/7 personal productivity tracking system running on a Raspberry Pi. Monitors habits, energy levels, goals, and daily metrics with real-time visualizations and AI-powered insights for continuous self-improvement.</p>
+                    <p class="project-desc" data-i18n="grid.ops.desc">24/7 personal productivity tracking system running on a Raspberry Pi. Monitors habits, energy levels, goals, and daily metrics with real-time visualizations and AI-powered insights for continuous self-improvement.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">24/7</div>
-                            <div class="stat-label">Always On</div>
+                            <div class="stat-label" data-i18n="grid.ops.s1">Always On</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Pi</div>
-                            <div class="stat-label">Powered</div>
+                            <div class="stat-label" data-i18n="grid.ops.s2">Powered</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">AI</div>
-                            <div class="stat-label">Insights</div>
+                            <div class="stat-label" data-i18n="grid.ops.s3">Insights</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1743,19 +1744,19 @@
                     <div class="project-company">Navigation &times; Soundtrack Sync</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">AI travel companion that generates perfectly-timed playlists synchronized to your drive. Enter a route and vibe — Gemini + Google Maps builds a soundtrack where the last song ends exactly as you arrive. Your drive becomes a movie.</p>
+                    <p class="project-desc" data-i18n="grid.vibe.desc">AI travel companion that generates perfectly-timed playlists synchronized to your drive. Enter a route and vibe — Gemini + Google Maps builds a soundtrack where the last song ends exactly as you arrive. Your drive becomes a movie.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">Gemini</div>
-                            <div class="stat-label">2.5 Flash</div>
+                            <div class="stat-label" data-i18n="grid.vibe.s1">2.5 Flash</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Maps</div>
-                            <div class="stat-label">Grounding</div>
+                            <div class="stat-label" data-i18n="grid.vibe.s2">Grounding</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Perfect</div>
-                            <div class="stat-label">Timing</div>
+                            <div class="stat-label" data-i18n="grid.vibe.s3">Timing</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1780,7 +1781,7 @@
                     <div class="project-company">Gamified Performance Platform</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">A gamified performance management platform with AI/ML recommendations, XP leveling, achievements, and transparent promotion paths.</p>
+                    <p class="project-desc" data-i18n="grid.perf.desc">A gamified performance management platform with AI/ML recommendations, XP leveling, achievements, and transparent promotion paths.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">AI</div>
@@ -1788,11 +1789,11 @@
                         </div>
                         <div class="stat">
                             <div class="stat-value">XP</div>
-                            <div class="stat-label">Gamified</div>
+                            <div class="stat-label" data-i18n="grid.perf.s2">Gamified</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Real</div>
-                            <div class="stat-label">Time</div>
+                            <div class="stat-label" data-i18n="grid.perf.s3">Time</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1815,19 +1816,19 @@
                     <div class="project-company">Talstack (Nigerian EdTech)</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Python automation that cleaned, deduplicated, and formatted 5,000+ student records scattered across 12 Google Sheets for seamless HubSpot import.</p>
+                    <p class="project-desc" data-i18n="grid.edtech.desc">Python automation that cleaned, deduplicated, and formatted 5,000+ student records scattered across 12 Google Sheets for seamless HubSpot import.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">52hrs</div>
-                            <div class="stat-label">Migration</div>
+                            <div class="stat-label" data-i18n="grid.edtech.s1">Migration</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">97.2%</div>
-                            <div class="stat-label">Data Quality</div>
+                            <div class="stat-label" data-i18n="grid.edtech.s2">Data Quality</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">43.5</div>
-                            <div class="stat-label">Hours Saved</div>
+                            <div class="stat-label" data-i18n="grid.edtech.s3">Hours Saved</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1850,19 +1851,19 @@
                     <div class="project-company">Voxitech (Sri Lankan AI Startup)</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Automated lead scoring algorithm that prioritizes high-value prospects and syncs them to HubSpot instantly, eliminating manual handoff delays.</p>
+                    <p class="project-desc" data-i18n="grid.apollo.desc">Automated lead scoring algorithm that prioritizes high-value prospects and syncs them to HubSpot instantly, eliminating manual handoff delays.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">0%</div>
-                            <div class="stat-label">Lost Leads</div>
+                            <div class="stat-label" data-i18n="grid.apollo.s1">Lost Leads</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Same Day</div>
-                            <div class="stat-label">Follow-Up</div>
+                            <div class="stat-label" data-i18n="grid.apollo.s2">Follow-Up</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">DoD</div>
-                            <div class="stat-label">Contract Won</div>
+                            <div class="stat-label" data-i18n="grid.apollo.s3">Contract Won</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1885,19 +1886,19 @@
                     <div class="project-company">Trail Blazers LLC</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Python & SQL system processing payments for 214 publishers, reducing manual work by 91.7% and eliminating data entry errors entirely.</p>
+                    <p class="project-desc" data-i18n="grid.payout.desc">Python & SQL system processing payments for 214 publishers, reducing manual work by 91.7% and eliminating data entry errors entirely.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">91.7%</div>
-                            <div class="stat-label">Less Manual</div>
+                            <div class="stat-label" data-i18n="grid.payout.s1">Less Manual</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">214</div>
-                            <div class="stat-label">Publishers</div>
+                            <div class="stat-label" data-i18n="grid.payout.s2">Publishers</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">0</div>
-                            <div class="stat-label">Errors</div>
+                            <div class="stat-label" data-i18n="grid.payout.s3">Errors</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1919,19 +1920,19 @@
                     <div class="project-company">Porsche</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Real-time Snowflake dashboard tracking issue trends across high-net-worth clients, leading to a 31.4% reduction in recurring escalations.</p>
+                    <p class="project-desc" data-i18n="grid.escal.desc">Real-time Snowflake dashboard tracking issue trends across high-net-worth clients, leading to a 31.4% reduction in recurring escalations.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">31.4%</div>
-                            <div class="stat-label">Less Issues</div>
+                            <div class="stat-label" data-i18n="grid.escal.s1">Less Issues</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Real</div>
-                            <div class="stat-label">Time</div>
+                            <div class="stat-label" data-i18n="grid.escal.s2">Time</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">HNW</div>
-                            <div class="stat-label">Clients</div>
+                            <div class="stat-label" data-i18n="grid.escal.s3">Clients</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1940,7 +1941,7 @@
                         <span class="tag">CX Strategy</span>
                     </div>
                     <div class="project-links">
-                        <a href="./cx-blog-post.html" class="project-btn project-btn-primary">Read CX Philosophy</a>
+                        <a href="./cx-blog-post.html" class="project-btn project-btn-primary" data-i18n="btn.readcx">Read CX Philosophy</a>
                     </div>
                 </div>
             </div>
@@ -1953,19 +1954,19 @@
                     <div class="project-company">Trail Blazers LLC</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Full-stack ordering system integrated with operations, reducing friction and boosting customer retention by 17.3%.</p>
+                    <p class="project-desc" data-i18n="grid.ecom.desc">Full-stack ordering system integrated with operations, reducing friction and boosting customer retention by 17.3%.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">17.3%</div>
-                            <div class="stat-label">Retention</div>
+                            <div class="stat-label" data-i18n="grid.ecom.s1">Retention</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">$2.68M</div>
-                            <div class="stat-label">Revenue</div>
+                            <div class="stat-label" data-i18n="grid.ecom.s2">Revenue</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Full</div>
-                            <div class="stat-label">Stack</div>
+                            <div class="stat-label" data-i18n="grid.ecom.s3">Stack</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -1987,19 +1988,19 @@
                     <div class="project-company">Trail Blazers LLC</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Predictive model using sales data to optimize stock levels, reducing excess inventory by 18.3% while maintaining availability.</p>
+                    <p class="project-desc" data-i18n="grid.inv.desc">Predictive model using sales data to optimize stock levels, reducing excess inventory by 18.3% while maintaining availability.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">18.3%</div>
-                            <div class="stat-label">Less Excess</div>
+                            <div class="stat-label" data-i18n="grid.inv.s1">Less Excess</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">ML</div>
-                            <div class="stat-label">Powered</div>
+                            <div class="stat-label" data-i18n="grid.inv.s2">Powered</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">98.4%</div>
-                            <div class="stat-label">Availability</div>
+                            <div class="stat-label" data-i18n="grid.inv.s3">Availability</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -2021,19 +2022,19 @@
                     <div class="project-company">Geothermal Well Simulation</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">Interactive 3D geothermal heat simulation powered by Three.js. Visualizes subsurface temperature propagation using line source theory, with animated thermal gradients, multi-lateral well configurations, and 50-year drawdown forecasting.</p>
+                    <p class="project-desc" data-i18n="grid.heat.desc">Interactive 3D geothermal heat simulation powered by Three.js. Visualizes subsurface temperature propagation using line source theory, with animated thermal gradients, multi-lateral well configurations, and 50-year drawdown forecasting.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">Three.js</div>
-                            <div class="stat-label">3D Engine</div>
+                            <div class="stat-label" data-i18n="grid.heat.s1">3D Engine</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">50yr</div>
-                            <div class="stat-label">Simulation</div>
+                            <div class="stat-label" data-i18n="grid.heat.s2">Simulation</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Real</div>
-                            <div class="stat-label">Physics</div>
+                            <div class="stat-label" data-i18n="grid.heat.s3">Physics</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -2057,19 +2058,19 @@
                     <div class="project-company">Neural Audio Mastering</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc">AI-powered audio mastering studio that analyzes tracks and applies intelligent processing. Features genre-aware EQ curves, adaptive compression, harmonic saturation, and broadcast-ready limiting — all driven by Gemini's audio intelligence.</p>
+                    <p class="project-desc" data-i18n="grid.master.desc">AI-powered audio mastering studio that analyzes tracks and applies intelligent processing. Features genre-aware EQ curves, adaptive compression, harmonic saturation, and broadcast-ready limiting — all driven by Gemini's audio intelligence.</p>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">Gemini</div>
-                            <div class="stat-label">AI Engine</div>
+                            <div class="stat-label" data-i18n="grid.master.s1">AI Engine</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">4-Stage</div>
-                            <div class="stat-label">Processing</div>
+                            <div class="stat-label" data-i18n="grid.master.s2">Processing</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">A/B</div>
-                            <div class="stat-label">Comparison</div>
+                            <div class="stat-label" data-i18n="grid.master.s3">Comparison</div>
                         </div>
                     </div>
                     <div class="project-tags">
@@ -2106,48 +2107,48 @@
     <section class="experience" id="experience">
         <div class="experience-grid">
             <div class="experience-intro">
-                <h2>Experience</h2>
-                <p>A track record of leadership, strategic growth, and operational excellence across diverse industries.</p>
+                <h2 data-i18n="exp.heading">Experience</h2>
+                <p data-i18n="exp.subtitle">A track record of leadership, strategic growth, and operational excellence across diverse industries.</p>
             </div>
             <div class="experience-list">
                 <div class="experience-item">
                     <div class="experience-date">2024 – Present</div>
                     <div class="experience-content">
-                        <h3>Strategic Operations Consultant</h3>
+                        <h3 data-i18n="exp.j1.title">Strategic Operations Consultant</h3>
                         <h4>Self-Employed, International</h4>
-                        <p>Driving US market entry for international startups. Building scalable systems, automations, and RevOps infrastructure that accelerate growth.</p>
+                        <p data-i18n="exp.j1.desc">Driving US market entry for international startups. Building scalable systems, automations, and RevOps infrastructure that accelerate growth.</p>
                     </div>
                 </div>
                 <div class="experience-item">
                     <div class="experience-date">2019 – 2023</div>
                     <div class="experience-content">
-                        <h3>Founder & Principal</h3>
+                        <h3 data-i18n="exp.j2.title">Founder & Principal</h3>
                         <h4>Trail Blazers LLC, Washington, D.C.</h4>
-                        <p>Scaled athletic/wellness brand to $2.68M revenue. Engineered custom e-commerce platform and optimized supply chain using data analytics.</p>
+                        <p data-i18n="exp.j2.desc">Scaled athletic/wellness brand to $2.68M revenue. Engineered custom e-commerce platform and optimized supply chain using data analytics.</p>
                     </div>
                 </div>
                 <div class="experience-item">
                     <div class="experience-date">2018 – 2019</div>
                     <div class="experience-content">
-                        <h3>Assistant Service Manager</h3>
+                        <h3 data-i18n="exp.j3.title">Assistant Service Manager</h3>
                         <h4>Porsche Cars of North America, Washington, DC</h4>
-                        <p>Managed high-net-worth client relationships and service operations. Implemented escalation dashboard reducing recurring issues by 31.4%.</p>
+                        <p data-i18n="exp.j3.desc">Managed high-net-worth client relationships and service operations. Implemented escalation dashboard reducing recurring issues by 31.4%.</p>
                     </div>
                 </div>
                 <div class="experience-item">
                     <div class="experience-date">2017 – 2018</div>
                     <div class="experience-content">
-                        <h3>Operations Team Lead</h3>
+                        <h3 data-i18n="exp.j4.title">Operations Team Lead</h3>
                         <h4>Utah Olympic Park, Park City, UT</h4>
-                        <p>Orchestrated logistics for international Olympic competitions. Balanced elite athlete training with public facility access.</p>
+                        <p data-i18n="exp.j4.desc">Orchestrated logistics for international Olympic competitions. Balanced elite athlete training with public facility access.</p>
                     </div>
                 </div>
                 <div class="experience-item">
                     <div class="experience-date">2015 – 2018</div>
                     <div class="experience-content">
-                        <h3>Real Estate Project Coordinator</h3>
+                        <h3 data-i18n="exp.j5.title">Real Estate Project Coordinator</h3>
                         <h4>The Lifshutz Companies, San Antonio, TX</h4>
-                        <p>Coordinated multi-property development projects. Managed vendor relationships and timeline optimization for luxury real estate portfolio.</p>
+                        <p data-i18n="exp.j5.desc">Coordinated multi-property development projects. Managed vendor relationships and timeline optimization for luxury real estate portfolio.</p>
                     </div>
                 </div>
             </div>
@@ -2158,10 +2159,10 @@
     <footer class="footer" id="contact">
         <div class="footer-container">
             <div class="footer-content">
-                <h2>Let's Connect</h2>
-                <p>Ready to optimize your operations and drive growth? Reach out to discuss how I can help your team succeed.</p>
+                <h2 data-i18n="footer.heading">Let's Connect</h2>
+                <p data-i18n="footer.subtitle">Ready to optimize your operations and drive growth? Reach out to discuss how I can help your team succeed.</p>
                 <div class="contact-info">
-                    <div>Brooklyn, NY / San Antonio, TX / Open to Relocation</div>
+                    <div data-i18n="footer.location">Brooklyn, NY / San Antonio, TX / Open to Relocation</div>
                     <div>347-268-1742</div>
                     <div><a href="mailto:mcmcowen@gmail.com">mcmcowen@gmail.com</a></div>
                 </div>
@@ -2180,12 +2181,12 @@
                     </a>
                 </div>
                 <div class="footer-cta">
-                    <a href="mailto:mcmcowen@gmail.com" class="footer-btn footer-btn-primary">Send Email</a>
+                    <a href="mailto:mcmcowen@gmail.com" class="footer-btn footer-btn-primary" data-i18n="footer.btn.email">Send Email</a>
                     <a href="./hire-owen/chat.html" target="_blank" class="footer-btn footer-btn-secondary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                         </svg>
-                        Chat with My AI Agent
+                        <span data-i18n="footer.btn.chat">Chat with My AI Agent</span>
                     </a>
                 </div>
             </div>
@@ -2195,18 +2196,301 @@
         </div>
         <div class="footer-bottom">
             <div>&copy; 2026 Owen McCormick</div>
-            <div>Built with Precision</div>
+            <div data-i18n="footer.tagline">Built with Precision</div>
         </div>
     </footer>
 
     <!-- Floating AI Agent Button -->
     <a href="./hire-owen/chat.html" class="floating-ai-btn" target="_blank">
         <span class="ai-dot"></span>
-        Chat with Owen's AI
+        <span data-i18n="float.chat">Chat with Owen's AI</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
     </a>
+
+    <script>
+window.__translations = {
+    en: {
+        '_pageTitle': 'Owen McCormick - Operations & Automation Portfolio',
+        'nav.about': 'About',
+        'nav.projects': 'Projects',
+        'nav.experience': 'Experience',
+        'nav.certifications': 'Certifications',
+        'nav.contact': 'Contact',
+        'nav.cta': 'Get In Touch',
+        'hero.heading': 'Ops.<br>Precision.<br><span>Mastery.</span>',
+        'hero.subtitle': 'Building systems that scale. Automations that stick. Operations that actually work. Scroll down to explore my projects \u2014 and chat with my AI assistant in the corner.',
+        'hero.btn.projects': 'View Projects',
+        'hero.btn.philosophy': 'Read My Philosophy',
+        'hero.btn.resume': 'Resume',
+        'hero.btn.presentation': 'Presentation',
+        'hero.badge.title': 'RevOps',
+        'hero.badge.sub': '& Automation',
+        'skill.auto.title': 'Automation',
+        'skill.auto.desc': 'Make, System Prompt Design, LLM Evaluation',
+        'skill.revops.title': 'RevOps',
+        'skill.pm.title': 'Project Mgmt',
+        'skill.cr.title': 'Client Relations',
+        'skill.cr.desc': 'Escalation Management & Retention Strategy',
+        'certs.tag': 'Credentials',
+        'certs.title': 'Certifications & Education',
+        'certs.bs.title': 'B.S. Business',
+        'certs.lss.desc': 'Green Belt Certified',
+        'certs.hs.desc': 'Revenue Operations Certified',
+        'certs.viewall': 'View All Credentials & Certificates',
+        'featured.tag': 'Featured Work',
+        'featured.title': 'Signature Projects',
+        'p1.category': 'Data Intelligence / AI',
+        'p1.subtitle': 'Company Culture Intelligence Platform',
+        'p1.desc': 'Built a comprehensive platform that visualizes company culture scores across 127 organizations. Features AI-powered chatbot for company insights, interactive radar charts for culture breakdowns, and bubble visualizations comparing work-life balance vs overall ratings.',
+        'p1.stat1': 'Companies',
+        'p1.stat2': 'Salaries',
+        'p1.stat3': 'Powered',
+        'btn.livedemo': 'Live Demo',
+        'btn.casestudy': 'Case Study',
+        'btn.github': 'View on GitHub',
+        'btn.dashboard': 'Launch Dashboard',
+        'btn.viewdash': 'View Dashboard',
+        'btn.readcx': 'Read CX Philosophy',
+        'p2.category': 'AI / Enterprise Analytics',
+        'p2.subtitle': 'Narrative Intelligence Engine',
+        'p2.desc': 'AI-powered narrative intelligence dashboard for enterprise communications. Features real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights. Built with React, TypeScript, and Gemini API integration.',
+        'p2.stat1': 'AI Core',
+        'p2.stat2': 'Time Intel',
+        'p2.stat3': 'Share of Voice',
+        'p3.category': 'AI / Product Launch Management',
+        'p3.subtitle': 'AI-Powered Launch Command Center',
+        'p3.desc': 'Real-time product launch tracking system with AI-generated status briefs, cross-team dependency mapping, risk detection, and stakeholder communications. Built to showcase how I orchestrate complex, multi-team initiatives.',
+        'p3.stat1': 'Active Launches',
+        'p3.stat2': 'Teams Tracked',
+        'p3.stat3': 'Powered Briefs',
+        'toggle.view': 'View All Projects',
+        'filter.all': 'All Projects',
+        'filter.auto': 'Automation',
+        'filter.data': 'Data & Analytics',
+        'filter.ai': 'AI & Trading',
+        'filter.ops': 'Operations',
+        'grid.revops.desc': 'End-to-end revenue operations pipeline with lead scoring, lifecycle management, and attribution modeling for US market expansion.',
+        'grid.revops.s1': 'Pipeline',
+        'grid.revops.s2': 'Conversion',
+        'grid.revops.s3': 'Cycle Time',
+        'grid.ga4.desc': 'Full GA4 dashboard with funnel analysis, attribution modeling, and conversion optimization for $2.5M athletic brand.',
+        'grid.ga4.s1': 'Revenue',
+        'grid.ga4.s2': 'CVR',
+        'grid.ga4.s3': 'Users',
+        'grid.dmaic.desc': 'Lean Six Sigma DMAIC case study reducing student onboarding from 72hrs to 18hrs with root cause analysis and SPC.',
+        'grid.dmaic.s1': 'Time Reduced',
+        'grid.dmaic.s2': 'Data Quality',
+        'grid.dmaic.s3': 'Hrs Saved/Wk',
+        'grid.aicos.desc': 'Personal AI executive assistant that aggregates calendar, email, tasks, and job search pipeline data to deliver intelligent daily briefings, priority recommendations, interview prep, and proactive suggestions.',
+        'grid.aicos.s1': 'AI Responses',
+        'grid.aicos.s2': 'Data Sources',
+        'grid.aicos.s3': 'Dashboard',
+        'grid.ops.desc': '24/7 personal productivity tracking system running on a Raspberry Pi. Monitors habits, energy levels, goals, and daily metrics with real-time visualizations and AI-powered insights for continuous self-improvement.',
+        'grid.ops.s1': 'Always On',
+        'grid.ops.s2': 'Powered',
+        'grid.ops.s3': 'Insights',
+        'grid.vibe.desc': 'AI travel companion that generates perfectly-timed playlists synchronized to your drive. Enter a route and vibe \u2014 Gemini + Google Maps builds a soundtrack where the last song ends exactly as you arrive. Your drive becomes a movie.',
+        'grid.vibe.s1': '2.5 Flash',
+        'grid.vibe.s2': 'Grounding',
+        'grid.vibe.s3': 'Timing',
+        'grid.perf.desc': 'A gamified performance management platform with AI/ML recommendations, XP leveling, achievements, and transparent promotion paths.',
+        'grid.perf.s2': 'Gamified',
+        'grid.perf.s3': 'Time',
+        'grid.edtech.desc': 'Python automation that cleaned, deduplicated, and formatted 5,000+ student records scattered across 12 Google Sheets for seamless HubSpot import.',
+        'grid.edtech.s1': 'Migration',
+        'grid.edtech.s2': 'Data Quality',
+        'grid.edtech.s3': 'Hours Saved',
+        'grid.apollo.desc': 'Automated lead scoring algorithm that prioritizes high-value prospects and syncs them to HubSpot instantly, eliminating manual handoff delays.',
+        'grid.apollo.s1': 'Lost Leads',
+        'grid.apollo.s2': 'Follow-Up',
+        'grid.apollo.s3': 'Contract Won',
+        'grid.payout.desc': 'Python & SQL system processing payments for 214 publishers, reducing manual work by 91.7% and eliminating data entry errors entirely.',
+        'grid.payout.s1': 'Less Manual',
+        'grid.payout.s2': 'Publishers',
+        'grid.payout.s3': 'Errors',
+        'grid.escal.desc': 'Real-time Snowflake dashboard tracking issue trends across high-net-worth clients, leading to a 31.4% reduction in recurring escalations.',
+        'grid.escal.s1': 'Less Issues',
+        'grid.escal.s2': 'Time',
+        'grid.escal.s3': 'Clients',
+        'grid.ecom.desc': 'Full-stack ordering system integrated with operations, reducing friction and boosting customer retention by 17.3%.',
+        'grid.ecom.s1': 'Retention',
+        'grid.ecom.s2': 'Revenue',
+        'grid.ecom.s3': 'Stack',
+        'grid.inv.desc': 'Predictive model using sales data to optimize stock levels, reducing excess inventory by 18.3% while maintaining availability.',
+        'grid.inv.s1': 'Less Excess',
+        'grid.inv.s2': 'Powered',
+        'grid.inv.s3': 'Availability',
+        'grid.heat.desc': 'Interactive 3D geothermal heat simulation powered by Three.js. Visualizes subsurface temperature propagation using line source theory, with animated thermal gradients, multi-lateral well configurations, and 50-year drawdown forecasting.',
+        'grid.heat.s1': '3D Engine',
+        'grid.heat.s2': 'Simulation',
+        'grid.heat.s3': 'Physics',
+        'grid.master.desc': 'AI-powered audio mastering studio that analyzes tracks and applies intelligent processing. Features genre-aware EQ curves, adaptive compression, harmonic saturation, and broadcast-ready limiting \u2014 all driven by Gemini\'s audio intelligence.',
+        'grid.master.s1': 'AI Engine',
+        'grid.master.s2': 'Processing',
+        'grid.master.s3': 'Comparison',
+        'exp.heading': 'Experience',
+        'exp.subtitle': 'A track record of leadership, strategic growth, and operational excellence across diverse industries.',
+        'exp.j1.title': 'Strategic Operations Consultant',
+        'exp.j1.desc': 'Driving US market entry for international startups. Building scalable systems, automations, and RevOps infrastructure that accelerate growth.',
+        'exp.j2.title': 'Founder & Principal',
+        'exp.j2.desc': 'Scaled athletic/wellness brand to $2.68M revenue. Engineered custom e-commerce platform and optimized supply chain using data analytics.',
+        'exp.j3.title': 'Assistant Service Manager',
+        'exp.j3.desc': 'Managed high-net-worth client relationships and service operations. Implemented escalation dashboard reducing recurring issues by 31.4%.',
+        'exp.j4.title': 'Operations Team Lead',
+        'exp.j4.desc': 'Orchestrated logistics for international Olympic competitions. Balanced elite athlete training with public facility access.',
+        'exp.j5.title': 'Real Estate Project Coordinator',
+        'exp.j5.desc': 'Coordinated multi-property development projects. Managed vendor relationships and timeline optimization for luxury real estate portfolio.',
+        'footer.heading': 'Let\'s Connect',
+        'footer.subtitle': 'Ready to optimize your operations and drive growth? Reach out to discuss how I can help your team succeed.',
+        'footer.location': 'Brooklyn, NY / San Antonio, TX / Open to Relocation',
+        'footer.btn.email': 'Send Email',
+        'footer.btn.chat': 'Chat with My AI Agent',
+        'footer.tagline': 'Built with Precision',
+        'float.chat': 'Chat with Owen\'s AI'
+    },
+    fr: {
+        '_pageTitle': 'Owen McCormick - Portfolio Op\u00e9rations & Automatisation',
+        'nav.about': '\u00c0 propos',
+        'nav.projects': 'Projets',
+        'nav.experience': 'Exp\u00e9rience',
+        'nav.certifications': 'Certifications',
+        'nav.contact': 'Contact',
+        'nav.cta': 'Me Contacter',
+        'hero.heading': 'Ops.<br>Pr\u00e9cision.<br><span>Ma\u00eetrise.</span>',
+        'hero.subtitle': 'Des syst\u00e8mes qui passent \u00e0 l\'\u00e9chelle. Des automatisations qui tiennent. Des op\u00e9rations qui fonctionnent vraiment. D\u00e9couvrez mes projets ci-dessous \u2014 et discutez avec mon assistant IA dans le coin.',
+        'hero.btn.projects': 'Voir les Projets',
+        'hero.btn.philosophy': 'Lire Ma Philosophie',
+        'hero.btn.resume': 'CV',
+        'hero.btn.presentation': 'Pr\u00e9sentation',
+        'hero.badge.title': 'RevOps',
+        'hero.badge.sub': '& Automatisation',
+        'skill.auto.title': 'Automatisation',
+        'skill.auto.desc': 'Make, Conception de Prompts, \u00c9valuation LLM',
+        'skill.revops.title': 'RevOps',
+        'skill.pm.title': 'Gestion de Projet',
+        'skill.cr.title': 'Relations Clients',
+        'skill.cr.desc': 'Gestion des Escalades & Strat\u00e9gie de R\u00e9tention',
+        'certs.tag': 'Dipl\u00f4mes',
+        'certs.title': 'Certifications & Formation',
+        'certs.bs.title': 'Licence Gestion',
+        'certs.lss.desc': 'Certifi\u00e9 Ceinture Verte',
+        'certs.hs.desc': 'Certifi\u00e9 Revenue Operations',
+        'certs.viewall': 'Voir Tous les Dipl\u00f4mes & Certificats',
+        'featured.tag': 'Travaux Phares',
+        'featured.title': 'Projets Signature',
+        'p1.category': 'Intelligence des Donn\u00e9es / IA',
+        'p1.subtitle': 'Plateforme d\'Intelligence Culturelle',
+        'p1.desc': 'Plateforme compl\u00e8te qui visualise les scores de culture d\'entreprise de 127 organisations. Chatbot IA pour des insights, graphiques radar interactifs pour l\'analyse culturelle, et visualisations comparant l\'\u00e9quilibre vie pro/perso aux notes globales.',
+        'p1.stat1': 'Entreprises',
+        'p1.stat2': 'Salaires',
+        'p1.stat3': 'Propuls\u00e9',
+        'btn.livedemo': 'D\u00e9mo Live',
+        'btn.casestudy': '\u00c9tude de Cas',
+        'btn.github': 'Voir sur GitHub',
+        'btn.dashboard': 'Voir le Dashboard',
+        'btn.viewdash': 'Voir le Dashboard',
+        'btn.readcx': 'Lire la Philosophie CX',
+        'p2.category': 'IA / Analytique Entreprise',
+        'p2.subtitle': 'Moteur d\'Intelligence Narrative',
+        'p2.desc': 'Tableau de bord d\'intelligence narrative propuls\u00e9 par l\'IA pour les communications d\'entreprise. Suivi de sentiment en temps r\u00e9el, analyse concurrentielle, chat analyste IA, et recommandations strat\u00e9giques. React, TypeScript, API Gemini.',
+        'p2.stat1': 'C\u0153ur IA',
+        'p2.stat2': 'Intel Temps R\u00e9el',
+        'p2.stat3': 'Part de Voix',
+        'p3.category': 'IA / Gestion de Lancement Produit',
+        'p3.subtitle': 'Centre de Commande de Lancement IA',
+        'p3.desc': 'Syst\u00e8me de suivi de lancement produit en temps r\u00e9el avec briefings IA, cartographie des d\u00e9pendances inter-\u00e9quipes, d\u00e9tection de risques et communications aux parties prenantes. D\u00e9montre l\'orchestration d\'initiatives complexes.',
+        'p3.stat1': 'Lancements Actifs',
+        'p3.stat2': '\u00c9quipes Suivies',
+        'p3.stat3': 'Briefings IA',
+        'toggle.view': 'Voir Tous les Projets',
+        'filter.all': 'Tous les Projets',
+        'filter.auto': 'Automatisation',
+        'filter.data': 'Donn\u00e9es & Analytique',
+        'filter.ai': 'IA & Trading',
+        'filter.ops': 'Op\u00e9rations',
+        'grid.revops.desc': 'Pipeline de revenue operations de bout en bout avec scoring de leads, gestion du cycle de vie et mod\u00e9lisation d\'attribution pour l\'expansion sur le march\u00e9 am\u00e9ricain.',
+        'grid.revops.s1': 'Pipeline',
+        'grid.revops.s2': 'Conversion',
+        'grid.revops.s3': 'Dur\u00e9e du Cycle',
+        'grid.ga4.desc': 'Dashboard GA4 complet avec analyse d\'entonnoir, mod\u00e9lisation d\'attribution et optimisation de conversion pour une marque sportive de 2,5M$.',
+        'grid.ga4.s1': 'Chiffre d\'Affaires',
+        'grid.ga4.s2': 'Taux Conv.',
+        'grid.ga4.s3': 'Utilisateurs',
+        'grid.dmaic.desc': '\u00c9tude de cas Lean Six Sigma DMAIC r\u00e9duisant l\'onboarding \u00e9tudiant de 72h \u00e0 18h avec analyse des causes racines et SPC.',
+        'grid.dmaic.s1': 'Temps R\u00e9duit',
+        'grid.dmaic.s2': 'Qualit\u00e9 Donn\u00e9es',
+        'grid.dmaic.s3': 'Hrs \u00c9conom./Sem',
+        'grid.aicos.desc': 'Assistant ex\u00e9cutif IA personnel qui agr\u00e8ge calendrier, emails, t\u00e2ches et pipeline de recherche d\'emploi pour des briefings quotidiens intelligents, recommandations de priorit\u00e9s et pr\u00e9paration d\'entretiens.',
+        'grid.aicos.s1': 'R\u00e9ponses IA',
+        'grid.aicos.s2': 'Sources Donn\u00e9es',
+        'grid.aicos.s3': 'Dashboard',
+        'grid.ops.desc': 'Syst\u00e8me de suivi de productivit\u00e9 24/7 sur Raspberry Pi. Suit les habitudes, l\'\u00e9nergie, les objectifs et les m\u00e9triques quotidiennes avec des visualisations temps r\u00e9el et des insights propuls\u00e9s par l\'IA.',
+        'grid.ops.s1': 'Toujours Actif',
+        'grid.ops.s2': 'Propuls\u00e9',
+        'grid.ops.s3': 'Insights',
+        'grid.vibe.desc': 'Compagnon de voyage IA qui g\u00e9n\u00e8re des playlists parfaitement synchronis\u00e9es avec votre trajet. Entrez un itin\u00e9raire et une ambiance \u2014 Gemini + Google Maps cr\u00e9e une bande-son o\u00f9 la derni\u00e8re chanson se termine exactement \u00e0 l\'arriv\u00e9e.',
+        'grid.vibe.s1': '2.5 Flash',
+        'grid.vibe.s2': 'Ancrage',
+        'grid.vibe.s3': 'Timing',
+        'grid.perf.desc': 'Plateforme de gestion de la performance gamifi\u00e9e avec recommandations IA/ML, niveaux XP, succ\u00e8s et parcours de promotion transparents.',
+        'grid.perf.s2': 'Gamifi\u00e9',
+        'grid.perf.s3': 'Temps R\u00e9el',
+        'grid.edtech.desc': 'Automatisation Python qui a nettoy\u00e9, d\u00e9dupliqu\u00e9 et format\u00e9 plus de 5 000 dossiers \u00e9tudiants r\u00e9partis dans 12 Google Sheets pour un import HubSpot fluide.',
+        'grid.edtech.s1': 'Migration',
+        'grid.edtech.s2': 'Qualit\u00e9 Donn\u00e9es',
+        'grid.edtech.s3': 'Heures \u00c9conom.',
+        'grid.apollo.desc': 'Algorithme de scoring de leads automatis\u00e9 qui priorise les prospects \u00e0 forte valeur et les synchronise avec HubSpot instantan\u00e9ment, \u00e9liminant les d\u00e9lais de transfert manuel.',
+        'grid.apollo.s1': 'Leads Perdus',
+        'grid.apollo.s2': 'Suivi',
+        'grid.apollo.s3': 'Contrat Gagn\u00e9',
+        'grid.payout.desc': 'Syst\u00e8me Python & SQL traitant les paiements de 214 \u00e9diteurs, r\u00e9duisant le travail manuel de 91,7% et \u00e9liminant totalement les erreurs de saisie.',
+        'grid.payout.s1': 'Moins Manuel',
+        'grid.payout.s2': '\u00c9diteurs',
+        'grid.payout.s3': 'Erreurs',
+        'grid.escal.desc': 'Dashboard Snowflake temps r\u00e9el suivant les tendances d\'incidents parmi les clients fortun\u00e9s, menant \u00e0 une r\u00e9duction de 31,4% des escalades r\u00e9currentes.',
+        'grid.escal.s1': 'Moins d\'Incidents',
+        'grid.escal.s2': 'Temps R\u00e9el',
+        'grid.escal.s3': 'Clients',
+        'grid.ecom.desc': 'Syst\u00e8me de commande full-stack int\u00e9gr\u00e9 aux op\u00e9rations, r\u00e9duisant les frictions et augmentant la r\u00e9tention client de 17,3%.',
+        'grid.ecom.s1': 'R\u00e9tention',
+        'grid.ecom.s2': 'Chiffre d\'Affaires',
+        'grid.ecom.s3': 'Stack',
+        'grid.inv.desc': 'Mod\u00e8le pr\u00e9dictif utilisant les donn\u00e9es de ventes pour optimiser les niveaux de stock, r\u00e9duisant les exc\u00e9dents de 18,3% tout en maintenant la disponibilit\u00e9.',
+        'grid.inv.s1': 'Moins d\'Exc\u00e9dent',
+        'grid.inv.s2': 'Propuls\u00e9',
+        'grid.inv.s3': 'Disponibilit\u00e9',
+        'grid.heat.desc': 'Simulation 3D interactive de g\u00e9othermie propuls\u00e9e par Three.js. Visualise la propagation de temp\u00e9rature souterraine avec des gradients thermiques anim\u00e9s, des configurations multi-lat\u00e9rales de puits et des pr\u00e9visions sur 50 ans.',
+        'grid.heat.s1': 'Moteur 3D',
+        'grid.heat.s2': 'Simulation',
+        'grid.heat.s3': 'Physique',
+        'grid.master.desc': 'Studio de mastering audio propuls\u00e9 par l\'IA qui analyse les pistes et applique un traitement intelligent. Courbes EQ adapt\u00e9es au genre, compression adaptative, saturation harmonique et limitation broadcast \u2014 le tout pilot\u00e9 par Gemini.',
+        'grid.master.s1': 'Moteur IA',
+        'grid.master.s2': 'Traitement',
+        'grid.master.s3': 'Comparaison',
+        'exp.heading': 'Exp\u00e9rience',
+        'exp.subtitle': 'Un parcours de leadership, de croissance strat\u00e9gique et d\'excellence op\u00e9rationnelle dans des secteurs vari\u00e9s.',
+        'exp.j1.title': 'Consultant en Op\u00e9rations Strat\u00e9giques',
+        'exp.j1.desc': 'Pilote l\'entr\u00e9e sur le march\u00e9 am\u00e9ricain pour des startups internationales. Construit des syst\u00e8mes scalables, des automatisations et une infrastructure RevOps qui acc\u00e9l\u00e8rent la croissance.',
+        'exp.j2.title': 'Fondateur & Dirigeant',
+        'exp.j2.desc': 'A d\u00e9velopp\u00e9 une marque sport/bien-\u00eatre jusqu\'\u00e0 2,68M$ de chiffre d\'affaires. Ing\u00e9nierie d\'une plateforme e-commerce et optimisation de la supply chain par l\'analytique.',
+        'exp.j3.title': 'Assistant Responsable Service',
+        'exp.j3.desc': 'Gestion des relations clients fortun\u00e9s et des op\u00e9rations de service. Mise en place d\'un dashboard d\'escalade r\u00e9duisant les probl\u00e8mes r\u00e9currents de 31,4%.',
+        'exp.j4.title': 'Responsable d\'\u00c9quipe Op\u00e9rations',
+        'exp.j4.desc': 'Orchestration de la logistique pour des comp\u00e9titions olympiques internationales. \u00c9quilibre entre l\'entra\u00eenement d\'athl\u00e8tes d\'\u00e9lite et l\'acc\u00e8s public aux installations.',
+        'exp.j5.title': 'Coordinateur de Projets Immobiliers',
+        'exp.j5.desc': 'Coordination de projets de d\u00e9veloppement multi-propri\u00e9t\u00e9s. Gestion des relations fournisseurs et optimisation des d\u00e9lais pour un portefeuille immobilier de luxe.',
+        'footer.heading': 'Connectons-nous',
+        'footer.subtitle': 'Pr\u00eat \u00e0 optimiser vos op\u00e9rations et stimuler la croissance ? Contactez-moi pour discuter de comment je peux aider votre \u00e9quipe.',
+        'footer.location': 'Brooklyn, NY / San Antonio, TX / Ouvert \u00e0 la Mobilit\u00e9',
+        'footer.btn.email': 'Envoyer un Email',
+        'footer.btn.chat': 'Discuter avec Mon Agent IA',
+        'footer.tagline': 'Construit avec Pr\u00e9cision',
+        'float.chat': 'Discuter avec l\'IA d\'Owen'
+    }
+};
+</script>
 
     <script>
         // Project filtering
@@ -2292,10 +2576,11 @@
             btn.classList.toggle('active');
             projects.classList.toggle('show');
 
+            var lang = window.__langSystem ? window.__langSystem.getCurrentLang() : 'en';
             if (projects.classList.contains('show')) {
-                document.getElementById('toggleBtnText').textContent = 'Hide Projects';
+                document.getElementById('toggleBtnText').textContent = lang === 'fr' ? 'Masquer les Projets' : 'Hide Projects';
             } else {
-                document.getElementById('toggleBtnText').textContent = 'View All Projects';
+                document.getElementById('toggleBtnText').textContent = lang === 'fr' ? 'Voir Tous les Projets' : 'View All Projects';
             }
         }
 
