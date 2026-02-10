@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <link rel="apple-touch-icon" href="./favicon.png">
+    <title>Certifications & Education - Owen McCormick</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a2027;
+            --bg-card: #1e252e;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-primary: #14b8a6;
+            --accent-secondary: #0d9488;
+            --accent-gradient: linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #0891b2 100%);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow-lg: 0 10px 25px -3px rgb(0 0 0 / 0.5);
+            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 40px;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 80px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Credentials Grid */
+        .credentials {
+            padding: 40px 40px 100px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cred-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .cred-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .cred-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl), 0 0 40px rgba(20, 184, 166, 0.1);
+        }
+
+        .cred-image {
+            width: 100%;
+            background: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cred-image img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .cred-card:hover .cred-image img {
+            transform: scale(1.02);
+        }
+
+        .cred-image .zoom-hint {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cred-card:hover .zoom-hint {
+            opacity: 1;
+        }
+
+        .cred-info {
+            padding: 24px 28px;
+        }
+
+        .cred-issuer {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 6px;
+        }
+
+        .cred-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .cred-detail {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .cred-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .cred-tag {
+            padding: 5px 10px;
+            background: var(--bg-secondary);
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border-radius: 5px;
+        }
+
+        /* Placeholder card for upcoming certs */
+        .cred-card.upcoming {
+            border-style: dashed;
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .cred-card.upcoming .cred-image {
+            background: var(--bg-secondary);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coming-soon {
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .coming-soon .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .coming-soon p {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .cred-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero, .credentials {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="./" class="nav-logo">Owen P. McCormick</a>
+            <a href="./" class="nav-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Portfolio
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-tag">Verified Credentials</div>
+        <h1>Certifications & <span>Education</span></h1>
+        <p>Every credential listed on my portfolio, verified and documented. Click any certificate to view it full-size.</p>
+    </section>
+
+    <section class="credentials">
+
+        <!-- EDUCATION -->
+        <div class="section-label">Education</div>
+        <div class="cred-grid">
+            <div class="cred-card">
+                <div class="cred-image" onclick="openLightbox(this)">
+                    <img src="./images/certs/csu-business.png" alt="Colorado State University - Bachelor of Science in Business Management">
+                    <span class="zoom-hint">Click to enlarge</span>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">Colorado State University Global</div>
+                    <div class="cred-title">Bachelor of Science — Business Management</div>
+                    <div class="cred-detail">Cum Laude · February 2025</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">B.S. Degree</span>
+                        <span class="cred-tag">Business Management</span>
+                        <span class="cred-tag">Cum Laude</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cred-card">
+                <div class="cred-image" onclick="openLightbox(this)">
+                    <img src="./images/certs/purdue-ai.png" alt="Purdue University - Generative AI for Business Transformation">
+                    <span class="zoom-hint">Click to enlarge</span>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">Purdue University × Simplilearn</div>
+                    <div class="cred-title">Generative AI for Business Transformation</div>
+                    <div class="cred-detail">Completed April 2023</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">Generative AI</span>
+                        <span class="cred-tag">Business Strategy</span>
+                        <span class="cred-tag">AI Transformation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFESSIONAL CERTIFICATIONS -->
+        <div class="section-label">Professional Certifications</div>
+        <div class="cred-grid">
+            <div class="cred-card">
+                <div class="cred-image" onclick="openLightbox(this)">
+                    <img src="./images/certs/hubspot-revops.png" alt="HubSpot Revenue Operations Certification">
+                    <span class="zoom-hint">Click to enlarge</span>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">HubSpot Academy</div>
+                    <div class="cred-title">Revenue Operations Certified</div>
+                    <div class="cred-detail">Valid Feb 2026 – Mar 2027 · ID: 22a49d0e6558...</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">RevOps</span>
+                        <span class="cred-tag">CRM</span>
+                        <span class="cred-tag">Pipeline Management</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cred-card">
+                <div class="cred-image" onclick="openLightbox(this)">
+                    <img src="./images/certs/google-analytics.png" alt="Google Analytics Certification">
+                    <span class="zoom-hint">Click to enlarge</span>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">Google</div>
+                    <div class="cred-title">Google Analytics Certification</div>
+                    <div class="cred-detail">Valid Feb 2026 – Feb 2027 · ID: 174024697</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">Google Analytics 4</span>
+                        <span class="cred-tag">Data Analytics</span>
+                        <span class="cred-tag">Reporting</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Placeholders for upcoming certs -->
+            <div class="cred-card upcoming">
+                <div class="cred-image">
+                    <div class="coming-soon">
+                        <div class="icon">🥋</div>
+                        <p>Lean Six Sigma Green Belt</p>
+                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
+                    </div>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">Lean Six Sigma</div>
+                    <div class="cred-title">Green Belt Certified</div>
+                    <div class="cred-detail">Process Improvement & Waste Reduction</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">DMAIC</span>
+                        <span class="cred-tag">Process Optimization</span>
+                        <span class="cred-tag">Quality</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cred-card upcoming">
+                <div class="cred-image">
+                    <div class="coming-soon">
+                        <div class="icon">🔄</div>
+                        <p>Professional Scrum Master I</p>
+                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
+                    </div>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">Scrum.org</div>
+                    <div class="cred-title">Professional Scrum Master I (PSM I)</div>
+                    <div class="cred-detail">Agile Project Management</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">Scrum</span>
+                        <span class="cred-tag">Agile</span>
+                        <span class="cred-tag">Sprint Management</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LANGUAGE & SPECIALTY -->
+        <div class="section-label">Language & Specialty</div>
+        <div class="cred-grid">
+            <div class="cred-card upcoming">
+                <div class="cred-image">
+                    <div class="coming-soon">
+                        <div class="icon">🇫🇷</div>
+                        <p>DELF B2 — French</p>
+                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
+                    </div>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">French Ministry of Education</div>
+                    <div class="cred-title">DELF B2 — French Language Proficiency</div>
+                    <div class="cred-detail">Upper-Intermediate / Independent User</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">French</span>
+                        <span class="cred-tag">B2 Level</span>
+                        <span class="cred-tag">International</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cred-card upcoming">
+                <div class="cred-image">
+                    <div class="coming-soon">
+                        <div class="icon">🪵</div>
+                        <p>Timber Framing</p>
+                        <p style="font-size: 0.65rem; font-weight: 400; text-transform: none; margin-top: 4px;">Certificate being compiled</p>
+                    </div>
+                </div>
+                <div class="cred-info">
+                    <div class="cred-issuer">Specialty Certification</div>
+                    <div class="cred-title">Timber Framing</div>
+                    <div class="cred-detail">Structural Timber Frame Construction</div>
+                    <div class="cred-tags">
+                        <span class="cred-tag">Timber Framing</span>
+                        <span class="cred-tag">Construction</span>
+                        <span class="cred-tag">Craftsmanship</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightboxImg" src="" alt="Certificate Full View">
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 Owen McCormick · <a href="./">Back to Portfolio</a></p>
+    </footer>
+
+    <script>
+        function openLightbox(el) {
+            const img = el.querySelector('img');
+            if (!img) return;
+            document.getElementById('lightboxImg').src = img.src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
