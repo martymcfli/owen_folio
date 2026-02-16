@@ -19,8 +19,8 @@
         }
 
         #hire-owen-bubble {
-            width: 64px;
-            height: 64px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
             border: none;
@@ -28,19 +28,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(20, 184, 166, 0.4);
+            box-shadow: 0 3px 14px rgba(20, 184, 166, 0.35);
             transition: all 0.3s ease;
             position: relative;
         }
 
         #hire-owen-bubble:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(20, 184, 166, 0.5);
+            box-shadow: 0 4px 20px rgba(20, 184, 166, 0.45);
         }
 
         #hire-owen-bubble svg {
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
             color: white;
         }
 
@@ -58,13 +58,13 @@
 
         #hire-owen-pulse {
             position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 16px;
-            height: 16px;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
             background: #22c55e;
             border-radius: 50%;
-            border: 3px solid #0f1419;
+            border: 2px solid #0f1419;
             animation: pulse 2s infinite;
         }
 
@@ -378,63 +378,89 @@
         }
     `;
 
-    // Knowledge base (condensed version for widget)
+    // Knowledge base
     const knowledge = {
-        skills: "Owen's core skills include RevOps & Sales Operations, Process Automation (Python, JavaScript), AI/ML Integration (Gemini API), Data Analytics & Visualization, CRM Management (HubSpot, Salesforce), and Project Management. He's Lean Six Sigma and Scrum Master certified.",
+        skills: "Owen's good at making messy things less messy. RevOps, sales ops, process automation, CRM architecture (HubSpot & Salesforce), project management. He's got a Lean Six Sigma Green Belt, Scrum Master cert, and is taking his PMP in March. He also builds things with Python, JavaScript, and React when nobody's looking.",
 
-        projects: "Owen has built several impressive projects: **Chime Pulse** (AI narrative intelligence dashboard), **Brandify AI** (AI brand identity generator), **SpinnerEvolve** (evolutionary animation generator), **Culture Heat Map** (organizational diagnostics), and a **Personal Ops Dashboard** running on Raspberry Pi.",
+        projects: "He's got a few things on this site worth clicking around — a **Salesforce Payment Orchestrator** (the one with actual Apex code, not just a screenshot), a **Culture Heat Map** that tracks org health across 127 companies, and **Chime Pulse** which is an AI-powered narrative intelligence dashboard. All built by him. Yes, really.",
 
-        aiProjects: "Owen's AI projects showcase his technical abilities:\n\n• **Chime Pulse** - Real-time sentiment tracking and AI analyst chat\n• **Brandify AI** - Generate complete brand identities from a mission statement\n• **SpinnerEvolve** - A/B test AI-generated animations\n\nAll built with React, TypeScript, and Gemini API. Live demos are on his portfolio!",
+        revops: "HubSpot RevOps certified. Built pipeline architecture, lead scoring, lifecycle automation — the whole thing. He managed an $847K+ pipeline at 24.3% conversion. He gets weirdly excited about deal stage hygiene.",
 
-        revops: "Owen is HubSpot RevOps certified with experience managing $847K+ pipelines at 24.3% conversion rates. He specializes in CRM optimization, process automation, and cross-functional alignment between sales, marketing, and CS teams.",
+        availability: "He's actively looking. Can start fast — within 2 weeks. Open to remote, hybrid, or on-site. Currently in New York but relocating is not a problem for him at all.",
 
-        availability: "Owen is actively looking for full-time opportunities. He can start immediately or within 2 weeks, and is open to remote, hybrid, or on-site roles in Brooklyn NY, San Antonio TX, or anywhere remote-friendly.",
+        compensation: "He says his range is $80K-$110K base but he's flexible depending on the full picture — equity, growth, company stage, whether the snacks are good. His words, not mine.",
 
-        compensation: "Owen's target range is $80,000 - $110,000, but he's flexible based on total comp, equity, growth opportunity, and company stage. He says he's more interested in the right fit than maximizing salary.",
+        contact: "Best ways to reach Owen:\n📧 mcmcowen@gmail.com\n📱 347-268-1742\n💼 linkedin.com/in/owen-p-mccormick\n\nHe's pretty quick to respond. Faster than me, honestly.",
 
-        contact: "You can reach Owen at:\n• Email: mcmcowen@gmail.com\n• Phone: 347-268-1742\n• LinkedIn: linkedin.com/in/owenpmccormick\n\nOr click 'Schedule a call' to book time with him directly!",
+        whyHire: "Most ops people manage systems. Owen builds them from scratch and then optimizes them. He scaled a business from zero to $2.5M and sold it. He's built CRM pipelines, payment systems, AI dashboards — not as homework, but because he wanted to. That's either impressive or concerning, depending on your perspective.",
 
-        whyHire: "Owen isn't just an operator—he's a builder. While most ops people manage existing systems, Owen builds new ones. His portfolio isn't case studies from past jobs—it's tools he built himself. He brings a 'what can I automate?' mindset to everything.",
+        background: "B.S. in Business (Cum Laude), Lean Six Sigma Green Belt, Scrum Master (PSM I), HubSpot RevOps cert, PMP candidate. He also speaks French (B2 certified) which comes up more than you'd think. Previously ran his own company in D.C. for five years and worked at Porsche before that.",
 
-        background: "Owen has a B.S. in Business, plus Lean Six Sigma, Scrum Master, and HubSpot RevOps certifications. He specializes in helping international startups scale operations in the US market."
+        color: "Green. Next question.",
+
+        food: "Owen's a big food guy. He lived in France for a while so he's annoyingly opinionated about bread now. His go-to cooking move is a one-pan situation that somehow turns out well.",
+
+        music: "He plays drums, guitar, and bass. Produced some stuff under 'ohtheshmo.' He's not famous but he's not bad either. That's the most honest thing I'll say in this conversation.",
+
+        fun: "He snowboards, he's into sustainability and geothermal energy (yeah, really), and he's building a timber frame house eventually. Also he's engaged to a French woman which explains the B2 certification and the bread opinions."
     };
 
     // Response generator
     function generateResponse(msg) {
         const m = msg.toLowerCase();
 
-        if (m.includes('skill') || m.includes('good at') || m.includes('can he do')) {
+        if (m.includes('color') || m.includes('colour')) {
+            return knowledge.color;
+        }
+        if (m.includes('food') || m.includes('eat') || m.includes('cook') || m.includes('restaurant')) {
+            return knowledge.food;
+        }
+        if (m.includes('music') || m.includes('drum') || m.includes('guitar') || m.includes('band') || m.includes('play')) {
+            return knowledge.music;
+        }
+        if (m.includes('fun') || m.includes('hobby') || m.includes('hobbies') || m.includes('free time') || m.includes('outside work') || m.includes('personal')) {
+            return knowledge.fun;
+        }
+        if (m.includes('skill') || m.includes('good at') || m.includes('can he do') || m.includes('tech stack')) {
             return knowledge.skills;
         }
         if (m.includes('ai project') || m.includes('gemini') || m.includes('machine learning')) {
-            return knowledge.aiProjects;
-        }
-        if (m.includes('project') || m.includes('portfolio') || m.includes('built')) {
             return knowledge.projects;
         }
-        if (m.includes('revops') || m.includes('hubspot') || m.includes('sales op') || m.includes('crm')) {
+        if (m.includes('project') || m.includes('portfolio') || m.includes('built') || m.includes('salesforce')) {
+            return knowledge.projects;
+        }
+        if (m.includes('revops') || m.includes('hubspot') || m.includes('sales op') || m.includes('crm') || m.includes('pipeline')) {
             return knowledge.revops;
         }
-        if (m.includes('available') || m.includes('start') || m.includes('looking') || m.includes('remote')) {
+        if (m.includes('available') || m.includes('start') || m.includes('looking') || m.includes('remote') || m.includes('relocat')) {
             return knowledge.availability;
         }
-        if (m.includes('salary') || m.includes('compensation') || m.includes('pay') || m.includes('money')) {
+        if (m.includes('salary') || m.includes('compensation') || m.includes('pay') || m.includes('money') || m.includes('cost')) {
             return knowledge.compensation;
         }
-        if (m.includes('contact') || m.includes('email') || m.includes('reach') || m.includes('phone')) {
+        if (m.includes('contact') || m.includes('email') || m.includes('reach') || m.includes('phone') || m.includes('linkedin')) {
             return knowledge.contact;
         }
-        if (m.includes('why') || m.includes('hire') || m.includes('should')) {
+        if (m.includes('why') || m.includes('hire') || m.includes('should') || m.includes('pitch')) {
             return knowledge.whyHire;
         }
-        if (m.includes('experience') || m.includes('background') || m.includes('education')) {
+        if (m.includes('experience') || m.includes('background') || m.includes('education') || m.includes('cert') || m.includes('degree')) {
             return knowledge.background;
         }
-        if (m.includes('schedule') || m.includes('call') || m.includes('meet') || m.includes('book')) {
-            return "I'd love to set that up! Click the button below or visit **omccormick.com/hire-owen/chat.html** for the full booking form. Owen typically responds within 24 hours.";
+        if (m.includes('schedule') || m.includes('call') || m.includes('meet') || m.includes('book') || m.includes('interview')) {
+            return "Shoot him an email at **mcmcowen@gmail.com** or hit him up on LinkedIn. He checks both way too often.";
+        }
+        if (m.includes('hello') || m.includes('hi') || m.includes('hey') || m.includes('sup') || m.includes('yo')) {
+            return "Hey! Ask me anything about Owen. His skills, his projects, his favorite color — I'm an open book. Well, his open book.";
         }
 
-        return "Great question! I can tell you about Owen's **skills**, **AI projects**, **RevOps experience**, **availability**, or **compensation expectations**. Or ask me anything specific—I know everything about him! 😄";
+        const fallbacks = [
+            "Hmm, not sure about that one. Try asking about his **skills**, **projects**, **background**, or honestly just ask what his favorite color is. I've got range.",
+            "I'm basically a very enthusiastic FAQ page. Ask me about Owen's **work**, **availability**, **certifications**, or something fun like his **hobbies**. I don't judge.",
+            "That's outside my jurisdiction. But I can talk about his **projects**, **experience**, **compensation**, or what he does for **fun**. Your call."
+        ];
+        return fallbacks[Math.floor(Math.random() * fallbacks.length)];
     }
 
     // Create widget HTML
@@ -442,7 +468,7 @@
         const widget = document.createElement('div');
         widget.id = 'hire-owen-widget';
         widget.innerHTML = `
-            <div id="hire-owen-tooltip">💬 Chat with Owen's AI Agent</div>
+            <div id="hire-owen-tooltip">👋 Ask me anything about Owen</div>
             <button id="hire-owen-bubble">
                 <span id="hire-owen-pulse"></span>
                 <svg class="chat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -454,10 +480,10 @@
             </button>
             <div id="hire-owen-chat">
                 <div id="hire-owen-header">
-                    <div id="hire-owen-avatar">🤖</div>
+                    <div id="hire-owen-avatar">👋</div>
                     <div id="hire-owen-header-info">
-                        <h4>Owen's AI Agent</h4>
-                        <p><span class="status-dot"></span> Online</p>
+                        <h4>Owen FAQ Bot</h4>
+                        <p><span class="status-dot"></span> Knows too much</p>
                     </div>
                     <button id="hire-owen-expand" onclick="window.open('hire-owen/chat.html', '_blank')" title="Open full chat">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -467,7 +493,7 @@
                 </div>
                 <div id="hire-owen-messages"></div>
                 <div id="hire-owen-typing">
-                    <div class="hire-owen-msg-avatar" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">🤖</div>
+                    <div class="hire-owen-msg-avatar" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">👋</div>
                     <div class="hire-owen-typing-dots">
                         <div class="hire-owen-typing-dot"></div>
                         <div class="hire-owen-typing-dot"></div>
@@ -475,11 +501,11 @@
                     </div>
                 </div>
                 <div id="hire-owen-quick-actions">
-                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('What are his main skills?')">Skills</button>
-                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('Tell me about his AI projects')">AI Projects</button>
-                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('Is he available?')">Availability</button>
-                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('What salary is he looking for?')">Compensation</button>
-                    <button class="hire-owen-quick-btn" onclick="window.open('hire-owen/chat.html', '_blank')">Schedule call</button>
+                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('What\'s his favorite color?')">Favorite color</button>
+                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('What are his skills?')">Skills</button>
+                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('What has he built?')">Projects</button>
+                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('What does he do for fun?')">Fun stuff</button>
+                    <button class="hire-owen-quick-btn" onclick="hireOwenQuick('How do I reach him?')">Contact</button>
                 </div>
                 <div id="hire-owen-input-area">
                     <div id="hire-owen-input-wrapper">
@@ -509,7 +535,7 @@
 
         // Add initial message after small delay
         setTimeout(() => {
-            addWidgetMessage('ai', "Hey! 👋 I'm Owen's AI agent. Ask me anything about his skills, projects, or availability—I'm here to help!");
+            addWidgetMessage('ai', "Hey! I'm basically Owen's hype man but with fewer opinions. Ask me about his work, his projects, or honestly just ask what his favorite color is. I won't judge.");
         }, 1000);
 
         // Toggle chat
@@ -525,7 +551,7 @@
         const msg = document.createElement('div');
         msg.className = `hire-owen-msg ${type}`;
         msg.innerHTML = `
-            <div class="hire-owen-msg-avatar">${type === 'ai' ? '🤖' : '👤'}</div>
+            <div class="hire-owen-msg-avatar">${type === 'ai' ? '👋' : '👤'}</div>
             <div class="hire-owen-msg-content">${content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}</div>
         `;
         messages.appendChild(msg);
