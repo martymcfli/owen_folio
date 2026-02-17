@@ -24,15 +24,15 @@
             --text-primary: #f4f4f5;
             --text-secondary: #a1a1aa;
             --text-muted: #71717a;
-            --accent-primary: #14b8a6;
-            --accent-secondary: #0d9488;
-            --accent-gradient: linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #0891b2 100%);
+            --accent-primary: #1B3A5C;
+            --accent-secondary: #152E4A;
+            --accent-gradient: linear-gradient(135deg, #1B3A5C 0%, #152E4A 50%, #0F2035 100%);
             --border-color: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(255, 255, 255, 0.15);
             --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
             --shadow-lg: 0 10px 25px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(20 184 166 / 0.2);
+            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(27 58 92 / 0.2);
         }
 
         body {
@@ -294,7 +294,7 @@
         }
 
         .skill-card:hover {
-            background: rgba(20, 184, 166, 0.08);
+            background: rgba(27, 58, 92, 0.08);
             transform: translateX(5px);
             box-shadow: var(--shadow-md);
         }
@@ -464,7 +464,7 @@
             gap: 20px;
             margin-bottom: 25px;
             padding: 20px;
-            background: rgba(20, 184, 166, 0.08);
+            background: rgba(27, 58, 92, 0.08);
             border-left: 3px solid var(--accent-primary);
             border-radius: 0 12px 12px 0;
         }
@@ -660,7 +660,7 @@
         }
 
         .contact-info a:hover {
-            color: #14b8a6;
+            color: #1B3A5C;
         }
 
         .social-links {
@@ -682,8 +682,8 @@
         }
 
         .social-links a:hover {
-            color: #14b8a6;
-            background: rgba(20, 184, 166, 0.1);
+            color: #1B3A5C;
+            background: rgba(27, 58, 92, 0.1);
         }
 
         .footer-cta {
@@ -876,7 +876,7 @@
             border-radius: 0 0 8px 8px;
         }
         .project-card.featured:hover {
-            box-shadow: 0 20px 60px rgba(20, 184, 166, 0.25), 0 10px 30px rgba(13, 148, 136, 0.15);
+            box-shadow: 0 20px 60px rgba(27, 58, 92, 0.25), 0 10px 30px rgba(21, 46, 74, 0.15);
         }
 
         /* Featured Showcase Section */
@@ -941,7 +941,7 @@
         .featured-tag {
             display: inline-block;
             padding: 6px 14px;
-            background: rgba(20, 184, 166, 0.15);
+            background: rgba(27, 58, 92, 0.15);
             color: var(--accent-primary);
             font-size: 0.7rem;
             font-weight: 700;
@@ -949,6 +949,20 @@
             text-transform: uppercase;
             border-radius: 6px;
             margin-bottom: 15px;
+        }
+
+        .speculative-badge {
+            display: inline-block;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 3px;
+            color: #94a3b8;
+            margin-left: 8px;
+            vertical-align: middle;
         }
 
         .featured-title {
@@ -1020,7 +1034,7 @@
 
         .featured-gallery:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(20, 184, 166, 0.3);
+            box-shadow: 0 30px 60px rgba(27, 58, 92, 0.3);
             border-color: var(--accent-primary);
         }
 
@@ -1078,7 +1092,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 40px rgba(20, 184, 166, 0.4);
+            box-shadow: 0 10px 40px rgba(27, 58, 92, 0.4);
         }
 
         .play-button svg {
@@ -1126,9 +1140,9 @@
             gap: 12px;
             width: 100%;
             padding: 24px 32px;
-            background: linear-gradient(135deg, rgba(20, 184, 166, 0.12) 0%, rgba(20, 184, 166, 0.04) 100%);
-            border: 2px solid rgba(20, 184, 166, 0.4);
-            color: #14b8a6;
+            background: linear-gradient(135deg, rgba(27, 58, 92, 0.12) 0%, rgba(27, 58, 92, 0.04) 100%);
+            border: 2px solid rgba(27, 58, 92, 0.4);
+            color: #1B3A5C;
             font-size: 1rem;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -1140,7 +1154,7 @@
             margin-bottom: 40px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(20, 184, 166, 0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 0 20px rgba(27, 58, 92, 0.1), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
         .toggle-projects-btn::before {
@@ -1150,7 +1164,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(20, 184, 166, 0.08), transparent);
+            background: linear-gradient(90deg, transparent, rgba(27, 58, 92, 0.08), transparent);
             animation: shimmer 3s infinite;
         }
 
@@ -1162,8 +1176,8 @@
         .toggle-projects-btn:hover {
             border-color: var(--accent-primary);
             color: #fff;
-            background: linear-gradient(135deg, rgba(20, 184, 166, 0.25) 0%, rgba(20, 184, 166, 0.1) 100%);
-            box-shadow: 0 0 30px rgba(20, 184, 166, 0.2), 0 4px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, rgba(27, 58, 92, 0.25) 0%, rgba(27, 58, 92, 0.1) 100%);
+            box-shadow: 0 0 30px rgba(27, 58, 92, 0.2), 0 4px 20px rgba(0,0,0,0.3);
             transform: translateY(-2px);
         }
 
@@ -1273,8 +1287,8 @@
     <!-- Hero Section -->
     <section class="hero" id="about">
         <div class="hero-content">
-            <h1 data-i18n-html="hero.heading">I build the systems<br>that let good businesses<br><span>run without me in the room.</span></h1>
-            <p data-i18n="hero.subtitle">Bootstrapped a company to $2.5M and sold it. Built RevOps infrastructure for startups entering the US market. The projects below are working software, not mockups.</p>
+            <h1 data-i18n-html="hero.heading">The reason customers<br>show up — and the reason<br><span>they stay.</span></h1>
+            <p data-i18n="hero.subtitle">I built a $2.5M business by walking into stores with no connections and no marketing budget, and winning on trust. Now I bring that same instinct to account management, customer success, and client relationships.</p>
             <div class="hero-buttons">
                 <a href="#projects" class="btn-primary">
                     <span data-i18n="hero.btn.projects">View Projects</span>
@@ -1426,7 +1440,7 @@
         <div class="featured-project">
             <div class="featured-content">
                 <div class="featured-number">02</div>
-                <div class="featured-tag" data-i18n="p2.category">AI / Enterprise Analytics</div>
+                <div class="featured-tag" data-i18n="p2.category">AI / Enterprise Analytics</div><span class="speculative-badge">Personal Build</span>
                 <h3 class="featured-title">Chime Pulse</h3>
                 <p class="featured-subtitle" data-i18n="p2.subtitle">Narrative Intelligence Engine</p>
                 <p class="featured-desc" data-i18n="p2.desc">AI-powered narrative intelligence dashboard for enterprise communications. Features real-time sentiment tracking, competitor analysis, AI analyst chat, and strategic insights. Built with React, TypeScript, and Gemini API integration.</p>
@@ -1493,9 +1507,9 @@
                     <span class="tag">TypeScript</span>
                 </div>
                 <div class="featured-links">
-                    <a href="https://github.com/martymcfli/owen_folio" target="_blank" class="btn-primary" style="padding: 14px 24px;">
+                    <a href="./salesforce-orchestrator/demo.html" class="btn-primary" style="padding: 14px 24px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                        View on GitHub
+                        Interactive Demo
                     </a>
                 </div>
             </div>
@@ -1504,7 +1518,7 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                         <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 16px;">
                             <div style="color: #a1a1aa; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;">Total Volume (24h)</div>
-                            <div style="color: #14b8a6; font-size: 1.5rem; font-weight: 800;">$2.5M</div>
+                            <div style="color: #1B3A5C; font-size: 1.5rem; font-weight: 800;">$2.5M</div>
                         </div>
                         <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 16px;">
                             <div style="color: #a1a1aa; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;">Success Rate</div>
@@ -1646,78 +1660,6 @@
                 </div>
             </div>
 
-            <!-- AI Chief of Staff - Personal AI Executive Assistant -->
-            <div class="project-card featured" data-category="ai automation operations">
-                <div class="project-header">
-                    <div class="project-category">AI / Automation</div>
-                    <div class="project-title">AI Chief of Staff</div>
-                    <div class="project-company">Personal AI Executive Assistant</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.aicos.desc">Personal AI executive assistant that aggregates calendar, email, tasks, and job search pipeline data to deliver intelligent daily briefings, priority recommendations, interview prep, and proactive suggestions.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">20+</div>
-                            <div class="stat-label" data-i18n="grid.aicos.s1">AI Responses</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">6</div>
-                            <div class="stat-label" data-i18n="grid.aicos.s2">Data Sources</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Live</div>
-                            <div class="stat-label" data-i18n="grid.aicos.s3">Dashboard</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">AI</span>
-                        <span class="tag">Automation</span>
-                        <span class="tag">Personal Ops</span>
-                        <span class="tag">NLP</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="ai-chief-of-staff/index.html" target="_blank" class="project-btn project-btn-primary">Live Demo</a>
-                        <a href="https://github.com/martymcfli/owen_folio" target="_blank" class="project-btn project-btn-secondary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Personal Ops Dashboard -->
-            <div class="project-card featured" data-category="ai data automation">
-                <div class="project-header">
-                    <div class="project-category">AI / Self-Optimization</div>
-                    <div class="project-title">Personal Ops Dashboard</div>
-                    <div class="project-company">Raspberry Pi Productivity System</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.ops.desc">24/7 personal productivity tracking system running on a Raspberry Pi. Monitors habits, energy levels, goals, and daily metrics with real-time visualizations and AI-powered insights for continuous self-improvement.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">24/7</div>
-                            <div class="stat-label" data-i18n="grid.ops.s1">Always On</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Pi</div>
-                            <div class="stat-label" data-i18n="grid.ops.s2">Powered</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">AI</div>
-                            <div class="stat-label" data-i18n="grid.ops.s3">Insights</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">Chart.js</span>
-                        <span class="tag">Raspberry Pi</span>
-                        <span class="tag">SQLite</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="./personal-ops-dashboard/dashboard.html" class="project-btn project-btn-primary">View Dashboard</a>
-                        <a href="https://github.com/martymcfli/owen_folio" target="_blank" class="project-btn project-btn-secondary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
             <!-- VibeDrive - AI Travel Soundtrack Sync -->
             <div class="project-card featured" data-category="ai automation">
                 <div class="project-header">
@@ -1751,76 +1693,6 @@
                     <div class="project-links">
                         <a href="vibedrive/demo.html" target="_blank" class="project-btn project-btn-primary">Live Demo</a>
                         <a href="https://github.com/martymcfli/vibedrive" target="_blank" class="project-btn project-btn-secondary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PerformIQ -->
-            <div class="project-card" data-category="ai operations">
-                <div class="project-header">
-                    <div class="project-category">Performance Management / AI</div>
-                    <div class="project-title">PerformIQ</div>
-                    <div class="project-company">Gamified Performance Platform</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.perf.desc">A gamified performance management platform with AI/ML recommendations, XP leveling, achievements, and transparent promotion paths.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">AI</div>
-                            <div class="stat-label">Powered</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">XP</div>
-                            <div class="stat-label" data-i18n="grid.perf.s2">Gamified</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Real</div>
-                            <div class="stat-label" data-i18n="grid.perf.s3">Time</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">React</span>
-                        <span class="tag">Node.js</span>
-                        <span class="tag">ML</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="./performiq.html" class="project-btn project-btn-primary">View Case Study</a>
-                        <a href="https://github.com/martymcfli/performiq" target="_blank" class="project-btn project-btn-secondary">GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- EdTech CRM Migration -->
-            <div class="project-card" data-category="automation data">
-                <div class="project-header">
-                    <div class="project-category">Automation / Data Migration</div>
-                    <div class="project-title">EdTech CRM Migration</div>
-                    <div class="project-company">Talstack (Nigerian EdTech)</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.edtech.desc">Python automation that cleaned, deduplicated, and formatted 5,000+ student records scattered across 12 Google Sheets for seamless HubSpot import.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">52hrs</div>
-                            <div class="stat-label" data-i18n="grid.edtech.s1">Migration</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">97.2%</div>
-                            <div class="stat-label" data-i18n="grid.edtech.s2">Data Quality</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">43.5</div>
-                            <div class="stat-label" data-i18n="grid.edtech.s3">Hours Saved</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">HubSpot</span>
-                        <span class="tag">Data Cleaning</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="./edtech-crm-migration/dashboard.html" class="project-btn project-btn-primary">View Dashboard</a>
-                        <a href="./edtech-crm-migration/" class="project-btn project-btn-secondary">See Code</a>
                     </div>
                 </div>
             </div>
@@ -1890,180 +1762,6 @@
                     </div>
                     <div class="project-links">
                         <a href="./automated-payout-system.html" class="project-btn project-btn-primary">View Case Study</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Client Escalation Dashboard -->
-            <div class="project-card" data-category="data operations">
-                <div class="project-header">
-                    <div class="project-category">Analytics / CX</div>
-                    <div class="project-title">Client Escalation Dashboard</div>
-                    <div class="project-company">Porsche</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.escal.desc">Real-time Snowflake dashboard tracking issue trends across high-net-worth clients, leading to a 31.4% reduction in recurring escalations.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">31.4%</div>
-                            <div class="stat-label" data-i18n="grid.escal.s1">Less Issues</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Real</div>
-                            <div class="stat-label" data-i18n="grid.escal.s2">Time</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">HNW</div>
-                            <div class="stat-label" data-i18n="grid.escal.s3">Clients</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Snowflake</span>
-                        <span class="tag">Data Viz</span>
-                        <span class="tag">CX Strategy</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="./cx-blog-post.html" class="project-btn project-btn-primary" data-i18n="btn.readcx">Read CX Philosophy</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- E-Commerce Platform -->
-            <div class="project-card" data-category="automation operations">
-                <div class="project-header">
-                    <div class="project-category">Web Development</div>
-                    <div class="project-title">E-Commerce Platform</div>
-                    <div class="project-company">Trail Blazers LLC</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.ecom.desc">Full-stack ordering system integrated with operations, reducing friction and boosting customer retention by 17.3%.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">17.3%</div>
-                            <div class="stat-label" data-i18n="grid.ecom.s1">Retention</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">$2.68M</div>
-                            <div class="stat-label" data-i18n="grid.ecom.s2">Revenue</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Full</div>
-                            <div class="stat-label" data-i18n="grid.ecom.s3">Stack</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Web Dev</span>
-                        <span class="tag">UX/UI</span>
-                        <span class="tag">Operations</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/MartyMcfli" target="_blank" class="project-btn project-btn-primary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Inventory Forecasting Model -->
-            <div class="project-card" data-category="data automation">
-                <div class="project-header">
-                    <div class="project-category">Supply Chain / Data Science</div>
-                    <div class="project-title">Inventory Forecasting Model</div>
-                    <div class="project-company">Trail Blazers LLC</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.inv.desc">Predictive model using sales data to optimize stock levels, reducing excess inventory by 18.3% while maintaining availability.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">18.3%</div>
-                            <div class="stat-label" data-i18n="grid.inv.s1">Less Excess</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">ML</div>
-                            <div class="stat-label" data-i18n="grid.inv.s2">Powered</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">98.4%</div>
-                            <div class="stat-label" data-i18n="grid.inv.s3">Availability</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">Data Science</span>
-                        <span class="tag">Logistics</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/MartyMcfli" target="_blank" class="project-btn project-btn-primary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Heat Flow Viz - 3D Geothermal Simulation -->
-            <div class="project-card featured" data-category="ai data">
-                <div class="project-header">
-                    <div class="project-category">Scientific Computing / 3D Visualization</div>
-                    <div class="project-title">Heat Flow Viz</div>
-                    <div class="project-company">Geothermal Well Simulation</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.heat.desc">Interactive 3D geothermal heat simulation powered by Three.js. Visualizes subsurface temperature propagation using line source theory, with animated thermal gradients, multi-lateral well configurations, and 50-year drawdown forecasting.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">Three.js</div>
-                            <div class="stat-label" data-i18n="grid.heat.s1">3D Engine</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">50yr</div>
-                            <div class="stat-label" data-i18n="grid.heat.s2">Simulation</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Real</div>
-                            <div class="stat-label" data-i18n="grid.heat.s3">Physics</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">Three.js</span>
-                        <span class="tag">TypeScript</span>
-                        <span class="tag">Thermal Modeling</span>
-                        <span class="tag">WebGL</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="heat-flow-viz/demo.html" target="_blank" class="project-btn project-btn-primary">Live Demo</a>
-                        <a href="https://github.com/martymcfli/heat-flow-viz" target="_blank" class="project-btn project-btn-secondary">View on GitHub</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mastermind AI - Audio Mastering Studio -->
-            <div class="project-card featured" data-category="ai automation">
-                <div class="project-header">
-                    <div class="project-category">AI / Audio Engineering</div>
-                    <div class="project-title">Mastermind AI</div>
-                    <div class="project-company">Neural Audio Mastering</div>
-                </div>
-                <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.master.desc">AI-powered audio mastering studio that analyzes tracks and applies intelligent processing. Features genre-aware EQ curves, adaptive compression, harmonic saturation, and broadcast-ready limiting — all driven by Gemini's audio intelligence.</p>
-                    <div class="project-stats">
-                        <div class="stat">
-                            <div class="stat-value">Gemini</div>
-                            <div class="stat-label" data-i18n="grid.master.s1">AI Engine</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">4-Stage</div>
-                            <div class="stat-label" data-i18n="grid.master.s2">Processing</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">A/B</div>
-                            <div class="stat-label" data-i18n="grid.master.s3">Comparison</div>
-                        </div>
-                    </div>
-                    <div class="project-tags">
-                        <span class="tag">React</span>
-                        <span class="tag">TypeScript</span>
-                        <span class="tag">Web Audio API</span>
-                        <span class="tag">Gemini</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="mastermind-ai/demo.html" target="_blank" class="project-btn project-btn-primary">Live Demo</a>
-                        <a href="https://github.com/martymcfli/mastermind-ai" target="_blank" class="project-btn project-btn-secondary">View on GitHub</a>
                     </div>
                 </div>
             </div>
@@ -2141,8 +1839,8 @@
     <footer class="footer" id="contact">
         <div class="footer-container">
             <div class="footer-content">
-                <h2 data-i18n="footer.heading">Let's Connect</h2>
-                <p data-i18n="footer.subtitle">Ready to optimize your operations and drive growth? Reach out to discuss how I can help your team succeed.</p>
+                <h2 data-i18n="footer.heading">Open to the Right Role</h2>
+                <p data-i18n="footer.subtitle">If something here made you want to have a conversation, email is the fastest way to reach me.</p>
                 <div class="contact-info">
                     <div data-i18n="footer.location">Brooklyn, NY / San Antonio, TX / Open to Relocation</div>
                     <div>347-268-1742</div>
@@ -2164,12 +1862,6 @@
                 </div>
                 <div class="footer-cta">
                     <a href="mailto:mcmcowen@gmail.com" class="footer-btn footer-btn-primary" data-i18n="footer.btn.email">Send Email</a>
-                    <a href="./hire-owen/chat.html" target="_blank" class="footer-btn footer-btn-secondary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        <span data-i18n="footer.btn.chat">Chat with My AI Agent</span>
-                    </a>
                 </div>
             </div>
             <div class="footer-brand">
@@ -2178,6 +1870,7 @@
         </div>
         <div class="footer-bottom">
             <div>&copy; 2026 Owen McCormick</div>
+            <div><a href="./hire-owen/chat.html" target="_blank" style="color: var(--text-muted); text-decoration: none; font-size: 0.8rem;" data-i18n="footer.faqbot">Owen FAQ Bot</a></div>
             <div data-i18n="footer.tagline">Built with Precision</div>
         </div>
     </footer>
@@ -2192,8 +1885,8 @@ window.__translations = {
         'nav.certifications': 'Certifications',
         'nav.contact': 'Contact',
         'nav.cta': 'Get In Touch',
-        'hero.heading': 'I build the systems<br>that let good businesses<br><span>run without me in the room.</span>',
-        'hero.subtitle': 'Bootstrapped a company to $2.5M and sold it. Built RevOps infrastructure for startups entering the US market. The projects below are working software, not mockups.',
+        'hero.heading': 'The reason customers<br>show up — and the reason<br><span>they stay.</span>',
+        'hero.subtitle': 'I built a $2.5M business by walking into stores with no connections and no marketing budget, and winning on trust. Now I bring that same instinct to account management, customer success, and client relationships.',
         'hero.btn.projects': 'View Projects',
         'hero.btn.philosophy': 'Read My Philosophy',
         'hero.btn.resume': 'Resume',
@@ -2256,25 +1949,10 @@ window.__translations = {
         'grid.dmaic.s1': 'Time Reduced',
         'grid.dmaic.s2': 'Data Quality',
         'grid.dmaic.s3': 'Hrs Saved/Wk',
-        'grid.aicos.desc': 'Personal AI executive assistant that aggregates calendar, email, tasks, and job search pipeline data to deliver intelligent daily briefings, priority recommendations, interview prep, and proactive suggestions.',
-        'grid.aicos.s1': 'AI Responses',
-        'grid.aicos.s2': 'Data Sources',
-        'grid.aicos.s3': 'Dashboard',
-        'grid.ops.desc': '24/7 personal productivity tracking system running on a Raspberry Pi. Monitors habits, energy levels, goals, and daily metrics with real-time visualizations and AI-powered insights for continuous self-improvement.',
-        'grid.ops.s1': 'Always On',
-        'grid.ops.s2': 'Powered',
-        'grid.ops.s3': 'Insights',
         'grid.vibe.desc': 'AI travel companion that generates perfectly-timed playlists synchronized to your drive. Enter a route and vibe \u2014 Gemini + Google Maps builds a soundtrack where the last song ends exactly as you arrive. Your drive becomes a movie.',
         'grid.vibe.s1': '2.5 Flash',
         'grid.vibe.s2': 'Grounding',
         'grid.vibe.s3': 'Timing',
-        'grid.perf.desc': 'A gamified performance management platform with AI/ML recommendations, XP leveling, achievements, and transparent promotion paths.',
-        'grid.perf.s2': 'Gamified',
-        'grid.perf.s3': 'Time',
-        'grid.edtech.desc': 'Python automation that cleaned, deduplicated, and formatted 5,000+ student records scattered across 12 Google Sheets for seamless HubSpot import.',
-        'grid.edtech.s1': 'Migration',
-        'grid.edtech.s2': 'Data Quality',
-        'grid.edtech.s3': 'Hours Saved',
         'grid.apollo.desc': 'Automated lead scoring algorithm that prioritizes high-value prospects and syncs them to HubSpot instantly, eliminating manual handoff delays.',
         'grid.apollo.s1': 'Lost Leads',
         'grid.apollo.s2': 'Follow-Up',
@@ -2283,26 +1961,6 @@ window.__translations = {
         'grid.payout.s1': 'Less Manual',
         'grid.payout.s2': 'Publishers',
         'grid.payout.s3': 'Errors',
-        'grid.escal.desc': 'Real-time Snowflake dashboard tracking issue trends across high-net-worth clients, leading to a 31.4% reduction in recurring escalations.',
-        'grid.escal.s1': 'Less Issues',
-        'grid.escal.s2': 'Time',
-        'grid.escal.s3': 'Clients',
-        'grid.ecom.desc': 'Full-stack ordering system integrated with operations, reducing friction and boosting customer retention by 17.3%.',
-        'grid.ecom.s1': 'Retention',
-        'grid.ecom.s2': 'Revenue',
-        'grid.ecom.s3': 'Stack',
-        'grid.inv.desc': 'Predictive model using sales data to optimize stock levels, reducing excess inventory by 18.3% while maintaining availability.',
-        'grid.inv.s1': 'Less Excess',
-        'grid.inv.s2': 'Powered',
-        'grid.inv.s3': 'Availability',
-        'grid.heat.desc': 'Interactive 3D geothermal heat simulation powered by Three.js. Visualizes subsurface temperature propagation using line source theory, with animated thermal gradients, multi-lateral well configurations, and 50-year drawdown forecasting.',
-        'grid.heat.s1': '3D Engine',
-        'grid.heat.s2': 'Simulation',
-        'grid.heat.s3': 'Physics',
-        'grid.master.desc': 'AI-powered audio mastering studio that analyzes tracks and applies intelligent processing. Features genre-aware EQ curves, adaptive compression, harmonic saturation, and broadcast-ready limiting \u2014 all driven by Gemini\'s audio intelligence.',
-        'grid.master.s1': 'AI Engine',
-        'grid.master.s2': 'Processing',
-        'grid.master.s3': 'Comparison',
         'exp.heading': 'Experience',
         'exp.subtitle': 'A track record of leadership, strategic growth, and operational excellence across diverse industries.',
         'exp.j1.title': 'Strategic Operations Consultant',
@@ -2315,11 +1973,11 @@ window.__translations = {
         'exp.j4.desc': 'Orchestrated logistics for international Olympic competitions. Balanced elite athlete training with public facility access.',
         'exp.j5.title': 'Real Estate Project Coordinator',
         'exp.j5.desc': 'Coordinated multi-property development projects. Managed vendor relationships and timeline optimization for luxury real estate portfolio.',
-        'footer.heading': 'Let\'s Connect',
-        'footer.subtitle': 'Ready to optimize your operations and drive growth? Reach out to discuss how I can help your team succeed.',
+        'footer.heading': 'Open to the Right Role',
+        'footer.subtitle': 'If something here made you want to have a conversation, email is the fastest way to reach me.',
         'footer.location': 'Brooklyn, NY / San Antonio, TX / Open to Relocation',
         'footer.btn.email': 'Send Email',
-        'footer.btn.chat': 'Chat with My AI Agent',
+        'footer.faqbot': 'Owen FAQ Bot',
         'footer.tagline': 'Built with Precision'
     },
     fr: {
@@ -2330,8 +1988,8 @@ window.__translations = {
         'nav.certifications': 'Certifications',
         'nav.contact': 'Contact',
         'nav.cta': 'Me Contacter',
-        'hero.heading': 'Je construis les syst\u00e8mes<br>qui permettent aux bonnes entreprises<br><span>de tourner sans moi dans la pi\u00e8ce.</span>',
-        'hero.subtitle': 'Bootstrapp\u00e9 une entreprise \u00e0 2,5\u00a0M$ et vendue. Construit l\u2019infrastructure RevOps pour des startups entrant sur le march\u00e9 am\u00e9ricain. Les projets ci-dessous sont des logiciels fonctionnels, pas des maquettes.',
+        'hero.heading': 'La raison pour laquelle les clients<br>arrivent — et la raison pour laquelle<br><span>ils restent.</span>',
+        'hero.subtitle': 'J\'ai construit une entreprise à 2,5\u00a0M$ en entrant dans des magasins sans connexions ni budget marketing, en gagnant sur la confiance. Aujourd\'hui, j\'apporte ce même instinct à la gestion de comptes, au customer success et aux relations clients.',
         'hero.btn.projects': 'Voir les Projets',
         'hero.btn.philosophy': 'Lire Ma Philosophie',
         'hero.btn.resume': 'CV',
@@ -2394,25 +2052,10 @@ window.__translations = {
         'grid.dmaic.s1': 'Temps R\u00e9duit',
         'grid.dmaic.s2': 'Qualit\u00e9 Donn\u00e9es',
         'grid.dmaic.s3': 'Hrs \u00c9conom./Sem',
-        'grid.aicos.desc': 'Assistant ex\u00e9cutif IA personnel qui agr\u00e8ge calendrier, emails, t\u00e2ches et pipeline de recherche d\'emploi pour des briefings quotidiens intelligents, recommandations de priorit\u00e9s et pr\u00e9paration d\'entretiens.',
-        'grid.aicos.s1': 'R\u00e9ponses IA',
-        'grid.aicos.s2': 'Sources Donn\u00e9es',
-        'grid.aicos.s3': 'Dashboard',
-        'grid.ops.desc': 'Syst\u00e8me de suivi de productivit\u00e9 24/7 sur Raspberry Pi. Suit les habitudes, l\'\u00e9nergie, les objectifs et les m\u00e9triques quotidiennes avec des visualisations temps r\u00e9el et des insights propuls\u00e9s par l\'IA.',
-        'grid.ops.s1': 'Toujours Actif',
-        'grid.ops.s2': 'Propuls\u00e9',
-        'grid.ops.s3': 'Insights',
         'grid.vibe.desc': 'Compagnon de voyage IA qui g\u00e9n\u00e8re des playlists parfaitement synchronis\u00e9es avec votre trajet. Entrez un itin\u00e9raire et une ambiance \u2014 Gemini + Google Maps cr\u00e9e une bande-son o\u00f9 la derni\u00e8re chanson se termine exactement \u00e0 l\'arriv\u00e9e.',
         'grid.vibe.s1': '2.5 Flash',
         'grid.vibe.s2': 'Ancrage',
         'grid.vibe.s3': 'Timing',
-        'grid.perf.desc': 'Plateforme de gestion de la performance gamifi\u00e9e avec recommandations IA/ML, niveaux XP, succ\u00e8s et parcours de promotion transparents.',
-        'grid.perf.s2': 'Gamifi\u00e9',
-        'grid.perf.s3': 'Temps R\u00e9el',
-        'grid.edtech.desc': 'Automatisation Python qui a nettoy\u00e9, d\u00e9dupliqu\u00e9 et format\u00e9 plus de 5 000 dossiers \u00e9tudiants r\u00e9partis dans 12 Google Sheets pour un import HubSpot fluide.',
-        'grid.edtech.s1': 'Migration',
-        'grid.edtech.s2': 'Qualit\u00e9 Donn\u00e9es',
-        'grid.edtech.s3': 'Heures \u00c9conom.',
         'grid.apollo.desc': 'Algorithme de scoring de leads automatis\u00e9 qui priorise les prospects \u00e0 forte valeur et les synchronise avec HubSpot instantan\u00e9ment, \u00e9liminant les d\u00e9lais de transfert manuel.',
         'grid.apollo.s1': 'Leads Perdus',
         'grid.apollo.s2': 'Suivi',
@@ -2421,26 +2064,6 @@ window.__translations = {
         'grid.payout.s1': 'Moins Manuel',
         'grid.payout.s2': '\u00c9diteurs',
         'grid.payout.s3': 'Erreurs',
-        'grid.escal.desc': 'Dashboard Snowflake temps r\u00e9el suivant les tendances d\'incidents parmi les clients fortun\u00e9s, menant \u00e0 une r\u00e9duction de 31,4% des escalades r\u00e9currentes.',
-        'grid.escal.s1': 'Moins d\'Incidents',
-        'grid.escal.s2': 'Temps R\u00e9el',
-        'grid.escal.s3': 'Clients',
-        'grid.ecom.desc': 'Syst\u00e8me de commande full-stack int\u00e9gr\u00e9 aux op\u00e9rations, r\u00e9duisant les frictions et augmentant la r\u00e9tention client de 17,3%.',
-        'grid.ecom.s1': 'R\u00e9tention',
-        'grid.ecom.s2': 'Chiffre d\'Affaires',
-        'grid.ecom.s3': 'Stack',
-        'grid.inv.desc': 'Mod\u00e8le pr\u00e9dictif utilisant les donn\u00e9es de ventes pour optimiser les niveaux de stock, r\u00e9duisant les exc\u00e9dents de 18,3% tout en maintenant la disponibilit\u00e9.',
-        'grid.inv.s1': 'Moins d\'Exc\u00e9dent',
-        'grid.inv.s2': 'Propuls\u00e9',
-        'grid.inv.s3': 'Disponibilit\u00e9',
-        'grid.heat.desc': 'Simulation 3D interactive de g\u00e9othermie propuls\u00e9e par Three.js. Visualise la propagation de temp\u00e9rature souterraine avec des gradients thermiques anim\u00e9s, des configurations multi-lat\u00e9rales de puits et des pr\u00e9visions sur 50 ans.',
-        'grid.heat.s1': 'Moteur 3D',
-        'grid.heat.s2': 'Simulation',
-        'grid.heat.s3': 'Physique',
-        'grid.master.desc': 'Studio de mastering audio propuls\u00e9 par l\'IA qui analyse les pistes et applique un traitement intelligent. Courbes EQ adapt\u00e9es au genre, compression adaptative, saturation harmonique et limitation broadcast \u2014 le tout pilot\u00e9 par Gemini.',
-        'grid.master.s1': 'Moteur IA',
-        'grid.master.s2': 'Traitement',
-        'grid.master.s3': 'Comparaison',
         'exp.heading': 'Exp\u00e9rience',
         'exp.subtitle': 'Un parcours de leadership, de croissance strat\u00e9gique et d\'excellence op\u00e9rationnelle dans des secteurs vari\u00e9s.',
         'exp.j1.title': 'Consultant en Op\u00e9rations Strat\u00e9giques',
@@ -2453,11 +2076,11 @@ window.__translations = {
         'exp.j4.desc': 'Orchestration de la logistique pour des comp\u00e9titions olympiques internationales. \u00c9quilibre entre l\'entra\u00eenement d\'athl\u00e8tes d\'\u00e9lite et l\'acc\u00e8s public aux installations.',
         'exp.j5.title': 'Coordinateur de Projets Immobiliers',
         'exp.j5.desc': 'Coordination de projets de d\u00e9veloppement multi-propri\u00e9t\u00e9s. Gestion des relations fournisseurs et optimisation des d\u00e9lais pour un portefeuille immobilier de luxe.',
-        'footer.heading': 'Connectons-nous',
-        'footer.subtitle': 'Pr\u00eat \u00e0 optimiser vos op\u00e9rations et stimuler la croissance ? Contactez-moi pour discuter de comment je peux aider votre \u00e9quipe.',
+        'footer.heading': 'Ouvert au Bon Poste',
+        'footer.subtitle': 'Si quelque chose ici vous a donné envie de discuter, l\'email est le moyen le plus rapide de me joindre.',
         'footer.location': 'Brooklyn, NY / San Antonio, TX / Ouvert \u00e0 la Mobilit\u00e9',
         'footer.btn.email': 'Envoyer un Email',
-        'footer.btn.chat': 'Discuter avec Mon Agent IA',
+        'footer.faqbot': 'Owen FAQ Bot',
         'footer.tagline': 'Construit avec Pr\u00e9cision'
     }
 };
