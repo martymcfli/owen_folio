@@ -745,6 +745,229 @@
             line-height: 0.8;
         }
 
+        /* Off the Clock - Music Section */
+        .off-the-clock {
+            padding: 100px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .otc-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .otc-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .otc-artist {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .otc-artist img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .otc-artist-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 24px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+        }
+
+        .otc-artist-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .otc-artist-tag {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+
+        .otc-player {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .otc-heading {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .otc-sub {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .track-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .track {
+            display: grid;
+            grid-template-columns: 48px 1fr auto;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .track:hover {
+            background: rgba(27, 58, 92, 0.15);
+            border-color: rgba(27, 58, 92, 0.3);
+        }
+
+        .track.playing {
+            background: rgba(27, 58, 92, 0.2);
+            border-color: rgba(27, 58, 92, 0.5);
+        }
+
+        .track-play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .track:hover .track-play-btn {
+            background: var(--accent-primary);
+            color: #fff;
+        }
+
+        .track.playing .track-play-btn {
+            background: var(--accent-primary);
+            color: #fff;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(27, 58, 92, 0.4); }
+            50% { box-shadow: 0 0 20px 4px rgba(27, 58, 92, 0.3); }
+        }
+
+        .track-info {
+            min-width: 0;
+        }
+
+        .track-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+            letter-spacing: 0.03em;
+        }
+
+        .track-duration {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+            font-weight: 500;
+        }
+
+        .track-progress-bar {
+            grid-column: 1 / -1;
+            height: 3px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .track.playing .track-progress-bar {
+            display: block;
+        }
+
+        .track-progress-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s linear;
+        }
+
+        .otc-spotify-soon {
+            margin-top: 24px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .otc-spotify-soon svg {
+            opacity: 0.4;
+        }
+
+        @media (max-width: 900px) {
+            .otc-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .otc-artist {
+                max-width: 320px;
+                margin: 0 auto;
+            }
+            .off-the-clock {
+                padding: 60px 20px;
+            }
+            .otc-heading {
+                font-size: 1.5rem;
+            }
+        }
+
         .footer-bottom {
             max-width: 1400px;
             margin: 60px auto 0;
@@ -1835,6 +2058,67 @@
         </div>
     </section>
 
+    <!-- Off the Clock -->
+    <div class="separator"></div>
+    <section class="off-the-clock" id="music">
+        <div class="otc-label" data-i18n="otc.label">Off the Clock</div>
+        <div class="otc-layout">
+            <div class="otc-artist">
+                <img src="./images/artist/owen-artist.jpg" alt="ohtheshmo - Owen McCormick artist photo" loading="lazy">
+                <div class="otc-artist-overlay">
+                    <div class="otc-artist-name">ohtheshmo</div>
+                    <div class="otc-artist-tag">Producer · Multi-instrumentalist</div>
+                </div>
+            </div>
+            <div class="otc-player">
+                <h2 class="otc-heading" data-i18n="otc.heading">I also make music.</h2>
+                <p class="otc-sub" data-i18n="otc.sub">Drums, guitar, bass, and a DAW. These are original productions — EDM with some texture. Hit play.</p>
+                <div class="track-list">
+                    <div class="track" data-src="./music/take-7-steps-forward.mp3" onclick="toggleTrack(this)">
+                        <button class="track-play-btn" aria-label="Play">
+                            <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
+                            <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                        </button>
+                        <div class="track-info">
+                            <div class="track-title">Take 7 Steps Forward</div>
+                            <div class="track-meta">ohtheshmo · Original</div>
+                        </div>
+                        <div class="track-duration" data-duration>--:--</div>
+                        <div class="track-progress-bar"><div class="track-progress-fill"></div></div>
+                    </div>
+                    <div class="track" data-src="./music/pierpont-st.mp3" onclick="toggleTrack(this)">
+                        <button class="track-play-btn" aria-label="Play">
+                            <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
+                            <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                        </button>
+                        <div class="track-info">
+                            <div class="track-title">Pierpont St</div>
+                            <div class="track-meta">ohtheshmo · Original</div>
+                        </div>
+                        <div class="track-duration" data-duration>--:--</div>
+                        <div class="track-progress-bar"><div class="track-progress-fill"></div></div>
+                    </div>
+                    <div class="track" data-src="./music/quelque-bois.mp3" onclick="toggleTrack(this)">
+                        <button class="track-play-btn" aria-label="Play">
+                            <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
+                            <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                        </button>
+                        <div class="track-info">
+                            <div class="track-title">Quelque Bois</div>
+                            <div class="track-meta">ohtheshmo · Original</div>
+                        </div>
+                        <div class="track-duration" data-duration>--:--</div>
+                        <div class="track-progress-bar"><div class="track-progress-fill"></div></div>
+                    </div>
+                </div>
+                <div class="otc-spotify-soon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                    <span data-i18n="otc.spotify">Spotify · Coming Soon</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer" id="contact">
         <div class="footer-container">
@@ -1973,6 +2257,10 @@ window.__translations = {
         'exp.j4.desc': 'Orchestrated logistics for international Olympic competitions. Balanced elite athlete training with public facility access.',
         'exp.j5.title': 'Real Estate Project Coordinator',
         'exp.j5.desc': 'Coordinated multi-property development projects. Managed vendor relationships and timeline optimization for luxury real estate portfolio.',
+        'otc.label': 'Off the Clock',
+        'otc.heading': 'I also make music.',
+        'otc.sub': 'Drums, guitar, bass, and a DAW. These are original productions — EDM with some texture. Hit play.',
+        'otc.spotify': 'Spotify · Coming Soon',
         'footer.heading': 'Open to the Right Role',
         'footer.subtitle': 'If something here made you want to have a conversation, email is the fastest way to reach me.',
         'footer.location': 'Brooklyn, NY / San Antonio, TX / Open to Relocation',
@@ -2076,6 +2364,10 @@ window.__translations = {
         'exp.j4.desc': 'Orchestration de la logistique pour des comp\u00e9titions olympiques internationales. \u00c9quilibre entre l\'entra\u00eenement d\'athl\u00e8tes d\'\u00e9lite et l\'acc\u00e8s public aux installations.',
         'exp.j5.title': 'Coordinateur de Projets Immobiliers',
         'exp.j5.desc': 'Coordination de projets de d\u00e9veloppement multi-propri\u00e9t\u00e9s. Gestion des relations fournisseurs et optimisation des d\u00e9lais pour un portefeuille immobilier de luxe.',
+        'otc.label': 'En Dehors du Boulot',
+        'otc.heading': 'Je fais aussi de la musique.',
+        'otc.sub': 'Batterie, guitare, basse et un DAW. Ce sont des productions originales — de l\'EDM avec de la texture. Appuyez sur play.',
+        'otc.spotify': 'Spotify · Bientôt disponible',
         'footer.heading': 'Ouvert au Bon Poste',
         'footer.subtitle': 'Si quelque chose ici vous a donné envie de discuter, l\'email est le moyen le plus rapide de me joindre.',
         'footer.location': 'Brooklyn, NY / San Antonio, TX / Ouvert \u00e0 la Mobilit\u00e9',
@@ -2184,6 +2476,108 @@ window.__translations = {
                 closeVideoModal();
             }
         });
+    </script>
+
+    <!-- Music Player -->
+    <script>
+    (function() {
+        let currentAudio = null;
+        let currentTrack = null;
+        let progressInterval = null;
+
+        function formatTime(s) {
+            if (isNaN(s)) return '--:--';
+            const m = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return m + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+
+        // Preload durations
+        document.querySelectorAll('.track').forEach(function(track) {
+            const src = track.getAttribute('data-src');
+            const audio = new Audio();
+            audio.preload = 'metadata';
+            audio.src = src;
+            audio.addEventListener('loadedmetadata', function() {
+                const dur = track.querySelector('[data-duration]');
+                if (dur) dur.textContent = formatTime(audio.duration);
+            });
+        });
+
+        window.toggleTrack = function(trackEl) {
+            const src = trackEl.getAttribute('data-src');
+
+            // If clicking the same track that's playing, pause it
+            if (currentTrack === trackEl && currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                trackEl.classList.remove('playing');
+                trackEl.querySelector('.icon-play').style.display = '';
+                trackEl.querySelector('.icon-pause').style.display = 'none';
+                clearInterval(progressInterval);
+                return;
+            }
+
+            // If clicking same track that's paused, resume
+            if (currentTrack === trackEl && currentAudio && currentAudio.paused) {
+                currentAudio.play();
+                trackEl.classList.add('playing');
+                trackEl.querySelector('.icon-play').style.display = 'none';
+                trackEl.querySelector('.icon-pause').style.display = '';
+                startProgress(trackEl);
+                return;
+            }
+
+            // Stop any currently playing track
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                if (currentTrack) {
+                    currentTrack.classList.remove('playing');
+                    currentTrack.querySelector('.icon-play').style.display = '';
+                    currentTrack.querySelector('.icon-pause').style.display = 'none';
+                    var oldFill = currentTrack.querySelector('.track-progress-fill');
+                    if (oldFill) oldFill.style.width = '0%';
+                }
+                clearInterval(progressInterval);
+            }
+
+            // Play new track
+            currentAudio = new Audio(src);
+            currentTrack = trackEl;
+            currentAudio.play();
+            trackEl.classList.add('playing');
+            trackEl.querySelector('.icon-play').style.display = 'none';
+            trackEl.querySelector('.icon-pause').style.display = '';
+
+            currentAudio.addEventListener('ended', function() {
+                trackEl.classList.remove('playing');
+                trackEl.querySelector('.icon-play').style.display = '';
+                trackEl.querySelector('.icon-pause').style.display = 'none';
+                var fill = trackEl.querySelector('.track-progress-fill');
+                if (fill) fill.style.width = '0%';
+                clearInterval(progressInterval);
+                currentTrack = null;
+                currentAudio = null;
+            });
+
+            startProgress(trackEl);
+        };
+
+        function startProgress(trackEl) {
+            clearInterval(progressInterval);
+            progressInterval = setInterval(function() {
+                if (!currentAudio) return;
+                var fill = trackEl.querySelector('.track-progress-fill');
+                var dur = trackEl.querySelector('[data-duration]');
+                if (fill && currentAudio.duration) {
+                    fill.style.width = (currentAudio.currentTime / currentAudio.duration * 100) + '%';
+                }
+                if (dur) {
+                    dur.textContent = formatTime(currentAudio.currentTime) + ' / ' + formatTime(currentAudio.duration);
+                }
+            }, 250);
+        }
+    })();
     </script>
 
 </body>
