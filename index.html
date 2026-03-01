@@ -990,6 +990,26 @@
             letter-spacing: 0.1em;
         }
 
+        /* FAQ Bot Snake */
+        .faq-snake-outer {
+            position: relative;
+            display: inline-block;
+            padding: 5px 12px;
+        }
+        .faq-snake-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+        .faq-snake-rect {
+            fill: none;
+            stroke: var(--accent-primary);
+            stroke-width: 1.5;
+            opacity: 0.85;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 1024px) {
             .hero {
@@ -2144,7 +2164,10 @@
         </div>
         <div class="footer-bottom">
             <div>&copy; 2026 Owen McCormick</div>
-            <div><a href="./hire-owen/chat.html" target="_blank" style="color: var(--text-muted); text-decoration: none; font-size: 0.8rem;" data-i18n="footer.faqbot">Owen FAQ Bot</a></div>
+            <div class="faq-snake-outer">
+                <svg class="faq-snake-svg" aria-hidden="true"><rect class="faq-snake-rect" rx="4" ry="4"/></svg>
+                <a href="./hire-owen/chat.html" target="_blank" style="color: var(--text-muted); text-decoration: none; font-size: 0.8rem; position: relative; z-index: 1;" data-i18n="footer.faqbot">Owen FAQ Bot</a>
+            </div>
             <div data-i18n="footer.tagline">Built with Precision</div>
         </div>
     </footer>
@@ -2565,6 +2588,43 @@ window.__translations = {
                 }
             }, 250);
         }
+    })();
+    </script>
+
+    <script>
+    // FAQ Bot snake animation
+    (function() {
+        const outer = document.querySelector('.faq-snake-outer');
+        const rectEl = document.querySelector('.faq-snake-rect');
+        if (!outer || !rectEl) return;
+
+        function init() {
+            const w = outer.offsetWidth;
+            const h = outer.offsetHeight;
+            rectEl.setAttribute('x', '0');
+            rectEl.setAttribute('y', '0');
+            rectEl.setAttribute('width', w);
+            rectEl.setAttribute('height', h);
+
+            const perimeter = 2 * (w + h);
+            const snakeLen = 44;
+            const gap = perimeter - snakeLen;
+            rectEl.style.strokeDasharray = snakeLen + ' ' + gap;
+
+            const speed = 60; // px per second
+            let startTime = null;
+
+            function frame(ts) {
+                if (!startTime) startTime = ts;
+                const offset = -((ts - startTime) / 1000 * speed % perimeter);
+                rectEl.style.strokeDashoffset = offset;
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        }
+
+        if (document.readyState === 'complete') { init(); }
+        else { window.addEventListener('load', init); }
     })();
     </script>
 
