@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <title>Salesforce Payment Orchestrator — Interactive Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0f1419;
+            --bg-card: #1a2027;
+            --bg-panel: #1e252e;
+            --border: rgba(255,255,255,0.08);
+            --text: #f4f4f5;
+            --text-dim: #94a3b8;
+            --text-muted: #64748b;
+            --navy: #1B3A5C;
+            --navy-light: #234876;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --blue: #3b82f6;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* NAV */
+        .nav {
+            background: rgba(15,20,25,0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+        }
+        .nav-logo { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+        .nav-title { font-size: 0.85rem; font-weight: 600; }
+        .nav-back { font-size: 0.75rem; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+        .nav-back:hover { color: var(--text-dim); }
+
+        /* HERO */
+        .hero {
+            padding: 48px 32px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--navy-light);
+            margin-bottom: 12px;
+        }
+        .hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; }
+        .hero-sub { font-size: 0.95rem; color: var(--text-dim); max-width: 680px; line-height: 1.6; margin-bottom: 20px; }
+        .hero-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+        .meta-item { font-size: 0.75rem; color: var(--text-muted); }
+        .meta-item strong { color: var(--text-dim); font-weight: 600; }
+
+        /* MAIN LAYOUT */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+        }
+
+        /* PANELS */
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .panel-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+        .panel-body { padding: 20px; }
+
+        /* GATEWAY STATUS */
+        .gateways { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+        .gateway {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .gateway:hover { border-color: rgba(255,255,255,0.15); }
+        .gateway.primary { border-color: rgba(27,58,92,0.6); }
+        .gateway.failed { border-color: rgba(239,68,68,0.3); opacity: 0.7; }
+        .gateway-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .gateway-indicator.active { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+        .gateway-indicator.failed { background: var(--red); }
+        .gateway-indicator.standby { background: var(--yellow); }
+        .gateway-name { font-size: 0.85rem; font-weight: 600; flex: 1; }
+        .gateway-role {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .gateway-role.primary-role { background: rgba(27,58,92,0.4); color: #93b4d4; }
+        .gateway-role.fallback-role { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .gateway-rate { font-size: 0.75rem; color: var(--text-muted); margin-left: 8px; }
+
+        /* TRIGGER BUTTON */
+        .trigger-section { margin-top: 8px; }
+        .trigger-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+        .failover-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            color: #f87171;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .failover-btn:hover { background: rgba(239,68,68,0.18); }
+        .failover-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .reset-btn {
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .reset-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text-dim); }
+
+        /* STATS */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+        .stat-value { font-size: 1.5rem; font-weight: 800; margin-bottom: 2px; }
+        .stat-value.green { color: var(--green); }
+        .stat-value.red { color: var(--red); }
+        .stat-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+
+        /* TRANSACTION LOG */
+        .tx-log { display: flex; flex-direction: column; gap: 0; max-height: 320px; overflow-y: auto; }
+        .tx-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 90px 80px 60px;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.75rem;
+            animation: txFade 0.4s ease;
+        }
+        @keyframes txFade {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tx-row:last-child { border-bottom: none; }
+        .tx-id { color: var(--text-muted); font-family: monospace; font-size: 0.7rem; }
+        .tx-restaurant { color: var(--text); font-weight: 500; }
+        .tx-amount { font-weight: 700; text-align: right; }
+        .tx-gateway { color: var(--text-muted); }
+        .tx-status {
+            text-align: right;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 3px;
+        }
+        .tx-status.success { background: rgba(34,197,94,0.12); color: #4ade80; }
+        .tx-status.failed { background: rgba(239,68,68,0.12); color: #f87171; }
+        .tx-status.retry { background: rgba(245,158,11,0.12); color: #fbbf24; }
+        .tx-status.routed { background: rgba(59,130,246,0.12); color: #60a5fa; }
+
+        /* FAILOVER DIAGRAM */
+        .failover-diagram {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .flow-step:last-child { border-bottom: none; }
+        .flow-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .flow-text h4 { font-size: 0.8rem; font-weight: 600; margin-bottom: 2px; }
+        .flow-text p { font-size: 0.72rem; color: var(--text-dim); line-height: 1.4; }
+
+        /* SIDEBAR */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+        /* ALERT */
+        .alert {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.25);
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: none;
+        }
+        .alert.active { display: block; }
+        .alert-title { font-size: 0.7rem; font-weight: 700; color: #f87171; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+        .alert-body { font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; }
+
+        .success-alert {
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.25);
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: none;
+        }
+        .success-alert.active { display: block; }
+        .success-alert .alert-title { color: #4ade80; }
+
+        /* TECH CALLOUTS */
+        .tech-list { display: flex; flex-direction: column; gap: 10px; }
+        .tech-item { display: flex; gap: 10px; align-items: flex-start; }
+        .tech-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--navy-light);
+            flex-shrink: 0;
+            margin-top: 6px;
+        }
+        .tech-text { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+        .tech-text strong { color: var(--text); font-weight: 600; }
+
+        /* FOOTER NOTE */
+        .demo-note {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 32px 40px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 900px) {
+            .main { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .hero { padding: 32px 20px 24px; }
+            .main { padding: 20px; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .tx-row { grid-template-columns: 70px 1fr 80px 60px; }
+            .tx-gateway { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <span class="nav-logo">Owen McCormick</span>
+    <span class="nav-title">Salesforce Payment Orchestrator</span>
+    <a href="../" class="nav-back">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Portfolio
+    </a>
+</nav>
+
+<div class="hero">
+    <div class="hero-label">Salesforce / FinTech · Interactive Demo</div>
+    <h1>Payment Orchestrator</h1>
+    <p class="hero-sub">Enterprise-grade payment routing built on Salesforce for a restaurant SaaS platform. Four gateway integrations with automatic failover, async transaction processing via Queueable Apex, and real-time analytics. Click "Simulate Gateway Failure" to see failover routing in action.</p>
+    <div class="hero-meta">
+        <span class="meta-item"><strong>Platform:</strong> Salesforce (Apex, LWC)</span>
+        <span class="meta-item"><strong>Gateways:</strong> Stripe · Adyen · Square · Heartland</span>
+        <span class="meta-item"><strong>Success Rate:</strong> 98.4%</span>
+        <span class="meta-item"><strong>Architecture:</strong> Queueable Apex / SOA</span>
+    </div>
+</div>
+
+<div class="main">
+    <!-- LEFT COLUMN -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value green" id="successRate">98.4%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="txCount">247</div>
+                <div class="stat-label">Transactions Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="volume">$84,392</div>
+                <div class="stat-label">Volume Processed</div>
+            </div>
+        </div>
+
+        <!-- TRANSACTION LOG -->
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Transaction Log</span>
+                <span id="liveIndicator" style="font-size: 0.65rem; color: #4ade80; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                    <span style="width: 6px; height: 6px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
+                    Live
+                </span>
+            </div>
+            <div class="panel-body" style="padding: 0 20px;">
+                <div style="display: grid; grid-template-columns: 80px 1fr 90px 80px 60px; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border);">
+                    <span style="font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);">TX ID</span>
+                    <span style="font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);">Restaurant</span>
+                    <span style="font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-align: right;">Amount</span>
+                    <span style="font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);">Gateway</span>
+                    <span style="font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-align: right;">Status</span>
+                </div>
+                <div class="tx-log" id="txLog"></div>
+            </div>
+        </div>
+
+        <!-- FAILOVER FLOW -->
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Failover Logic</span>
+            </div>
+            <div class="failover-diagram">
+                <div class="flow-step">
+                    <div class="flow-icon" style="background: rgba(27,58,92,0.3);">1</div>
+                    <div class="flow-text">
+                        <h4>Route to Primary Gateway</h4>
+                        <p>Every transaction hits Stripe first. Queueable Apex processes asynchronously — no governor limit timeouts on high-volume batches.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon" style="background: rgba(239,68,68,0.15);">2</div>
+                    <div class="flow-text">
+                        <h4>Detect Failure in Real Time</h4>
+                        <p>If Stripe returns a gateway error, the orchestrator catches the exception immediately — no manual intervention, no lost transaction.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon" style="background: rgba(245,158,11,0.15);">3</div>
+                    <div class="flow-text">
+                        <h4>Re-route to Fallback</h4>
+                        <p>Adyen is queued as first fallback. Square and Heartland follow in priority order. Each retry is logged with full context in Salesforce.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon" style="background: rgba(34,197,94,0.15);">4</div>
+                    <div class="flow-text">
+                        <h4>Confirm &amp; Surface to Dashboard</h4>
+                        <p>Successful transactions update the LWC analytics dashboard in real time. Failed attempts trigger alerts and log to the escalation record.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="sidebar">
+
+        <!-- GATEWAY STATUS -->
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Gateway Status</span>
+            </div>
+            <div class="panel-body">
+                <div class="gateways" id="gatewayList">
+                    <div class="gateway primary" id="gw-stripe" onclick="selectPrimary('stripe')">
+                        <div class="gateway-indicator active" id="ind-stripe"></div>
+                        <span class="gateway-name">Stripe</span>
+                        <span class="gateway-role primary-role" id="role-stripe">Primary</span>
+                        <span class="gateway-rate">99.1%</span>
+                    </div>
+                    <div class="gateway" id="gw-adyen" onclick="selectPrimary('adyen')">
+                        <div class="gateway-indicator standby" id="ind-adyen"></div>
+                        <span class="gateway-name">Adyen</span>
+                        <span class="gateway-role fallback-role" id="role-adyen">Fallback 1</span>
+                        <span class="gateway-rate">98.7%</span>
+                    </div>
+                    <div class="gateway" id="gw-square" onclick="selectPrimary('square')">
+                        <div class="gateway-indicator standby" id="ind-square"></div>
+                        <span class="gateway-name">Square</span>
+                        <span class="gateway-role fallback-role" id="role-square">Fallback 2</span>
+                        <span class="gateway-rate">97.9%</span>
+                    </div>
+                    <div class="gateway" id="gw-heartland" onclick="selectPrimary('heartland')">
+                        <div class="gateway-indicator standby" id="ind-heartland"></div>
+                        <span class="gateway-name">Heartland</span>
+                        <span class="gateway-role fallback-role" id="role-heartland">Fallback 3</span>
+                        <span class="gateway-rate">96.4%</span>
+                    </div>
+                </div>
+
+                <div class="trigger-section">
+                    <div class="trigger-label">Simulate Failure</div>
+                    <button class="failover-btn" id="failoverBtn" onclick="simulateFailover()">
+                        Fail Primary Gateway →
+                    </button>
+                    <button class="reset-btn" onclick="resetGateways()">Reset All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERT BOX -->
+        <div class="alert" id="failAlert">
+            <div class="alert-title">⚠ Gateway Failure Detected</div>
+            <div class="alert-body" id="failAlertBody">Stripe returned GATEWAY_ERROR. Routing to Adyen fallback. Transaction preserved — no data lost.</div>
+        </div>
+
+        <div class="success-alert" id="successAlert">
+            <div class="alert-title">✓ Failover Complete</div>
+            <div class="alert-body" id="successAlertBody">Payment re-routed via Adyen. Logged to Salesforce escalation record. Success rate holding at 98.4%.</div>
+        </div>
+
+        <!-- TECH DETAILS -->
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Technical Notes</span>
+            </div>
+            <div class="panel-body">
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-dot"></div>
+                        <div class="tech-text"><strong>Queueable Apex</strong> — async processing avoids governor limits on high-volume restaurant batches</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-dot"></div>
+                        <div class="tech-text"><strong>Custom LWC terminal</strong> — staff-facing payment UI built in Lightning Web Components</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-dot"></div>
+                        <div class="tech-text"><strong>SOA pattern</strong> — gateways are swappable service layers; adding a 5th provider requires no core logic changes</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-dot"></div>
+                        <div class="tech-text"><strong>Full audit trail</strong> — every routing decision logged to custom Salesforce objects for compliance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="demo-note">
+    This is an interactive simulation. Transaction data is generated for demonstration purposes. The architecture, failover logic, and Apex patterns reflect the actual system built on Salesforce.
+    <span style="margin-left: 16px;"><a href="https://github.com/martymcfli/owen_folio" target="_blank" style="color: #64748b; text-decoration: none;">View on GitHub →</a></span>
+</div>
+
+<script>
+    const gateways = ['stripe', 'adyen', 'square', 'heartland'];
+    let primaryGateway = 'stripe';
+    let failedGateways = new Set();
+    let txCounter = 247;
+    let volumeCents = 8439200;
+
+    const restaurants = [
+        'The Osprey', 'Birch & Rye', 'Founders Table', 'Casa Nomad',
+        'The Larder', 'Elm Street Kitchen', 'Harbor & Grain', 'North Star Bistro',
+        'The Wayward', 'Salt + Smoke', 'Grove & Glass', 'The Atelier'
+    ];
+
+    function fmt(cents) {
+        return '$' + (cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function shortId() {
+        return 'TX' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    }
+
+    function getActiveGateway() {
+        for (const gw of [primaryGateway, ...gateways.filter(g => g !== primaryGateway)]) {
+            if (!failedGateways.has(gw)) return gw;
+        }
+        return null;
+    }
+
+    function addTransaction(forced = false) {
+        const log = document.getElementById('txLog');
+        const amount = Math.floor(Math.random() * 28000) + 800;
+        const restaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+        const id = shortId();
+        const gw = getActiveGateway();
+
+        let status, statusClass, gwName;
+
+        if (forced) {
+            gwName = capitalise(primaryGateway);
+            status = 'Failed';
+            statusClass = 'failed';
+        } else if (!gw) {
+            status = 'Failed';
+            statusClass = 'failed';
+            gwName = 'N/A';
+        } else {
+            gwName = capitalise(gw);
+            const isRerouted = gw !== primaryGateway && failedGateways.size > 0;
+            if (isRerouted) {
+                status = 'Re-routed';
+                statusClass = 'routed';
+            } else {
+                status = 'Success';
+                statusClass = 'success';
+            }
+            txCounter++;
+            volumeCents += amount;
+            document.getElementById('txCount').textContent = txCounter;
+            document.getElementById('volume').textContent = '$' + Math.floor(volumeCents / 100).toLocaleString();
+        }
+
+        const row = document.createElement('div');
+        row.className = 'tx-row';
+        row.innerHTML = `
+            <span class="tx-id">${id}</span>
+            <span class="tx-restaurant">${restaurant}</span>
+            <span class="tx-amount">${fmt(amount)}</span>
+            <span class="tx-gateway">${gwName}</span>
+            <span class="tx-status ${statusClass}">${status}</span>
+        `;
+
+        log.insertBefore(row, log.firstChild);
+        if (log.children.length > 18) log.removeChild(log.lastChild);
+    }
+
+    function capitalise(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    function updateGatewayUI() {
+        gateways.forEach(gw => {
+            const el = document.getElementById('gw-' + gw);
+            const ind = document.getElementById('ind-' + gw);
+            const role = document.getElementById('role-' + gw);
+
+            el.className = 'gateway';
+            if (failedGateways.has(gw)) {
+                ind.className = 'gateway-indicator failed';
+                el.classList.add('failed');
+                role.textContent = 'Offline';
+                role.className = 'gateway-role';
+                role.style.background = 'rgba(239,68,68,0.15)';
+                role.style.color = '#f87171';
+            } else if (gw === primaryGateway) {
+                ind.className = 'gateway-indicator active';
+                el.classList.add('primary');
+                role.textContent = 'Primary';
+                role.className = 'gateway-role primary-role';
+                role.style.background = '';
+                role.style.color = '';
+            } else {
+                ind.className = 'gateway-indicator standby';
+                const activeList = gateways.filter(g => !failedGateways.has(g) && g !== primaryGateway);
+                const pos = activeList.indexOf(gw) + 1;
+                role.textContent = 'Fallback ' + pos;
+                role.className = 'gateway-role fallback-role';
+                role.style.background = '';
+                role.style.color = '';
+            }
+        });
+    }
+
+    function simulateFailover() {
+        const btn = document.getElementById('failoverBtn');
+        const failAlert = document.getElementById('failAlert');
+        const successAlert = document.getElementById('successAlert');
+
+        if (failedGateways.size >= gateways.length - 1) return;
+
+        btn.disabled = true;
+
+        // Show fail transaction
+        addTransaction(true);
+        failedGateways.add(primaryGateway);
+
+        const failedName = capitalise(primaryGateway);
+        const nextGw = getActiveGateway();
+        const nextName = nextGw ? capitalise(nextGw) : 'None';
+
+        document.getElementById('failAlertBody').textContent =
+            `${failedName} returned GATEWAY_ERROR. Routing to ${nextName} fallback. Transaction preserved — no data lost.`;
+
+        failAlert.classList.add('active');
+        successAlert.classList.remove('active');
+
+        updateGatewayUI();
+
+        // Update success rate display
+        const newRate = (98.4 - failedGateways.size * 0.8).toFixed(1);
+        document.getElementById('successRate').textContent = newRate + '%';
+        document.getElementById('successRate').style.color = parseFloat(newRate) < 97 ? 'var(--yellow)' : 'var(--green)';
+
+        // Show re-routed transaction after brief delay
+        setTimeout(() => {
+            addTransaction();
+            failAlert.classList.remove('active');
+            successAlert.classList.add('active');
+            document.getElementById('successAlertBody').textContent =
+                `Payment re-routed via ${nextName}. Logged to Salesforce escalation record. Failover completed in <200ms.`;
+            btn.disabled = false;
+            btn.textContent = `Fail ${capitalise(getActiveGateway() || 'Gateway')} →`;
+        }, 1800);
+    }
+
+    function resetGateways() {
+        failedGateways.clear();
+        primaryGateway = 'stripe';
+        document.getElementById('successRate').textContent = '98.4%';
+        document.getElementById('successRate').style.color = 'var(--green)';
+        document.getElementById('failAlert').classList.remove('active');
+        document.getElementById('successAlert').classList.remove('active');
+        document.getElementById('failoverBtn').textContent = 'Fail Primary Gateway →';
+        document.getElementById('failoverBtn').disabled = false;
+        updateGatewayUI();
+    }
+
+    function selectPrimary(gw) {
+        if (failedGateways.has(gw)) return;
+        primaryGateway = gw;
+        updateGatewayUI();
+        document.getElementById('failoverBtn').textContent = `Fail ${capitalise(gw)} →`;
+    }
+
+    // Seed initial transactions
+    function seedLog() {
+        const seedData = [
+            ['TXA4F2', 'Harbor & Grain', '$312.40', 'Stripe', 'success', 'Success'],
+            ['TXB8C1', 'The Larder', '$89.50', 'Stripe', 'success', 'Success'],
+            ['TXDF31', 'Birch & Rye', '$204.00', 'Stripe', 'success', 'Success'],
+            ['TXE9A2', 'North Star Bistro', '$156.75', 'Stripe', 'success', 'Success'],
+            ['TX3C7B', 'Casa Nomad', '$441.20', 'Stripe', 'success', 'Success'],
+            ['TX7F18', 'The Osprey', '$73.00', 'Stripe', 'success', 'Success'],
+            ['TX2A9D', 'Grove & Glass', '$520.00', 'Stripe', 'success', 'Success'],
+            ['TX5E4C', 'Salt + Smoke', '$267.50', 'Stripe', 'success', 'Success'],
+        ];
+        const log = document.getElementById('txLog');
+        seedData.forEach(([id, rest, amt, gw, cls, label]) => {
+            const row = document.createElement('div');
+            row.className = 'tx-row';
+            row.innerHTML = `
+                <span class="tx-id">${id}</span>
+                <span class="tx-restaurant">${rest}</span>
+                <span class="tx-amount">${amt}</span>
+                <span class="tx-gateway">${gw}</span>
+                <span class="tx-status ${cls}">${label}</span>
+            `;
+            log.appendChild(row);
+        });
+    }
+
+    // Auto-add transactions periodically
+    function startLiveFeed() {
+        setInterval(() => {
+            if (failedGateways.size < gateways.length) {
+                addTransaction();
+            }
+        }, 3200);
+    }
+
+    seedLog();
+    updateGatewayUI();
+    startLiveFeed();
+</script>
+</body>
+</html>

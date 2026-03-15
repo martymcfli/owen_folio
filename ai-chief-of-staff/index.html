@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chief of Staff - Owen McCormick</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a2027;
+            --bg-card: #1e252e;
+            --bg-card-hover: #242c36;
+            --bg-input: #151b22;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-primary: #14b8a6;
+            --accent-secondary: #0d9488;
+            --accent-gradient: linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #0891b2 100%);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(20, 184, 166, 0.3);
+            --glow-teal: 0 0 20px rgba(20, 184, 166, 0.15);
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+            --green: #10b981;
+            --pink: #ec4899;
+            --sidebar-w: 280px;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        ::selection { background: rgba(20,184,166,0.3); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        /* ============== LAYOUT ============== */
+        .app-layout {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* ============== SIDEBAR ============== */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--glow-teal);
+        }
+        .logo-icon svg { color: white; width: 22px; height: 22px; }
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .logo-text span { color: var(--accent-primary); }
+        .logo-sub {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 2px;
+            padding-left: 52px;
+        }
+
+        .sidebar-section {
+            padding: 20px 16px 8px;
+        }
+        .sidebar-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding-left: 4px;
+        }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li {
+            margin-bottom: 2px;
+        }
+        .sidebar-nav a, .sidebar-nav button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .sidebar-nav a:hover, .sidebar-nav button:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active, .sidebar-nav button.active {
+            background: rgba(20,184,166,0.1);
+            color: var(--accent-primary);
+            border-left: 2px solid var(--accent-primary);
+        }
+        .sidebar-nav svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+        .sidebar-nav .active svg { opacity: 1; }
+        .nav-badge {
+            margin-left: auto;
+            background: var(--red);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+        .nav-badge.teal { background: var(--accent-primary); }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .sidebar-footer a:hover { color: var(--accent-primary); }
+        .sidebar-footer svg { width: 14px; height: 14px; }
+
+        /* ============== MAIN ============== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .main-header {
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .main-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: rgba(20,184,166,0.1);
+            border: 1px solid rgba(20,184,166,0.2);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+        .status-pill .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;}50%{opacity:0.4;} }
+        .time-display {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ============== DASHBOARD ============== */
+        .dashboard-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px;
+        }
+
+        /* Panel visibility */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* Morning brief */
+        .brief-card {
+            background: linear-gradient(135deg, rgba(20,184,166,0.08) 0%, rgba(8,145,178,0.05) 100%);
+            border: 1px solid rgba(20,184,166,0.15);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            animation: fadeSlideUp 0.5s ease;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .brief-greeting {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .brief-date {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .brief-stats {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .brief-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .brief-stat .emoji { font-size: 16px; }
+        .brief-stat .count { color: var(--accent-primary); }
+
+        /* Dashboard grid */
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .dash-grid.triple {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        @media (max-width: 1200px) {
+            .dash-grid { grid-template-columns: 1fr; }
+            .dash-grid.triple { grid-template-columns: 1fr; }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--glow-teal);
+            transform: translateY(-2px);
+        }
+        .card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .card-title h3 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-title h3 svg { width: 14px; height: 14px; color: var(--accent-primary); }
+        .card-title .card-count {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Agenda items */
+        .agenda-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .agenda-item:last-child { border-bottom: none; }
+        .agenda-time {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 65px;
+            font-variant-numeric: tabular-nums;
+        }
+        .agenda-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .agenda-dot.recurring { background: var(--blue); }
+        .agenda-dot.interview { background: var(--orange); }
+        .agenda-dot.personal { background: var(--purple); }
+        .agenda-dot.deep-work { background: var(--green); }
+        .agenda-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .agenda-duration {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Task items */
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .task-item:last-child { border-bottom: none; }
+        .task-check {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .task-check:hover { border-color: var(--accent-primary); }
+        .task-check.done {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+        .task-check.done::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 1px;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        .task-info { flex: 1; }
+        .task-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .task-item.done .task-label {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+        .task-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .priority-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .priority-dot.high { background: var(--red); }
+        .priority-dot.medium { background: var(--orange); }
+        .priority-dot.low { background: var(--blue); }
+
+        /* Email items */
+        .email-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .email-item:last-child { border-bottom: none; }
+        .email-unread {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            flex-shrink: 0;
+        }
+        .email-unread.read { background: transparent; }
+        .email-from {
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 140px;
+            color: var(--text-secondary);
+        }
+        .email-subject {
+            font-size: 13px;
+            font-weight: 500;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .email-priority {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .email-priority.high { background: rgba(239,68,68,0.15); color: var(--red); }
+        .email-priority.medium { background: rgba(245,158,11,0.15); color: var(--orange); }
+        .email-priority.low { background: rgba(59,130,246,0.1); color: var(--blue); }
+
+        /* Pipeline */
+        .pipeline-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .pipeline-metric {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .pipeline-metric .val {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        .pipeline-metric .lbl {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+        .pipeline-metric.applied .val { color: var(--blue); }
+        .pipeline-metric.interviewing .val { color: var(--orange); }
+        .pipeline-metric.offers .val { color: var(--green); }
+        .pipeline-metric.rejected .val { color: var(--text-muted); }
+
+        .company-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .company-row:last-child { border-bottom: none; }
+        .company-name {
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 70px;
+        }
+        .company-stage {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .stage-technical { background: rgba(245,158,11,0.15); color: var(--orange); }
+        .stage-awaiting { background: rgba(239,68,68,0.12); color: #f87171; }
+        .stage-final { background: rgba(16,185,129,0.15); color: var(--green); }
+        .stage-applied { background: rgba(59,130,246,0.12); color: var(--blue); }
+        .company-next {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Insight cards */
+        .insight-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .insight-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 14px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-primary);
+            transition: all 0.2s;
+        }
+        .insight-card:hover {
+            background: rgba(20,184,166,0.05);
+        }
+        .insight-card .insight-emoji { font-size: 16px; flex-shrink: 0; }
+        .insight-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .insight-card .action-link {
+            color: var(--accent-primary);
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .insight-card .action-link:hover { text-decoration: underline; }
+
+        /* Energy */
+        .energy-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .energy-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            min-width: 60px;
+            font-weight: 500;
+        }
+        .energy-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .energy-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        /* ============== CHAT ============== */
+        .chat-section {
+            border-top: 1px solid var(--border-color);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            max-height: 50vh;
+            transition: max-height 0.3s ease;
+        }
+        .chat-section.expanded {
+            max-height: 70vh;
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 32px;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            user-select: none;
+        }
+        .chat-header h4 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chat-header h4 svg { width: 14px; height: 14px; color: var(--accent-primary); }
+        .chat-toggle {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 4px 8px;
+        }
+        .chat-toggle:hover { color: var(--text-secondary); }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .chat-msg {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+            animation: fadeSlideUp 0.3s ease;
+        }
+        .chat-msg.user {
+            align-self: flex-end;
+            background: var(--accent-gradient);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-msg.ai {
+            align-self: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+            color: var(--text-secondary);
+        }
+        .chat-msg.ai strong { color: var(--text-primary); }
+        .chat-msg.ai .chat-section-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-primary);
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 14px 18px;
+            align-self: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            border-bottom-left-radius: 4px;
+        }
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: typingBounce 1.2s infinite;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%,80%,100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+        }
+
+        .chat-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 32px 16px;
+            background: var(--bg-secondary);
+        }
+        .chat-input-row input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 11px 16px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input-row input:focus { border-color: var(--accent-primary); }
+        .chat-input-row input::placeholder { color: var(--text-muted); }
+        .send-btn {
+            background: var(--accent-gradient);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .send-btn:hover { transform: translateY(-1px); box-shadow: var(--glow-teal); }
+        .send-btn svg { color: white; width: 18px; height: 18px; }
+
+        /* Command palette hint */
+        .cmd-hint {
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 0 32px 8px;
+            background: var(--bg-secondary);
+        }
+        .cmd-hint kbd {
+            background: rgba(255,255,255,0.06);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 10px;
+        }
+
+        /* Command palette */
+        .cmd-palette {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 32px;
+            right: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+        .cmd-palette.visible { display: block; }
+        .cmd-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .cmd-item:hover {
+            background: rgba(20,184,166,0.1);
+            color: var(--text-primary);
+        }
+        .cmd-item code {
+            font-family: 'Inter', monospace;
+            font-size: 12px;
+            color: var(--accent-primary);
+            font-weight: 600;
+            min-width: 90px;
+        }
+
+        /* Quick action chips */
+        .quick-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 0 32px 10px;
+            background: var(--bg-secondary);
+        }
+        .quick-chip {
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .quick-chip:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: rgba(20,184,166,0.05);
+        }
+
+        /* Demo badge */
+        .demo-badge {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(15,20,25,0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .demo-badge .db-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            animation: pulse 2s infinite;
+        }
+        .demo-badge a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .demo-badge a:hover { text-decoration: underline; }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .dashboard-scroll { padding: 16px; }
+            .chat-messages { padding: 12px 16px; }
+            .chat-input-row { padding: 10px 16px 12px; }
+            .quick-actions { padding: 0 16px 8px; }
+            .cmd-hint { padding: 0 16px 6px; }
+            .main-header { padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-row">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="logo-text">AI Chief of <span>Staff</span></div>
+            </div>
+            <div class="logo-sub">Owen's Personal AI</div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-label">Dashboards</div>
+            <ul class="sidebar-nav">
+                <li><button class="active" onclick="showPanel('overview')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    Overview
+                </button></li>
+                <li><button onclick="showPanel('pipeline')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    Job Pipeline
+                    <span class="nav-badge teal">3</span>
+                </button></li>
+                <li><button onclick="showPanel('email')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Email
+                    <span class="nav-badge">5</span>
+                </button></li>
+                <li><button onclick="showPanel('tasks')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Tasks
+                </button></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-label">Intelligence</div>
+            <ul class="sidebar-nav">
+                <li><button onclick="showPanel('insights')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    AI Insights
+                </button></li>
+                <li><button onclick="showPanel('weekly')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    Weekly Review
+                </button></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-label">Connected Apps</div>
+            <ul class="sidebar-nav">
+                <li><a href="../personal-ops-dashboard/dashboard.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                    Personal Ops
+                </a></li>
+                <li><a href="../hire-owen/chat.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Hire Owen Agent
+                </a></li>
+                <li><a href="../reverse-interview/index.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Reverse Interview
+                </a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Portfolio
+            </a>
+        </div>
+    </aside>
+
+    <!-- ========== MAIN ========== -->
+    <div class="main-content">
+        <div class="main-header">
+            <h2 id="panelTitle">Daily Overview</h2>
+            <div class="header-right">
+                <div class="status-pill">
+                    <span class="dot"></span>
+                    Systems Online
+                </div>
+                <div class="time-display" id="currentTime"></div>
+            </div>
+        </div>
+
+        <div class="dashboard-scroll" id="dashboardScroll">
+
+            <!-- ===== OVERVIEW PANEL ===== -->
+            <div class="panel active" id="panel-overview">
+                <div class="brief-card">
+                    <div class="brief-greeting" id="greetingText"></div>
+                    <div class="brief-date" id="dateText"></div>
+                    <div class="brief-stats">
+                        <div class="brief-stat"><span class="emoji">🔥</span> <span class="count">3</span> urgent items</div>
+                        <div class="brief-stat"><span class="emoji">⚡</span> <span class="count">7</span> tasks due</div>
+                        <div class="brief-stat"><span class="emoji">📧</span> <span class="count">5</span> unread emails</div>
+                        <div class="brief-stat"><span class="emoji">🎯</span> <span class="count">3</span> interviews this week</div>
+                    </div>
+                </div>
+
+                <div class="dash-grid">
+                    <!-- Today's Agenda -->
+                    <div class="card">
+                        <div class="card-title">
+                            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Today's Agenda</h3>
+                            <span class="card-count">6 events</span>
+                        </div>
+                        <div id="agendaList"></div>
+                    </div>
+
+                    <!-- Top Tasks -->
+                    <div class="card">
+                        <div class="card-title">
+                            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Priority Tasks</h3>
+                            <span class="card-count">7 active</span>
+                        </div>
+                        <div id="taskList"></div>
+                    </div>
+                </div>
+
+                <div class="dash-grid">
+                    <!-- Email -->
+                    <div class="card">
+                        <div class="card-title">
+                            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Inbox Highlights</h3>
+                            <span class="card-count">5 unread</span>
+                        </div>
+                        <div id="emailList"></div>
+                    </div>
+
+                    <!-- Energy -->
+                    <div class="card">
+                        <div class="card-title">
+                            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Energy & Focus</h3>
+                        </div>
+                        <div id="energyBars"></div>
+                        <div style="margin-top:16px;padding:12px;background:rgba(20,184,166,0.06);border-radius:8px;border-left:3px solid var(--accent-primary);">
+                            <p style="font-size:12px;color:var(--text-secondary);line-height:1.5;">
+                                <strong style="color:var(--accent-primary);">AI Recommendation:</strong> Your peak hours are 9 AM – 12 PM. Use this window for deep work or creative tasks. Schedule meetings after lunch.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Suggestions -->
+                <div class="card" style="margin-bottom:24px;">
+                    <div class="card-title">
+                        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Smart Suggestions</h3>
+                    </div>
+                    <div class="insight-cards" id="suggestionsBox"></div>
+                </div>
+            </div>
+
+            <!-- ===== PIPELINE PANEL ===== -->
+            <div class="panel" id="panel-pipeline">
+                <div class="card" style="margin-bottom:20px;">
+                    <div class="card-title"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Job Search Pipeline</h3></div>
+                    <div class="pipeline-row" id="pipelineMetrics"></div>
+                    <div id="companyList"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Pipeline Activity</h3></div>
+                    <div id="pipelineActivity"></div>
+                </div>
+            </div>
+
+            <!-- ===== EMAIL PANEL ===== -->
+            <div class="panel" id="panel-email">
+                <div class="card" style="margin-bottom:20px;">
+                    <div class="card-title"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> All Emails</h3><span class="card-count">12 total</span></div>
+                    <div id="fullEmailList"></div>
+                </div>
+            </div>
+
+            <!-- ===== TASKS PANEL ===== -->
+            <div class="panel" id="panel-tasks">
+                <div class="card" style="margin-bottom:20px;">
+                    <div class="card-title"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> All Tasks</h3></div>
+                    <div id="fullTaskList"></div>
+                </div>
+            </div>
+
+            <!-- ===== INSIGHTS PANEL ===== -->
+            <div class="panel" id="panel-insights">
+                <div class="card" style="margin-bottom:20px;">
+                    <div class="card-title"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> AI Insights & Patterns</h3></div>
+                    <div class="insight-cards" id="allInsights"></div>
+                </div>
+            </div>
+
+            <!-- ===== WEEKLY PANEL ===== -->
+            <div class="panel" id="panel-weekly">
+                <div class="brief-card">
+                    <div class="brief-greeting">Weekly Review</div>
+                    <div class="brief-date">Week of Feb 3 – Feb 8, 2026</div>
+                    <div class="brief-stats">
+                        <div class="brief-stat"><span class="emoji">📨</span> <span class="count">8</span> applications sent</div>
+                        <div class="brief-stat"><span class="emoji">🎤</span> <span class="count">3</span> interviews</div>
+                        <div class="brief-stat"><span class="emoji">🤝</span> <span class="count">2</span> networking calls</div>
+                        <div class="brief-stat"><span class="emoji">🛠️</span> <span class="count">4</span> portfolio updates</div>
+                    </div>
+                </div>
+                <div class="dash-grid">
+                    <div class="card">
+                        <div class="card-title"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Wins This Week</h3></div>
+                        <div class="insight-cards" id="weeklyWins"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Focus Areas Next Week</h3></div>
+                        <div class="insight-cards" id="weeklyFocus"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ========== CHAT ========== -->
+        <div class="chat-section" id="chatSection">
+            <div class="chat-header" onclick="toggleChat()">
+                <h4>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    AI Assistant
+                </h4>
+                <button class="chat-toggle" id="chatToggle">Expand ↑</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg ai" id="initialMsg"></div>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-chip" onclick="sendQuick('What should I focus on today?')">What's urgent?</button>
+                <button class="quick-chip" onclick="sendQuick('Prepare me for my Stripe interview')">Prep for Stripe</button>
+                <button class="quick-chip" onclick="sendQuick('Draft a follow-up email to Notion')">Draft email</button>
+                <button class="quick-chip" onclick="sendQuick('Give me my weekly review')">Weekly review</button>
+                <button class="quick-chip" onclick="sendQuick('How is my job search going?')">Job pipeline</button>
+            </div>
+            <div class="cmd-hint">Type <kbd>/</kbd> for commands &nbsp;•&nbsp; Try asking anything about your schedule, tasks, or job search</div>
+            <div style="position:relative;">
+                <div class="cmd-palette" id="cmdPalette">
+                    <div class="cmd-item" onclick="sendQuick('/brief')"><code>/brief</code> Generate morning briefing</div>
+                    <div class="cmd-item" onclick="sendQuick('/email Notion')"><code>/email</code> Draft follow-up email</div>
+                    <div class="cmd-item" onclick="sendQuick('/prep Stripe')"><code>/prep</code> Interview preparation</div>
+                    <div class="cmd-item" onclick="sendQuick('/review')"><code>/review</code> Weekly progress review</div>
+                    <div class="cmd-item" onclick="sendQuick('/focus')"><code>/focus</code> What should I work on?</div>
+                    <div class="cmd-item" onclick="sendQuick('/pipeline')"><code>/pipeline</code> Job search status</div>
+                </div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="Ask your AI Chief of Staff anything..." autocomplete="off">
+                <button class="send-btn" onclick="sendMessage()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo Badge -->
+<div class="demo-badge">
+    <span class="db-dot"></span>
+    Demo Mode &mdash; <a href="../index.html">Back to Portfolio</a>
+</div>
+
+<script>
+// ========================================================
+// MOCK DATA
+// ========================================================
+const mockCalendar = [
+    { time: '8:30 AM', title: 'Morning Journaling & Planning', duration: 30, type: 'personal' },
+    { time: '9:00 AM', title: 'Daily Standup', duration: 15, type: 'recurring' },
+    { time: '10:00 AM', title: 'Deep Work: Portfolio Polish', duration: 120, type: 'deep-work' },
+    { time: '12:00 PM', title: 'Lunch Break', duration: 60, type: 'personal' },
+    { time: '1:00 PM', title: 'Interview Prep: Stripe', duration: 60, type: 'interview' },
+    { time: '2:30 PM', title: 'Networking Call: Sarah (Notion PM)', duration: 30, type: 'interview' },
+    { time: '3:30 PM', title: 'Code Review: SpinnerEvolve PR', duration: 45, type: 'recurring' },
+    { time: '5:00 PM', title: 'Gym Session', duration: 60, type: 'personal' },
+];
+
+const mockEmails = [
+    { from: 'Stripe Recruiting', subject: 'Technical Interview — Next Steps & Prep Materials', priority: 'high', unread: true, time: '9:15 AM' },
+    { from: 'GitHub', subject: 'You have 3 new stars on owen_folio', priority: 'low', unread: true, time: '8:42 AM' },
+    { from: 'Notion Careers', subject: 'Application Status Update', priority: 'medium', unread: true, time: '8:20 AM' },
+    { from: 'Sarah Chen', subject: 'Re: Coffee chat about Notion PM role', priority: 'medium', unread: true, time: 'Yesterday' },
+    { from: 'LinkedIn', subject: '5 new recruiters viewed your profile', priority: 'low', unread: true, time: 'Yesterday' },
+    { from: 'Figma HR', subject: 'Final Round Interview Confirmation — Feb 12', priority: 'high', unread: false, time: 'Feb 6' },
+    { from: 'Vercel', subject: 'Your application has been received', priority: 'low', unread: false, time: 'Feb 5' },
+    { from: 'Google Calendar', subject: 'Upcoming: Stripe Interview Prep', priority: 'low', unread: false, time: 'Feb 5' },
+    { from: 'HubSpot Academy', subject: 'Your RevOps certification is expiring soon', priority: 'medium', unread: false, time: 'Feb 4' },
+    { from: 'Anthropic Careers', subject: 'Thank you for your interest', priority: 'low', unread: false, time: 'Feb 3' },
+    { from: 'Dev.to', subject: 'Your article got 200+ reactions!', priority: 'low', unread: false, time: 'Feb 3' },
+    { from: 'AWS', subject: 'Your free tier usage this month', priority: 'low', unread: false, time: 'Feb 2' },
+];
+
+const mockTasks = [
+    { task: 'Follow up with Notion', priority: 'high', due: 'Today', domain: 'job-search', done: false },
+    { task: 'Review Stripe prep materials', priority: 'high', due: 'Today', domain: 'job-search', done: false },
+    { task: 'Polish AI Chief of Staff demo', priority: 'high', due: 'Today', domain: 'work', done: false },
+    { task: 'Prepare questions for Figma final round', priority: 'medium', due: 'Tomorrow', domain: 'job-search', done: false },
+    { task: 'Gym session — upper body', priority: 'medium', due: 'Today', domain: 'health', done: false },
+    { task: 'Review and merge SpinnerEvolve PR', priority: 'medium', due: 'Today', domain: 'work', done: false },
+    { task: 'Update LinkedIn headline', priority: 'low', due: 'This week', domain: 'job-search', done: false },
+    { task: 'Reply to Sarah about Notion insights', priority: 'medium', due: 'Today', domain: 'networking', done: true },
+    { task: 'Submit GA4 dashboard case study', priority: 'low', due: 'This week', domain: 'work', done: true },
+];
+
+const mockJobPipeline = {
+    applied: 15, interviewing: 3, offers: 1, rejected: 4,
+    companies: [
+        { name: 'Stripe', stage: 'Technical Interview', stageClass: 'stage-technical', lastContact: '2 days ago', nextStep: 'Feb 10 — System Design Round' },
+        { name: 'Notion', stage: 'Awaiting Response', stageClass: 'stage-awaiting', lastContact: '5 days ago', nextStep: 'Follow up today!' },
+        { name: 'Figma', stage: 'Final Round', stageClass: 'stage-final', lastContact: '1 day ago', nextStep: 'Feb 12 — Onsite' },
+        { name: 'Vercel', stage: 'Applied', stageClass: 'stage-applied', lastContact: '3 days ago', nextStep: 'Waiting on recruiter screen' },
+        { name: 'Anthropic', stage: 'Rejected', stageClass: '', lastContact: '5 days ago', nextStep: 'Reapply in 6 months' },
+    ]
+};
+
+const mockPipelineActivity = [
+    { date: 'Feb 8', action: 'Received Stripe prep materials', type: 'update' },
+    { date: 'Feb 7', action: 'Figma confirmed final round for Feb 12', type: 'positive' },
+    { date: 'Feb 6', action: 'Sent follow-up to Notion recruiter', type: 'action' },
+    { date: 'Feb 5', action: 'Applied to Vercel — Senior Ops role', type: 'action' },
+    { date: 'Feb 4', action: 'Completed Stripe phone screen', type: 'positive' },
+    { date: 'Feb 3', action: 'Anthropic — rejected (timing)', type: 'negative' },
+    { date: 'Feb 2', action: 'Applied to 3 new roles', type: 'action' },
+];
+
+const mockEnergy = [
+    { label: '6–9 AM', value: 60, color: '#f59e0b' },
+    { label: '9–12 PM', value: 95, color: '#10b981' },
+    { label: '12–3 PM', value: 55, color: '#f59e0b' },
+    { label: '3–6 PM', value: 75, color: '#14b8a6' },
+    { label: '6–9 PM', value: 40, color: '#ef4444' },
+];
+
+const mockSuggestions = [
+    { emoji: '⚠️', text: "You haven't followed up with <strong>Notion</strong> in 5 days. <span class='action-link' onclick=\"sendQuick('Draft a follow-up email to Notion')\">Draft email?</span>" },
+    { emoji: '🎯', text: "Your <strong>Stripe</strong> interview is in <strong>2 days</strong>. <span class='action-link' onclick=\"sendQuick('Prepare me for my Stripe interview')\">Start prep?</span>" },
+    { emoji: '💡', text: "You've been heads-down for 3 hours today. Consider a 15-min walk break to reset." },
+    { emoji: '📈', text: "Your portfolio got <strong>3 new GitHub stars</strong> overnight. The AI projects are gaining traction!" },
+];
+
+const mockInsights = [
+    { emoji: '🧠', text: "You're most productive between <strong>9–11 AM</strong> this week. Schedule creative work during these hours." },
+    { emoji: '🎤', text: "Your interview success rate is <strong>67%</strong> — higher than the industry average of 45%." },
+    { emoji: '⏰', text: "You spend an average of <strong>2.3 hours/day</strong> on job search activities. That's optimal for active seekers." },
+    { emoji: '🔄', text: "Consider taking a break — you've had <strong>4 back-to-back meeting days</strong> this week." },
+    { emoji: '📊', text: "Your portfolio has received <strong>127 unique visitors</strong> this week (+23% vs last week)." },
+    { emoji: '💪', text: "You've completed <strong>85%</strong> of planned tasks this week. On track for a strong finish." },
+    { emoji: '🌐', text: "Based on market data, <strong>Operations + AI</strong> hybrid roles have increased 40% in the past 3 months." },
+    { emoji: '🏃', text: "You've hit your gym goal <strong>3 out of 4 days</strong> this week. One more session to hit your weekly target!" },
+];
+
+const mockWeeklyWins = [
+    { emoji: '🏆', text: "Advanced to <strong>Figma final round</strong> — your case study presentation stood out." },
+    { emoji: '⭐', text: "Portfolio earned <strong>11 new GitHub stars</strong> across 3 repos." },
+    { emoji: '✅', text: "Shipped <strong>AI Chief of Staff</strong> and <strong>Opportunity Radar</strong> demos." },
+    { emoji: '🤝', text: "Connected with <strong>Sarah Chen</strong> (Notion PM) for insider intel." },
+];
+
+const mockWeeklyFocus = [
+    { emoji: '🎯', text: "Crush the <strong>Stripe system design</strong> interview on Monday." },
+    { emoji: '📧', text: "Re-engage <strong>Notion</strong> — your contact Sarah can help internally." },
+    { emoji: '🛠️', text: "Add <strong>AI Chief of Staff</strong> as Featured Showcase #04 on portfolio." },
+    { emoji: '🏋️', text: "Maintain the <strong>4x/week gym</strong> streak. Recovery day Wednesday." },
+];
+
+// ========================================================
+// AI CHAT RESPONSES
+// ========================================================
+const chatResponses = {
+    brief: () => `Good ${getTimeOfDay()}, Owen! Here's your briefing:\n\n<span class='chat-section-label'>📅 Today's Schedule</span>\n• 9:00 AM — Daily standup (15 min)\n• 10:00 AM — Deep work: Portfolio polish (2 hrs)\n• 1:00 PM — Interview prep: Stripe\n• 2:30 PM — Networking call with Sarah (Notion)\n• 3:30 PM — Code review: SpinnerEvolve PR\n• 5:00 PM — Gym session\n\n<span class='chat-section-label'>📧 Email Highlights</span>\n• <strong>Stripe</strong> sent prep materials — high priority\n• <strong>Notion</strong> status update — needs follow-up\n• 3 new GitHub stars overnight\n\n<span class='chat-section-label'>⚡ Top 3 Priorities</span>\n1. Follow up with Notion (5 days overdue!)\n2. Review Stripe prep materials before Monday\n3. Polish AI Chief of Staff demo\n\n<span class='chat-section-label'>💡 AI Insight</span>\nYour energy peaks 9–11 AM. Tackle portfolio polish first, then shift to interview prep after lunch.`,
+
+    focus: () => `Based on your calendar, deadlines, and energy patterns, here's what I recommend:\n\n<span class='chat-section-label'>🔥 Do Right Now</span>\n1. <strong>Follow up with Notion</strong> — It's been 5 days. Sarah can help you internally. Draft a warm check-in email.\n2. <strong>Review Stripe prep materials</strong> — Your interview is in 2 days. Block 1 hour after standup.\n\n<span class='chat-section-label'>⏰ Do This Afternoon</span>\n3. <strong>Polish AI Chief of Staff demo</strong> — You're in a creative groove. Use your 3–5 PM window.\n4. <strong>Prep questions for Figma final round</strong> — Due by Friday.\n\n<span class='chat-section-label'>💡 Skip Today</span>\n• LinkedIn headline update (not urgent)\n• SpinnerEvolve PR can wait until tomorrow\n\nShall I draft that Notion follow-up email?`,
+
+    email_notion: () => `Here's a draft follow-up email for <strong>Notion</strong>:\n\n<span class='chat-section-label'>📧 Draft Email</span>\n<strong>To:</strong> Notion Recruiting Team\n<strong>Subject:</strong> Following Up — Operations Role Application\n\n---\n\nHi [Recruiter Name],\n\nHope you're having a great week! I wanted to follow up on my application for the Operations role. I'm very excited about Notion's mission to make tooling that empowers teams.\n\nSince applying, I've shipped two new AI projects that demonstrate my operations + AI approach — including a real-time career intelligence engine. Happy to walk through my portfolio anytime.\n\nLooking forward to hearing about next steps!\n\nBest,\nOwen McCormick\n\n---\n\n<strong>Tip:</strong> I noticed your contact Sarah Chen is a PM there. Mention your upcoming call to add a warm touch. Want me to adjust the tone?`,
+
+    email_generic: () => `I can draft emails for any company in your pipeline. Here's your current follow-up queue:\n\n<span class='chat-section-label'>📧 Emails Needed</span>\n• <strong>Notion</strong> — 5 days since last contact (urgent!)\n• <strong>Vercel</strong> — 3 days, waiting on recruiter screen\n\n<span class='chat-section-label'>✅ Recently Sent</span>\n• Stripe — prep materials acknowledged\n• Figma — final round confirmed\n\nWhich company should I draft for? Just say "draft email to [company]".`,
+
+    prep_stripe: () => `Let's get you ready for <strong>Stripe</strong>! Here's your prep kit:\n\n<span class='chat-section-label'>📋 Interview Details</span>\n• <strong>Date:</strong> Feb 10 (2 days away)\n• <strong>Type:</strong> System Design Round\n• <strong>Duration:</strong> 60 minutes\n• <strong>Focus:</strong> Operational systems & automation architecture\n\n<span class='chat-section-label'>🎯 Key Talking Points</span>\n1. Your RevOps pipeline dashboard ($847K pipeline, 24.3% conversion)\n2. CRM migration experience (EdTech project — 50K+ records)\n3. AI-powered automation tools (Chime Pulse, Opportunity Radar)\n4. Lean Six Sigma DMAIC approach to process optimization\n\n<span class='chat-section-label'>❓ Questions to Ask Them</span>\n1. How does the ops team collaborate with engineering on tooling?\n2. What's the biggest operational bottleneck you're solving right now?\n3. How do you measure success for this role in the first 90 days?\n4. What's your approach to internal automation vs. vendor solutions?\n\n<span class='chat-section-label'>💡 Pro Tip</span>\nStripe values "thinking from first principles." When answering system design questions, start with the problem, not the solution. Use your Reverse Interview framework to flip the script!\n\nWant me to run a mock question?`,
+
+    prep_figma: () => `Here's your <strong>Figma</strong> final round prep:\n\n<span class='chat-section-label'>📋 Interview Details</span>\n• <strong>Date:</strong> Feb 12 (4 days away)\n• <strong>Type:</strong> Final Round — Onsite/Virtual\n• <strong>Duration:</strong> Half-day (3-4 sessions)\n\n<span class='chat-section-label'>🎯 Key Talking Points</span>\n1. Your design-to-operations bridge experience\n2. Culture Heat Map as a product case study\n3. Cross-functional collaboration at startups\n4. How you use data to drive decisions\n\n<span class='chat-section-label'>❓ Questions to Ask</span>\n1. How does the ops team influence product direction?\n2. What does "craft" mean for non-design roles at Figma?\n3. How do you balance speed vs. quality in operations?\n\nShall I dive deeper into any area?`,
+
+    pipeline: () => `Here's your job search pipeline status:\n\n<span class='chat-section-label'>📊 Pipeline Metrics</span>\n• <strong>Applied:</strong> 15 total\n• <strong>Interviewing:</strong> 3 active\n• <strong>Offers:</strong> 1 pending\n• <strong>Rejected:</strong> 4\n\n<span class='chat-section-label'>🏢 Active Companies</span>\n1. <strong>Stripe</strong> — Technical Interview → System Design (Feb 10)\n2. <strong>Notion</strong> — Awaiting Response ⚠️ Follow up today!\n3. <strong>Figma</strong> — Final Round (Feb 12)\n4. <strong>Vercel</strong> — Applied, waiting on screen\n\n<span class='chat-section-label'>📈 Conversion Rate</span>\nYour application-to-interview rate is <strong>33%</strong> (5/15), which is above average.\nInterview-to-offer rate: <strong>67%</strong> — excellent!\n\n<span class='chat-section-label'>💡 Recommendation</span>\nFocus energy on Stripe and Figma this week. Send the Notion follow-up today. Consider 2-3 new applications to maintain pipeline velocity.`,
+
+    review: () => `<span class='chat-section-label'>📊 Weekly Review — Feb 3–8, 2026</span>\n\n<strong>🏆 Wins:</strong>\n• Advanced to Figma final round\n• Shipped 2 major demos (AI Chief of Staff + Opportunity Radar)\n• Portfolio earned 11 new GitHub stars\n• Connected with Sarah Chen at Notion\n\n<strong>📈 Metrics:</strong>\n• 8 applications sent\n• 3 interviews completed\n• 85% task completion rate\n• 127 portfolio visitors (+23% WoW)\n\n<strong>🎯 Next Week Priorities:</strong>\n1. Nail Stripe system design (Monday)\n2. Crush Figma final round (Wednesday)\n3. Re-engage Notion via Sarah\n4. Ship 2-3 fresh applications\n\n<strong>💡 Insight:</strong>\nYou're in a strong position with 3 active interviews. This is the week to convert. Minimize new applications and focus on prep quality over quantity.`,
+
+    schedule: () => `Here's your schedule overview:\n\n<span class='chat-section-label'>📅 Today (${getFormattedDate()})</span>\n• 8:30 AM — Morning journaling\n• 9:00 AM — Daily standup\n• 10:00 AM — Deep work: Portfolio (2 hrs)\n• 1:00 PM — Interview prep: Stripe\n• 2:30 PM — Networking: Sarah (Notion)\n• 3:30 PM — Code review\n• 5:00 PM — Gym\n\n<span class='chat-section-label'>🟢 Open Slots</span>\n• 12:00–1:00 PM (lunch, flexible)\n• 4:15–5:00 PM (45 min gap)\n\n<span class='chat-section-label'>📆 This Week</span>\n• Feb 10 — Stripe System Design Interview\n• Feb 12 — Figma Final Round\n\nWant me to block time for anything specific?`,
+
+    health: () => `Here's your wellness check-in:\n\n<span class='chat-section-label'>🏋️ This Week's Activity</span>\n• Gym sessions: 3/4 completed ✅\n• Steps avg: 8,200/day (target: 10K)\n• Sleep avg: 6.8 hrs (target: 7.5)\n\n<span class='chat-section-label'>⚡ Energy Pattern</span>\n• Peak: 9–11 AM (use for creative work)\n• Dip: 2–3 PM (schedule meetings or admin)\n• Recovery: 5–6 PM (gym helps reset)\n\n<span class='chat-section-label'>💡 Recommendations</span>\n1. You've had 4 intense days — schedule a lighter Friday\n2. Sleep is slightly below target. Try winding down by 10:30 PM\n3. Hit the gym today to maintain your 4x/week streak\n4. Take a 10-min walk after lunch to beat the 2 PM slump\n\nYour body is your best productivity tool. Take care of it! 💪`,
+
+    task: () => `Here are your prioritized tasks:\n\n<span class='chat-section-label'>🔴 High Priority (Today)</span>\n1. Follow up with Notion — 5 days overdue\n2. Review Stripe prep materials — interview in 2 days\n3. Polish AI Chief of Staff demo\n\n<span class='chat-section-label'>🟡 Medium Priority</span>\n4. Prepare Figma final round questions — due tomorrow\n5. Gym session — maintain 4x/week streak\n6. Review & merge SpinnerEvolve PR\n\n<span class='chat-section-label'>🔵 Low Priority (This Week)</span>\n7. Update LinkedIn headline\n\n<span class='chat-section-label'>✅ Completed Today</span>\n• Reply to Sarah about Notion insights\n• Submit GA4 dashboard case study\n\nEstimated time for remaining tasks: <strong>4.5 hours</strong>. You have enough time if you start now!`,
+
+    fallback: () => {
+        const responses = [
+            "I can help with that! Try asking about your <strong>schedule</strong>, <strong>tasks</strong>, <strong>emails</strong>, <strong>job pipeline</strong>, or <strong>interview prep</strong>. You can also use slash commands like <code>/brief</code>, <code>/focus</code>, or <code>/prep Stripe</code>.",
+            "I'm your AI Chief of Staff — I handle briefings, task priorities, interview prep, email drafts, and wellness check-ins. What would you like to know?",
+            "Not sure I caught that. Here's what I'm great at:\n\n• <code>/brief</code> — Morning briefing\n• <code>/focus</code> — What to work on\n• <code>/prep [company]</code> — Interview prep\n• <code>/email [company]</code> — Draft emails\n• <code>/pipeline</code> — Job search status\n• <code>/review</code> — Weekly review\n\nTry one of these or ask me anything about your day!",
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+};
+
+function classifyIntent(input) {
+    const lower = input.toLowerCase().trim();
+
+    if (lower.startsWith('/brief') || /morning|brief|catch me up|what.?s (up|new|happening)/.test(lower)) return 'brief';
+    if (lower.startsWith('/focus') || /focus|prioriti|should i (work|do)|what.?s urgent|important/.test(lower)) return 'focus';
+    if (lower.startsWith('/review') || /weekly|review|progress|how.?d (i|this week)|recap/.test(lower)) return 'review';
+    if (lower.startsWith('/pipeline') || /pipeline|job search|application|how.?s my (search|job)|status/.test(lower)) return 'pipeline';
+    if (lower.startsWith('/prep')) {
+        if (/figma/i.test(lower)) return 'prep_figma';
+        return 'prep_stripe';
+    }
+    if (/prep|interview|prepare|ready for/.test(lower)) {
+        if (/figma/i.test(lower)) return 'prep_figma';
+        if (/stripe/i.test(lower)) return 'prep_stripe';
+        return 'prep_stripe';
+    }
+    if (lower.startsWith('/email')) {
+        if (/notion/i.test(lower)) return 'email_notion';
+        return 'email_generic';
+    }
+    if (/email|draft|follow.?up|message|send|reply/.test(lower)) {
+        if (/notion/i.test(lower)) return 'email_notion';
+        return 'email_generic';
+    }
+    if (/schedule|calendar|meeting|agenda|free time|when|block/.test(lower)) return 'schedule';
+    if (/health|wellness|energy|break|rest|sleep|gym|burnout|productive/.test(lower)) return 'health';
+    if (/task|todo|to.do|deadline|checklist/.test(lower)) return 'task';
+
+    return 'fallback';
+}
+
+// ========================================================
+// RENDER FUNCTIONS
+// ========================================================
+function getTimeOfDay() {
+    const h = new Date().getHours();
+    if (h < 12) return 'morning';
+    if (h < 17) return 'afternoon';
+    if (h < 21) return 'evening';
+    return 'night';
+}
+
+function getGreeting() {
+    const tod = getTimeOfDay();
+    const greetings = {
+        morning: "Good morning, Owen ☀️",
+        afternoon: "Good afternoon, Owen!",
+        evening: "Wrapping up the day, Owen?",
+        night: "Working late, Owen? 🌙"
+    };
+    return greetings[tod];
+}
+
+function getFormattedDate() {
+    return new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function updateTime() {
+    document.getElementById('currentTime').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderOverview() {
+    document.getElementById('greetingText').textContent = getGreeting().replace(/[\u2600\u2601\u263A\u{1F319}\u{1F31E}\u{1F31B}]/gu, '');
+    document.getElementById('greetingText').innerHTML = getGreeting();
+    document.getElementById('dateText').textContent = getFormattedDate();
+
+    // Agenda
+    document.getElementById('agendaList').innerHTML = mockCalendar.map(e => `
+        <div class="agenda-item">
+            <span class="agenda-time">${e.time}</span>
+            <span class="agenda-dot ${e.type}"></span>
+            <span class="agenda-label">${e.title}</span>
+            <span class="agenda-duration">${e.duration} min</span>
+        </div>
+    `).join('');
+
+    // Tasks (top 5)
+    document.getElementById('taskList').innerHTML = mockTasks.slice(0, 5).map((t, i) => `
+        <div class="task-item${t.done ? ' done' : ''}">
+            <div class="task-check${t.done ? ' done' : ''}" onclick="toggleTask(${i})"></div>
+            <div class="task-info">
+                <div class="task-label">${t.task}</div>
+                <div class="task-meta">${t.due} • ${t.domain}</div>
+            </div>
+            <span class="priority-dot ${t.priority}"></span>
+        </div>
+    `).join('');
+
+    // Emails (top 5)
+    document.getElementById('emailList').innerHTML = mockEmails.slice(0, 5).map(e => `
+        <div class="email-item">
+            <span class="email-unread${e.unread ? '' : ' read'}"></span>
+            <span class="email-from">${e.from}</span>
+            <span class="email-subject">${e.subject}</span>
+            <span class="email-priority ${e.priority}">${e.priority}</span>
+        </div>
+    `).join('');
+
+    // Energy
+    document.getElementById('energyBars').innerHTML = mockEnergy.map(e => `
+        <div class="energy-bar-row">
+            <span class="energy-label">${e.label}</span>
+            <div class="energy-track">
+                <div class="energy-fill" style="width:${e.value}%;background:${e.color};"></div>
+            </div>
+            <span style="font-size:11px;font-weight:700;color:${e.color};min-width:30px;text-align:right;">${e.value}%</span>
+        </div>
+    `).join('');
+
+    // Suggestions
+    document.getElementById('suggestionsBox').innerHTML = mockSuggestions.map(s => `
+        <div class="insight-card">
+            <span class="insight-emoji">${s.emoji}</span>
+            <p>${s.text}</p>
+        </div>
+    `).join('');
+}
+
+function renderPipeline() {
+    const p = mockJobPipeline;
+    document.getElementById('pipelineMetrics').innerHTML = `
+        <div class="pipeline-metric applied"><div class="val">${p.applied}</div><div class="lbl">Applied</div></div>
+        <div class="pipeline-metric interviewing"><div class="val">${p.interviewing}</div><div class="lbl">Interviewing</div></div>
+        <div class="pipeline-metric offers"><div class="val">${p.offers}</div><div class="lbl">Offers</div></div>
+        <div class="pipeline-metric rejected"><div class="val">${p.rejected}</div><div class="lbl">Rejected</div></div>
+    `;
+    document.getElementById('companyList').innerHTML = p.companies.map(c => `
+        <div class="company-row">
+            <span class="company-name">${c.name}</span>
+            <span class="company-stage ${c.stageClass}">${c.stage}</span>
+            <span class="company-next">${c.nextStep}</span>
+        </div>
+    `).join('');
+    document.getElementById('pipelineActivity').innerHTML = mockPipelineActivity.map(a => {
+        const color = a.type === 'positive' ? 'var(--green)' : a.type === 'negative' ? 'var(--red)' : 'var(--blue)';
+        return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-color);">
+            <span style="font-size:11px;color:var(--text-muted);min-width:50px;">${a.date}</span>
+            <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></span>
+            <span style="font-size:13px;">${a.action}</span>
+        </div>`;
+    }).join('');
+}
+
+function renderFullEmails() {
+    document.getElementById('fullEmailList').innerHTML = mockEmails.map(e => `
+        <div class="email-item">
+            <span class="email-unread${e.unread ? '' : ' read'}"></span>
+            <span class="email-from">${e.from}</span>
+            <span class="email-subject">${e.subject}</span>
+            <span class="email-priority ${e.priority}">${e.priority}</span>
+            <span style="font-size:11px;color:var(--text-muted);min-width:60px;text-align:right;">${e.time}</span>
+        </div>
+    `).join('');
+}
+
+function renderFullTasks() {
+    document.getElementById('fullTaskList').innerHTML = mockTasks.map((t, i) => `
+        <div class="task-item${t.done ? ' done' : ''}">
+            <div class="task-check${t.done ? ' done' : ''}" onclick="toggleTask(${i})"></div>
+            <div class="task-info">
+                <div class="task-label">${t.task}</div>
+                <div class="task-meta">${t.due} • ${t.domain}</div>
+            </div>
+            <span class="priority-dot ${t.priority}"></span>
+        </div>
+    `).join('');
+}
+
+function renderInsights() {
+    document.getElementById('allInsights').innerHTML = mockInsights.map(i => `
+        <div class="insight-card">
+            <span class="insight-emoji">${i.emoji}</span>
+            <p>${i.text}</p>
+        </div>
+    `).join('');
+}
+
+function renderWeekly() {
+    document.getElementById('weeklyWins').innerHTML = mockWeeklyWins.map(w => `
+        <div class="insight-card"><span class="insight-emoji">${w.emoji}</span><p>${w.text}</p></div>
+    `).join('');
+    document.getElementById('weeklyFocus').innerHTML = mockWeeklyFocus.map(f => `
+        <div class="insight-card"><span class="insight-emoji">${f.emoji}</span><p>${f.text}</p></div>
+    `).join('');
+}
+
+// ========================================================
+// PANEL NAVIGATION
+// ========================================================
+const panelTitles = {
+    overview: 'Daily Overview',
+    pipeline: 'Job Search Pipeline',
+    email: 'Email Inbox',
+    tasks: 'Task Manager',
+    insights: 'AI Insights',
+    weekly: 'Weekly Review',
+};
+
+function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    document.getElementById('panelTitle').textContent = panelTitles[id] || 'Dashboard';
+
+    document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+    event.target.closest('button')?.classList.add('active');
+
+    // Lazy render
+    if (id === 'pipeline') renderPipeline();
+    if (id === 'email') renderFullEmails();
+    if (id === 'tasks') renderFullTasks();
+    if (id === 'insights') renderInsights();
+    if (id === 'weekly') renderWeekly();
+}
+
+// ========================================================
+// CHAT LOGIC
+// ========================================================
+let chatExpanded = false;
+
+function toggleChat() {
+    chatExpanded = !chatExpanded;
+    document.getElementById('chatSection').classList.toggle('expanded', chatExpanded);
+    document.getElementById('chatToggle').textContent = chatExpanded ? 'Collapse ↓' : 'Expand ↑';
+}
+
+function toggleTask(idx) {
+    mockTasks[idx].done = !mockTasks[idx].done;
+    renderOverview();
+    renderFullTasks();
+}
+
+function addMessage(text, type) {
+    const msgs = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + type;
+    div.innerHTML = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+    const msgs = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'typing-indicator';
+    div.id = 'typingDots';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+    const el = document.getElementById('typingDots');
+    if (el) el.remove();
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    addMessage(text, 'user');
+    hideCmdPalette();
+
+    // Expand chat on first message
+    if (!chatExpanded) toggleChat();
+
+    const intent = classifyIntent(text);
+    const responseFn = chatResponses[intent] || chatResponses.fallback;
+
+    showTyping();
+    setTimeout(() => {
+        removeTyping();
+        addMessage(responseFn(), 'ai');
+    }, 800 + Math.random() * 600);
+}
+
+function sendQuick(text) {
+    document.getElementById('chatInput').value = text;
+    sendMessage();
+}
+
+// Command palette
+const chatInput = document.getElementById('chatInput');
+chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendMessage();
+});
+chatInput.addEventListener('input', () => {
+    const val = chatInput.value;
+    if (val === '/') {
+        document.getElementById('cmdPalette').classList.add('visible');
+    } else {
+        hideCmdPalette();
+    }
+});
+
+function hideCmdPalette() {
+    document.getElementById('cmdPalette').classList.remove('visible');
+}
+
+// ========================================================
+// INIT
+// ========================================================
+function init() {
+    updateTime();
+    setInterval(updateTime, 30000);
+    renderOverview();
+
+    // Initial chat message
+    const tod = getTimeOfDay();
+    const initialMsgs = {
+        morning: "Good morning, Owen! ☀️ You have <strong>3 interviews this week</strong> and <strong>7 tasks</strong> on your plate. Your Stripe prep materials just arrived — want me to summarize them? Type <code>/brief</code> for your full morning briefing.",
+        afternoon: "Good afternoon! You're doing great today — <strong>2 tasks completed</strong> so far. Your call with Sarah (Notion) is at 2:30 PM. Need anything before then?",
+        evening: "Wrapping up? You knocked out <strong>5 of 7 tasks</strong> today. Tomorrow's big one: Stripe system design at 10 AM. Want me to run a quick prep session?",
+        night: "Working late? 🌙 Don't forget — your Stripe interview is in 2 days. Get some rest, Owen. I'll have your briefing ready in the morning."
+    };
+    document.getElementById('initialMsg').innerHTML = initialMsgs[tod];
+}
+
+init();
+</script>
+</body>
+</html>

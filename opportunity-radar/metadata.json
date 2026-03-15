@@ -1,0 +1,5 @@
+{
+  "name": "Opportunity Radar",
+  "description": "A real-time AI news scanner that hypothesizes future job openings and suggests portfolio projects based on breaking industry news.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apollo → HubSpot Lead Sync Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0e27;
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            box-shadow: 0 0 20px #00ffff;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8),
+                         0 0 40px rgba(0, 255, 255, 0.4);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            color: #00ffff;
+            opacity: 0.7;
+            font-size: 1em;
+            letter-spacing: 1px;
+        }
+        
+        .demo-badge {
+            display: inline-block;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .pipeline-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .pipeline-stage {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .pipeline-stage::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scan 3s infinite;
+        }
+        
+        @keyframes scan {
+            0%, 100% { left: -100%; }
+            50% { left: 100%; }
+        }
+        
+        .pipeline-stage:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .pipeline-stage h3 {
+            color: rgba(0, 255, 255, 0.7);
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+        
+        .pipeline-number {
+            font-size: 3.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+        
+        .pipeline-label {
+            color: rgba(0, 255, 255, 0.5);
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+        
+        .lead-list {
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .lead-list h2 {
+            color: #00ffff;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .lead-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .lead-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #00ffff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lead-item:hover {
+            background: rgba(0, 255, 255, 0.05);
+            border-color: rgba(0, 255, 255, 0.3);
+        }
+        
+        .lead-item:hover::before {
+            opacity: 1;
+        }
+        
+        .lead-item:last-child {
+            border-bottom: none;
+        }
+        
+        .lead-info h4 {
+            color: #00ffff;
+            margin-bottom: 5px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .lead-info p {
+            color: rgba(0, 255, 255, 0.6);
+            font-size: 0.85em;
+        }
+        
+        .lead-score {
+            font-size: 2em;
+            font-weight: 300;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid;
+            min-width: 80px;
+        }
+        
+        .score-high {
+            background: rgba(0, 255, 128, 0.1);
+            color: #00ff80;
+            border-color: #00ff80;
+            box-shadow: 0 0 15px rgba(0, 255, 128, 0.3);
+        }
+        
+        .score-medium {
+            background: rgba(255, 255, 0, 0.1);
+            color: #ffff00;
+            border-color: #ffff00;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+        }
+        
+        .chart-section {
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-section h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .disclaimer {
+            background: rgba(10, 14, 39, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 40px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .disclaimer h3 {
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .disclaimer p {
+            color: rgba(0, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .possibilities {
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 3px solid #00ffff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        .possibilities ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .possibilities li {
+            padding: 8px 0;
+            color: rgba(0, 255, 255, 0.8);
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .possibilities li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #00ffff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>LEAD INTELLIGENCE DASHBOARD</h1>
+            <p>Apollo.io Cold Outreach → HubSpot CRM | Real-Time Lead Scoring</p>
+            <div class="demo-badge">⚠ Demo Dashboard</div>
+        </div>
+        
+        <div class="pipeline-container">
+            <div class="pipeline-stage">
+                <h3>Cold Outreach Sent</h3>
+                <div class="pipeline-number">847</div>
+                <div class="pipeline-label">Apollo sequences</div>
+            </div>
+            
+            <div class="pipeline-stage">
+                <h3>Replies Received</h3>
+                <div class="pipeline-number">143</div>
+                <div class="pipeline-label">16.9% response rate</div>
+            </div>
+            
+            <div class="pipeline-stage">
+                <h3>Qualified Leads</h3>
+                <div class="pipeline-number">89</div>
+                <div class="pipeline-label">Auto-synced to HubSpot</div>
+            </div>
+            
+            <div class="pipeline-stage">
+                <h3>High-Priority</h3>
+                <div class="pipeline-number">34</div>
+                <div class="pipeline-label">Score ≥70</div>
+            </div>
+        </div>
+        
+        <div class="lead-list">
+            <h2>🔥 Top Qualified Leads (Last 7 Days)</h2>
+            
+            <div class="lead-item">
+                <div class="lead-info">
+                    <h4>Sarah Mitchell - VP Engineering</h4>
+                    <p>TechCorp Solutions | 450 employees | Series C | Reply: "Very interested in your AI platform"</p>
+                </div>
+                <div class="lead-score score-high">95</div>
+            </div>
+            
+            <div class="lead-item">
+                <div class="lead-info">
+                    <h4>James Rodriguez - CTO</h4>
+                    <p>DataFlow Inc | 280 employees | Series B | Reply: "Let's schedule a demo next week"</p>
+                </div>
+                <div class="lead-score score-high">88</div>
+            </div>
+            
+            <div class="lead-item">
+                <div class="lead-info">
+                    <h4>Emily Chen - Head of Product</h4>
+                    <p>CloudSync | 120 employees | Series A | Reply: "Sounds promising, send more details"</p>
+                </div>
+                <div class="lead-score score-high">82</div>
+            </div>
+            
+            <div class="lead-item">
+                <div class="lead-info">
+                    <h4>Michael Thompson - Director AI</h4>
+                    <p>AutomateX | 340 employees | Bootstrap | Reply: "We use TensorFlow, curious about your approach"</p>
+                </div>
+                <div class="lead-score score-high">76</div>
+            </div>
+            
+            <div class="lead-item">
+                <div class="lead-info">
+                    <h4>Lisa Anderson - COO</h4>
+                    <p>StartupHub | 65 employees | Seed | Reply: "Maybe in Q2, thanks"</p>
+                </div>
+                <div class="lead-score score-medium">58</div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <h2>Lead Quality Distribution</h2>
+            <canvas id="scoreChart" height="80"></canvas>
+        </div>
+        
+        <div class="chart-section">
+            <h2>Response Time Impact on Conversion</h2>
+            <canvas id="responseChart" height="80"></canvas>
+        </div>
+        
+        <div class="disclaimer">
+            <h3>⚙️ Baseline Demo Dashboard</h3>
+            <p><strong>Note:</strong> Representative data from ABC Company's Q4 2025 outreach campaign. Built from Voxitech (Sri Lankan AI startup) real-world US market entry strategy.</p>
+            
+            <p><strong>This is the foundation.</strong> From here, we can build:</p>
+            
+            <div class="possibilities">
+                <ul>
+                    <li><strong>AI-powered sentiment analysis</strong> - Automatically detect urgency, budget signals, competitor mentions in replies</li>
+                    <li><strong>Multi-touch attribution</strong> - Track which email sequence, subject line, or send time drives best responses</li>
+                    <li><strong>Automated follow-up sequences</strong> - Trigger personalized nurture campaigns based on lead score tier</li>
+                    <li><strong>Integration with Clearbit/ZoomInfo</strong> - Real-time company enrichment (funding, tech stack, job openings)</li>
+                    <li><strong>Slack/Teams notifications</strong> - Instant alerts when high-value leads (score ≥85) reply</li>
+                    <li><strong>Revenue forecasting</strong> - Predict pipeline value based on historical score-to-close rates</li>
+                    <li><strong>A/B testing framework</strong> - Test different scoring models, optimize for YOUR ideal customer profile</li>
+                    <li><strong>CRM workflow triggers</strong> - Auto-assign leads to reps, create tasks, update deal stages</li>
+                    <li><strong>Geographic routing</strong> - Assign leads to regional sales teams based on company location</li>
+                    <li><strong>Custom scoring models</strong> - Train ML model on YOUR closed-won deals for better predictions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Lead score distribution
+        const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+        new Chart(scoreCtx, {
+            type: 'bar',
+            data: {
+                labels: ['0-39 (Low)', '40-69 (Medium)', '70-100 (High)'],
+                datasets: [{
+                    label: 'Number of Leads',
+                    data: [54, 55, 34],
+                    backgroundColor: ['rgba(255, 0, 0, 0.3)', 'rgba(255, 255, 0, 0.3)', 'rgba(0, 255, 128, 0.3)'],
+                    borderColor: ['#ff0000', '#ffff00', '#00ff80'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0, 255, 255, 0.1)' },
+                        ticks: { color: '#00ffff' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(0, 255, 255, 0.1)' },
+                        ticks: { color: '#00ffff' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+        
+        // Response time chart
+        const responseCtx = document.getElementById('responseChart').getContext('2d');
+        new Chart(responseCtx, {
+            type: 'line',
+            data: {
+                labels: ['Same Day', '1 Day', '2 Days', '3 Days', '4+ Days'],
+                datasets: [{
+                    label: 'Conversion Rate (%)',
+                    data: [42, 35, 28, 18, 9],
+                    borderColor: '#00ffff',
+                    backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointBackgroundColor: '#00ffff',
+                    pointBorderColor: '#0a0e27',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 50,
+                        grid: { color: 'rgba(0, 255, 255, 0.1)' },
+                        ticks: {
+                            color: '#00ffff',
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { color: 'rgba(0, 255, 255, 0.1)' },
+                        ticks: { color: '#00ffff' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

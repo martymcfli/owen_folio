@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talstack DMAIC Process Improvement | Owen McCormick</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a2027;
+            --bg-card: #1e252e;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --sixsigma-green: #10b981;
+            --sixsigma-blue: #3b82f6;
+            --sixsigma-purple: #8b5cf6;
+            --sixsigma-yellow: #f59e0b;
+            --sixsigma-red: #ef4444;
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--sixsigma-green);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .logo-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .cert-badge-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--sixsigma-green);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            padding: 30px 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-title {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-title p {
+            color: var(--text-muted);
+        }
+
+        /* DMAIC Progress */
+        .dmaic-progress {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 40px;
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .dmaic-step {
+            flex: 1;
+            position: relative;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dmaic-step.active {
+            transform: translateY(-5px);
+        }
+
+        .dmaic-step.define { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%); border: 2px solid var(--sixsigma-blue); }
+        .dmaic-step.measure { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%); border: 2px solid var(--sixsigma-purple); }
+        .dmaic-step.analyze { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%); border: 2px solid var(--sixsigma-yellow); }
+        .dmaic-step.improve { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%); border: 2px solid var(--sixsigma-green); }
+        .dmaic-step.control { background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%); border: 2px solid var(--sixsigma-red); }
+
+        .dmaic-letter {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .dmaic-step.define .dmaic-letter { color: var(--sixsigma-blue); }
+        .dmaic-step.measure .dmaic-letter { color: var(--sixsigma-purple); }
+        .dmaic-step.analyze .dmaic-letter { color: var(--sixsigma-yellow); }
+        .dmaic-step.improve .dmaic-letter { color: var(--sixsigma-green); }
+        .dmaic-step.control .dmaic-letter { color: var(--sixsigma-red); }
+
+        .dmaic-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .dmaic-status {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .dmaic-check {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-badge {
+            font-size: 0.65rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .kpi-badge.before {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .kpi-badge.after {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .kpi-values {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .kpi-value.before {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            font-size: 1.2rem;
+        }
+
+        .kpi-value.after {
+            color: var(--sixsigma-green);
+        }
+
+        .kpi-improvement {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+
+        /* Process Flow */
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Process Steps */
+        .process-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .process-step.eliminated {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .process-step.improved {
+            border: 2px solid var(--sixsigma-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .process-number {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .process-content {
+            flex: 1;
+        }
+
+        .process-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .process-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .process-badge {
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .process-badge.eliminated {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .process-badge.improved {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .process-badge.automated {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--sixsigma-blue);
+        }
+
+        /* Root Cause Analysis */
+        .fishbone-container {
+            padding: 20px;
+        }
+
+        .cause-category {
+            margin-bottom: 20px;
+        }
+
+        .cause-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .cause-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .cause-icon.people { background: rgba(59, 130, 246, 0.2); }
+        .cause-icon.process { background: rgba(139, 92, 246, 0.2); }
+        .cause-icon.tech { background: rgba(245, 158, 11, 0.2); }
+        .cause-icon.data { background: rgba(239, 68, 68, 0.2); }
+
+        .cause-title {
+            font-weight: 700;
+        }
+
+        .cause-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-left: 46px;
+        }
+
+        .cause-item {
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .cause-item.root {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--sixsigma-green);
+            border: 1px solid var(--sixsigma-green);
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 280px;
+            position: relative;
+        }
+
+        /* Control Chart */
+        .control-limits {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .limit-item {
+            text-align: center;
+        }
+
+        .limit-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .limit-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .limit-value.ucl { color: var(--danger); }
+        .limit-value.mean { color: var(--sixsigma-blue); }
+        .limit-value.lcl { color: var(--sixsigma-green); }
+
+        /* Savings Breakdown */
+        .savings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .savings-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .savings-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .savings-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .savings-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--sixsigma-green);
+        }
+
+        /* Cert Badge */
+        .cert-badge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .cert-icon {
+            font-size: 2.5rem;
+        }
+
+        .cert-content h4 {
+            font-size: 1rem;
+            color: var(--sixsigma-green);
+            margin-bottom: 4px;
+        }
+
+        .cert-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
+            .dmaic-progress {
+                flex-wrap: wrap;
+            }
+            .dmaic-step {
+                min-width: calc(50% - 4px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dmaic-step {
+                min-width: 100%;
+            }
+            .savings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <a href="../" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Portfolio
+            </a>
+            <div class="logo">
+                <div class="logo-icon">📊</div>
+                <div>
+                    <div class="logo-text">Talstack Process Improvement</div>
+                    <div class="logo-sub">DMAIC Case Study</div>
+                </div>
+            </div>
+        </div>
+        <div class="cert-badge-header">
+            <span>🏅</span>
+            Lean Six Sigma Green Belt
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <div class="dashboard-title">
+            <h1>Student Onboarding Optimization</h1>
+            <p>DMAIC methodology applied to reduce onboarding cycle time and improve data quality for Nigerian EdTech startup</p>
+        </div>
+
+        <!-- DMAIC Progress -->
+        <div class="dmaic-progress">
+            <div class="dmaic-step define active">
+                <div class="dmaic-check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <div class="dmaic-letter">D</div>
+                <div class="dmaic-name">Define</div>
+                <div class="dmaic-status">Problem Scoped</div>
+            </div>
+            <div class="dmaic-step measure active">
+                <div class="dmaic-check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <div class="dmaic-letter">M</div>
+                <div class="dmaic-name">Measure</div>
+                <div class="dmaic-status">Baseline Set</div>
+            </div>
+            <div class="dmaic-step analyze active">
+                <div class="dmaic-check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <div class="dmaic-letter">A</div>
+                <div class="dmaic-name">Analyze</div>
+                <div class="dmaic-status">Root Causes Found</div>
+            </div>
+            <div class="dmaic-step improve active">
+                <div class="dmaic-check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <div class="dmaic-letter">I</div>
+                <div class="dmaic-name">Improve</div>
+                <div class="dmaic-status">Solutions Deployed</div>
+            </div>
+            <div class="dmaic-step control active">
+                <div class="dmaic-check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <div class="dmaic-letter">C</div>
+                <div class="dmaic-name">Control</div>
+                <div class="dmaic-status">Monitoring Active</div>
+            </div>
+        </div>
+
+        <!-- KPI Cards - Before/After -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-label">Onboarding Cycle Time</div>
+                </div>
+                <div class="kpi-values">
+                    <div class="kpi-value before">72 hrs</div>
+                    <div class="kpi-value after">18 hrs</div>
+                </div>
+                <div class="kpi-improvement">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                    75% reduction
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-label">Data Quality Score</div>
+                </div>
+                <div class="kpi-values">
+                    <div class="kpi-value before">67%</div>
+                    <div class="kpi-value after">93%</div>
+                </div>
+                <div class="kpi-improvement">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                    +26% improvement
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-label">Manual Touch Points</div>
+                </div>
+                <div class="kpi-values">
+                    <div class="kpi-value before">12</div>
+                    <div class="kpi-value after">3</div>
+                </div>
+                <div class="kpi-improvement">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                    75% eliminated
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <div class="kpi-label">Hours Saved Weekly</div>
+                </div>
+                <div class="kpi-values">
+                    <div class="kpi-value after">40+</div>
+                </div>
+                <div class="kpi-improvement">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                    ~$2,000/month saved
+                </div>
+            </div>
+        </div>
+
+        <!-- Process Flow & Root Cause -->
+        <div class="section-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Process Flow Improvement</div>
+                        <div class="card-subtitle">Before vs After DMAIC</div>
+                    </div>
+                </div>
+                <div class="process-flow">
+                    <div class="process-step improved">
+                        <div class="process-number">1</div>
+                        <div class="process-content">
+                            <div class="process-name">Student Registration Form</div>
+                            <div class="process-time">5 min → 2 min</div>
+                        </div>
+                        <span class="process-badge improved">Simplified</span>
+                    </div>
+                    <div class="process-step eliminated">
+                        <div class="process-number">2</div>
+                        <div class="process-content">
+                            <div class="process-name">Manual Data Entry to Sheet 1</div>
+                            <div class="process-time">15 min</div>
+                        </div>
+                        <span class="process-badge eliminated">Eliminated</span>
+                    </div>
+                    <div class="process-step eliminated">
+                        <div class="process-number">3</div>
+                        <div class="process-content">
+                            <div class="process-name">Copy to Master Spreadsheet</div>
+                            <div class="process-time">10 min</div>
+                        </div>
+                        <span class="process-badge eliminated">Eliminated</span>
+                    </div>
+                    <div class="process-step improved">
+                        <div class="process-number">4</div>
+                        <div class="process-content">
+                            <div class="process-name">Data Validation & Dedup</div>
+                            <div class="process-time">45 min → Instant</div>
+                        </div>
+                        <span class="process-badge automated">Automated</span>
+                    </div>
+                    <div class="process-step improved">
+                        <div class="process-number">5</div>
+                        <div class="process-content">
+                            <div class="process-name">HubSpot CRM Import</div>
+                            <div class="process-time">30 min → 2 min</div>
+                        </div>
+                        <span class="process-badge automated">Automated</span>
+                    </div>
+                    <div class="process-step improved">
+                        <div class="process-number">6</div>
+                        <div class="process-content">
+                            <div class="process-name">Welcome Email Sequence</div>
+                            <div class="process-time">Manual → Auto-trigger</div>
+                        </div>
+                        <span class="process-badge automated">Automated</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Root Cause Analysis</div>
+                        <div class="card-subtitle">Fishbone Diagram Findings</div>
+                    </div>
+                </div>
+                <div class="fishbone-container">
+                    <div class="cause-category">
+                        <div class="cause-header">
+                            <div class="cause-icon people">👥</div>
+                            <div class="cause-title">People</div>
+                        </div>
+                        <div class="cause-items">
+                            <span class="cause-item">Inconsistent data entry</span>
+                            <span class="cause-item">No standard training</span>
+                            <span class="cause-item root">Multiple handoffs</span>
+                        </div>
+                    </div>
+                    <div class="cause-category">
+                        <div class="cause-header">
+                            <div class="cause-icon process">⚙️</div>
+                            <div class="cause-title">Process</div>
+                        </div>
+                        <div class="cause-items">
+                            <span class="cause-item root">12 Google Sheets</span>
+                            <span class="cause-item">No single source of truth</span>
+                            <span class="cause-item">Manual deduplication</span>
+                        </div>
+                    </div>
+                    <div class="cause-category">
+                        <div class="cause-header">
+                            <div class="cause-icon tech">💻</div>
+                            <div class="cause-title">Technology</div>
+                        </div>
+                        <div class="cause-items">
+                            <span class="cause-item">No CRM system</span>
+                            <span class="cause-item root">No automation</span>
+                            <span class="cause-item">Fragmented tools</span>
+                        </div>
+                    </div>
+                    <div class="cause-category">
+                        <div class="cause-header">
+                            <div class="cause-icon data">📊</div>
+                            <div class="cause-title">Data</div>
+                        </div>
+                        <div class="cause-items">
+                            <span class="cause-item">Duplicate records</span>
+                            <span class="cause-item root">Inconsistent formats</span>
+                            <span class="cause-item">Missing fields</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="section-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Cycle Time Control Chart</div>
+                        <div class="card-subtitle">Statistical Process Control (Post-Implementation)</div>
+                    </div>
+                </div>
+                <div class="control-limits">
+                    <div class="limit-item">
+                        <div class="limit-label">Upper Control Limit</div>
+                        <div class="limit-value ucl">24 hrs</div>
+                    </div>
+                    <div class="limit-item">
+                        <div class="limit-label">Mean</div>
+                        <div class="limit-value mean">18 hrs</div>
+                    </div>
+                    <div class="limit-item">
+                        <div class="limit-label">Lower Control Limit</div>
+                        <div class="limit-value lcl">12 hrs</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="controlChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Project Savings</div>
+                        <div class="card-subtitle">Annual impact breakdown</div>
+                    </div>
+                </div>
+                <div class="savings-grid">
+                    <div class="savings-card">
+                        <div class="savings-icon">⏱️</div>
+                        <div class="savings-label">Time Saved</div>
+                        <div class="savings-value">2,080 hrs</div>
+                    </div>
+                    <div class="savings-card">
+                        <div class="savings-icon">💰</div>
+                        <div class="savings-label">Cost Savings</div>
+                        <div class="savings-value">$24,960</div>
+                    </div>
+                    <div class="savings-card">
+                        <div class="savings-icon">📈</div>
+                        <div class="savings-label">Efficiency Gain</div>
+                        <div class="savings-value">+312%</div>
+                    </div>
+                </div>
+
+                <div class="cert-badge">
+                    <div class="cert-icon">🏆</div>
+                    <div class="cert-content">
+                        <h4>Lean Six Sigma Green Belt Certified</h4>
+                        <p>This project demonstrates DMAIC methodology, root cause analysis, process mapping, and statistical process control.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Defect Rate Chart -->
+        <div class="card" style="margin-bottom: 30px;">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Data Quality Improvement Over Time</div>
+                    <div class="card-subtitle">Defect rate tracking through DMAIC phases</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="defectChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Built by Owen McCormick | Lean Six Sigma Green Belt Certified | <a href="../" style="color: var(--sixsigma-green);">View Portfolio</a></p>
+    </footer>
+
+    <script>
+        // Control Chart
+        const controlCtx = document.getElementById('controlChart').getContext('2d');
+        const controlData = [19, 17, 18, 20, 16, 18, 19, 17, 18, 15, 19, 18, 17, 20, 18, 16, 18, 19, 17, 18];
+
+        new Chart(controlCtx, {
+            type: 'line',
+            data: {
+                labels: controlData.map((_, i) => `Day ${i + 1}`),
+                datasets: [{
+                    label: 'Cycle Time (hrs)',
+                    data: controlData,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#3b82f6'
+                }, {
+                    label: 'UCL',
+                    data: Array(20).fill(24),
+                    borderColor: '#ef4444',
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }, {
+                    label: 'Mean',
+                    data: Array(20).fill(18),
+                    borderColor: '#10b981',
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }, {
+                    label: 'LCL',
+                    data: Array(20).fill(12),
+                    borderColor: '#22c55e',
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#a1a1aa' }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 30,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#71717a' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#71717a', maxRotation: 45 }
+                    }
+                }
+            }
+        });
+
+        // Defect Rate Chart
+        const defectCtx = document.getElementById('defectChart').getContext('2d');
+        new Chart(defectCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Define', 'Measure', 'Analyze', 'Improve', 'Control'],
+                datasets: [{
+                    label: 'Defect Rate (%)',
+                    data: [33, 28, 22, 12, 7],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(139, 92, 246, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(34, 197, 94, 0.8)'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 40,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: {
+                            color: '#71717a',
+                            callback: value => value + '%'
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#71717a' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

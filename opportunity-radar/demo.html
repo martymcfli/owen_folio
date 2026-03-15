@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Radar - Real-Time Career Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-950: #020617;
+            --bg-900: #0f172a;
+            --bg-850: #151e2e;
+            --bg-800: #1e293b;
+            --bg-700: #334155;
+            --bg-600: #475569;
+            --text-50: #f8fafc;
+            --text-200: #e2e8f0;
+            --text-300: #cbd5e1;
+            --text-400: #94a3b8;
+            --text-500: #64748b;
+            --text-600: #475569;
+            --cyan-400: #22d3ee;
+            --cyan-500: #06b6d4;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-900: rgba(30,58,138,0.2);
+            --emerald-400: #34d399;
+            --yellow-400: #facc15;
+            --red-500: #ef4444;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-900);
+            color: var(--text-200);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        ::selection { background: rgba(6,182,212,0.3); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-900); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-700); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--bg-600); }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            background: rgba(15,23,42,0.8);
+            border-bottom: 1px solid var(--bg-800);
+        }
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 16px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            background: linear-gradient(135deg, var(--blue-600), var(--cyan-500));
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(6,182,212,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-icon svg { color: white; }
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: white;
+        }
+        .logo-text h1 span { color: var(--cyan-400); }
+        .logo-text p {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-500);
+            font-weight: 600;
+        }
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-dot {
+            position: relative;
+            width: 8px;
+            height: 8px;
+        }
+        .status-dot .ping {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            opacity: 0.75;
+        }
+        .status-dot .dot {
+            position: relative;
+            display: block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .status-dot.active .ping { background: var(--cyan-400); animation: ping 1s cubic-bezier(0,0,0.2,1) infinite; }
+        .status-dot.active .dot { background: var(--cyan-500); }
+        .status-dot.idle .ping { background: var(--bg-600); }
+        .status-dot.idle .dot { background: var(--bg-700); }
+        .status-dot.live .ping { background: var(--emerald-400); animation: ping 2s cubic-bezier(0,0,0.2,1) infinite; }
+        .status-dot.live .dot { background: var(--emerald-400); }
+        .status-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-400);
+        }
+        @keyframes ping {
+            75%, 100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Back link */
+        .back-strip {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 12px 16px 0;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-500);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--cyan-400); }
+
+        /* Main content */
+        .main { max-width: 1280px; margin: 0 auto; padding: 16px 16px 64px; }
+
+        /* Search section */
+        .search-section {
+            margin-bottom: 48px;
+            max-width: 768px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            padding-top: 24px;
+        }
+        .search-section h2 {
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 24px;
+        }
+        .search-section > p {
+            color: var(--text-400);
+            margin-bottom: 32px;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search-wrapper {
+            position: relative;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+        .search-glow {
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(to right, var(--cyan-500), var(--blue-600));
+            border-radius: 10px;
+            filter: blur(6px);
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+        .search-wrapper:hover .search-glow,
+        .search-wrapper:focus-within .search-glow { opacity: 0.6; }
+        .search-bar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-900);
+            border-radius: 8px;
+            padding: 6px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .search-bar svg {
+            margin-left: 12px;
+            color: var(--text-500);
+            flex-shrink: 0;
+        }
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+        .search-bar input::placeholder { color: var(--bg-600); }
+        .scan-btn {
+            background: var(--bg-800);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .scan-btn:hover { background: var(--bg-700); }
+        .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .suggested-queries {
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        .query-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-900);
+            border: 1px solid var(--bg-800);
+            border-radius: 9999px;
+            font-size: 12px;
+            color: var(--text-400);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .query-chip:hover {
+            border-color: rgba(6,182,212,0.5);
+            color: var(--cyan-400);
+        }
+
+        /* Loading state */
+        .loading-state {
+            text-align: center;
+            padding: 80px 0;
+            display: none;
+        }
+        .loading-state.active { display: block; }
+        .scanner-container {
+            position: relative;
+            display: inline-block;
+            width: 96px;
+            height: 96px;
+            margin-bottom: 24px;
+        }
+        .scanner-border {
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .scanner-line {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--cyan-400), transparent);
+            box-shadow: 0 0 15px 2px rgba(34,211,238,0.5);
+            opacity: 0.5;
+            animation: scanLine 2s linear infinite;
+        }
+        @keyframes scanLine {
+            0% { transform: translateY(-96px); }
+            100% { transform: translateY(96px); }
+        }
+        .scanner-globe {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .scanner-globe svg { color: var(--bg-700); animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .scanner-dots {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+        }
+        .scanner-dots span {
+            width: 4px;
+            height: 4px;
+            background: var(--cyan-500);
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        .scanner-dots span:nth-child(2) { animation-delay: 75ms; }
+        .scanner-dots span:nth-child(3) { animation-delay: 150ms; }
+        .loading-state h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+        }
+        .loading-state p {
+            color: var(--text-500);
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        /* Results dashboard */
+        .results-dashboard {
+            display: none;
+            animation: slideUp 0.7s ease;
+        }
+        .results-dashboard.active { display: block; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(32px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Metrics row */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        @media (max-width: 1024px) {
+            .metrics-row { grid-template-columns: 1fr; }
+        }
+
+        /* Impact chart */
+        .impact-chart {
+            background: rgba(21,30,46,0.5);
+            border: 1px solid var(--bg-800);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .impact-chart h3 {
+            font-size: 12px;
+            color: var(--text-400);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            height: 200px;
+            padding-top: 10px;
+        }
+        .chart-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .chart-bar {
+            width: 100%;
+            max-width: 80px;
+            border-radius: 4px 4px 0 0;
+            transition: height 1s ease;
+            position: relative;
+            min-height: 20px;
+        }
+        .chart-bar.high { background: var(--emerald-400); }
+        .chart-bar.medium { background: var(--blue-500); }
+        .chart-bar-value {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-300);
+        }
+        .chart-bar-label {
+            margin-top: 8px;
+            font-size: 10px;
+            color: var(--text-400);
+            text-align: center;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Sources panel */
+        .sources-panel {
+            background: rgba(15,23,42,0.5);
+            border: 1px solid var(--bg-800);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sources-panel h3 {
+            font-size: 12px;
+            color: var(--text-400);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+        .source-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .source-item {
+            display: flex;
+            align-items: flex-start;
+        }
+        .source-item svg {
+            margin-top: 2px;
+            margin-right: 8px;
+            color: var(--cyan-500);
+            flex-shrink: 0;
+        }
+        .source-item a {
+            font-size: 12px;
+            color: var(--text-300);
+            text-decoration: none;
+            transition: color 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+        .source-item a:hover { color: var(--cyan-400); }
+        .sources-footer {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--bg-800);
+            font-size: 10px;
+            color: var(--bg-600);
+        }
+
+        /* Opportunity cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        @media (max-width: 1024px) {
+            .cards-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Opportunity card */
+        .opp-card {
+            background: var(--bg-850);
+            border: 1px solid var(--bg-700);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.5s;
+            animation: cardIn 0.5s ease backwards;
+        }
+        .opp-card:nth-child(2) { animation-delay: 150ms; }
+        .opp-card:nth-child(3) { animation-delay: 300ms; }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .opp-card:hover {
+            border-color: rgba(6,182,212,0.5);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .card-company {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            color: var(--text-400);
+        }
+        .card-company svg { width: 14px; height: 14px; }
+        .impact-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .impact-badge svg { width: 12px; height: 12px; }
+        .impact-high { color: var(--emerald-400); background: rgba(52,211,153,0.1); }
+        .impact-medium { color: var(--yellow-400); background: rgba(250,204,21,0.1); }
+        .card-headline {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+        .opp-card:hover .card-headline { color: var(--cyan-400); }
+        .card-location {
+            display: flex;
+            align-items: center;
+            color: var(--text-400);
+            font-size: 13px;
+            margin-bottom: 16px;
+            gap: 4px;
+        }
+        .card-location svg { width: 14px; height: 14px; }
+        .card-summary {
+            color: var(--text-300);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            border-left: 2px solid var(--bg-600);
+            padding-left: 12px;
+        }
+        .card-section-title {
+            font-size: 11px;
+            color: var(--text-500);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-section-title svg { width: 12px; height: 12px; }
+        .role-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .role-tag {
+            background: var(--bg-800);
+            color: var(--text-200);
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--bg-700);
+        }
+        .card-analysis {
+            font-size: 13px;
+            color: var(--text-400);
+            font-style: italic;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .project-idea {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(51,65,85,0.5);
+        }
+        .project-idea-box {
+            background: var(--blue-900);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .project-idea-title {
+            color: var(--blue-500);
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .project-idea-title svg { width: 12px; height: 12px; }
+        .project-idea-text {
+            font-size: 13px;
+            color: #bfdbfe;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* Demo badge */
+        .demo-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(15,23,42,0.95);
+            border: 1px solid var(--bg-700);
+            border-radius: 10px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-400);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        .demo-badge .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cyan-500);
+            animation: pulse 2s infinite;
+        }
+        .demo-badge a {
+            color: var(--cyan-400);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .demo-badge a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="2" x2="12" y2="6"/>
+                        <line x1="12" y1="18" x2="12" y2="22"/>
+                        <line x1="2" y1="12" x2="6" y2="12"/>
+                        <line x1="18" y1="12" x2="22" y2="12"/>
+                        <circle cx="12" cy="12" r="6"/>
+                        <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>Opportunity<span>Radar</span></h1>
+                    <p>Real-time Career Intelligence</p>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot idle" id="statusDot">
+                    <span class="ping"></span>
+                    <span class="dot"></span>
+                </div>
+                <span class="status-label" id="statusLabel">System Ready</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="back-strip">
+        <a href="../culture-heatmap.html" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Culture Heat Map
+        </a>
+    </div>
+
+    <main class="main">
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <h2>Predict your next career move.</h2>
+            <p>Our AI scans breaking geopolitical and industry news to hypothesize emerging job openings before they are posted.</p>
+
+            <div class="search-wrapper">
+                <div class="search-glow"></div>
+                <div class="search-bar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="searchInput" placeholder="Scan for news (e.g., 'Semiconductors in Texas', 'European Tech Regulation')">
+                    <button class="scan-btn" id="scanBtn" onclick="handleScan()">Scan</button>
+                </div>
+            </div>
+
+            <div class="suggested-queries">
+                <button class="query-chip" onclick="runQuery('AI & Automation')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h6"/></svg>
+                    AI & Automation
+                </button>
+                <button class="query-chip" onclick="runQuery('Renewable Energy')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Renewable Energy
+                </button>
+                <button class="query-chip" onclick="runQuery('FinTech Regulations')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    FinTech Regulations
+                </button>
+                <button class="query-chip" onclick="runQuery('Global Supply Chain')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Global Supply Chain
+                </button>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState">
+            <div class="scanner-container">
+                <div class="scanner-border">
+                    <div class="scanner-line"></div>
+                </div>
+                <div class="scanner-globe">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <div class="scanner-dots">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+            <h3 id="loadingText">Scanning Global News Wires...</h3>
+            <p>Accessing real-time search grounding...</p>
+        </div>
+
+        <!-- Results Dashboard -->
+        <div class="results-dashboard" id="resultsDashboard">
+            <!-- Metrics Row -->
+            <div class="metrics-row">
+                <div class="impact-chart">
+                    <h3>Hiring Impact Velocity</h3>
+                    <div class="chart-bars" id="chartBars"></div>
+                </div>
+                <div class="sources-panel">
+                    <div>
+                        <h3>News Sources</h3>
+                        <ul class="source-list" id="sourceList"></ul>
+                    </div>
+                    <div class="sources-footer">Verified via Google Search Grounding</div>
+                </div>
+            </div>
+            <!-- Cards Grid -->
+            <div class="cards-grid" id="cardsGrid"></div>
+        </div>
+
+    </main>
+
+    <!-- Demo Badge -->
+    <div class="demo-badge">
+        <span class="badge-dot"></span>
+        Demo Mode &mdash; <a href="https://github.com/martymcfli/opportunity-radar" target="_blank">View Source</a>
+    </div>
+
+    <script>
+    // ==========================================
+    // MOCK DATA — Realistic AI-generated results
+    // ==========================================
+    const MOCK_DATA = {
+        "AI & Automation": {
+            opportunities: [
+                {
+                    headline: "NVIDIA Announces $12B AI Chip Fabrication Plant in Texas",
+                    companyName: "NVIDIA",
+                    summary: "NVIDIA broke ground on a massive new semiconductor fabrication facility in Austin, TX, targeting next-gen AI inference chips. The plant will employ over 3,000 workers and signals a major domestic manufacturing push.",
+                    impactScore: 92,
+                    location: "Austin, TX",
+                    predictedRoles: ["AI Chip Design Engineer", "Process Integration Engineer", "ML Compiler Developer", "Supply Chain Analyst", "Cleanroom Technician"],
+                    reasoning: "A $12B fabrication facility requires hundreds of specialized engineers across chip design, process, and yield optimization. The AI-specific focus means demand for ML hardware/software crossover talent will surge in the Austin metro area.",
+                    projectIdea: "Build an AI inference benchmarking tool that compares latency, throughput, and power consumption across GPU architectures using public MLPerf data."
+                },
+                {
+                    headline: "EU Passes AI Accountability Act — Mandates Explainability Audits",
+                    companyName: "Industry Wide",
+                    summary: "The European Parliament voted to enforce mandatory explainability audits for all AI systems deployed in hiring, lending, and healthcare. Companies have 18 months to comply.",
+                    impactScore: 85,
+                    location: "Europe / Remote",
+                    predictedRoles: ["AI Ethics & Compliance Officer", "Explainable AI Researcher", "ML Audit Engineer", "Policy Analyst", "Technical Documentation Lead"],
+                    reasoning: "Every major tech company operating in the EU will need dedicated compliance teams. This creates an entirely new job category at the intersection of ML engineering and regulatory affairs.",
+                    projectIdea: "Create a SHAP-based model interpretability dashboard that auto-generates compliance reports for classification models, including bias detection metrics."
+                },
+                {
+                    headline: "Amazon Robotics Acquires Covariant for $2.1B",
+                    companyName: "Amazon Robotics",
+                    summary: "Amazon completed its acquisition of AI robotics startup Covariant, integrating their foundation models for robotic manipulation into Amazon's warehouse and logistics network.",
+                    impactScore: 78,
+                    location: "Seattle, WA / Global",
+                    predictedRoles: ["Robotics Software Engineer", "Computer Vision Scientist", "Warehouse Automation PM", "Simulation Engineer", "Integration Architect"],
+                    reasoning: "Post-acquisition integration always drives hiring. Amazon will need engineers who can bridge Covariant's foundation models with their existing robotics fleet across 500+ fulfillment centers.",
+                    projectIdea: "Build a ROS2-based pick-and-place simulator using Gazebo and a pre-trained grasp detection model, demonstrating warehouse item recognition and sorting."
+                }
+            ],
+            sources: [
+                { title: "NVIDIA Breaks Ground on Austin AI Fab — Reuters", uri: "#" },
+                { title: "EU AI Accountability Act Passes Parliament — TechCrunch", uri: "#" },
+                { title: "Amazon Acquires Covariant for $2.1B — Bloomberg", uri: "#" },
+                { title: "AI Chip Manufacturing Reshoring Trend — WSJ", uri: "#" },
+                { title: "Global AI Regulation Tracker 2026 — MIT Tech Review", uri: "#" }
+            ]
+        },
+        "Renewable Energy": {
+            opportunities: [
+                {
+                    headline: "DOE Awards $8.5B for Grid-Scale Battery Storage Network",
+                    companyName: "U.S. Dept. of Energy",
+                    summary: "The Department of Energy announced $8.5B in grants for a national grid-scale battery storage network, targeting 50GW of storage capacity by 2030. Dozens of companies are scrambling to submit proposals.",
+                    impactScore: 95,
+                    location: "Nationwide (U.S.)",
+                    predictedRoles: ["Battery Systems Engineer", "Grid Integration Architect", "Energy Storage PM", "Power Electronics Designer", "Environmental Compliance Specialist"],
+                    reasoning: "$8.5B in federal funding creates a gold rush for energy storage companies. Every grant recipient will need to hire rapidly to meet project timelines, creating thousands of roles across engineering and project management.",
+                    projectIdea: "Design a Python-based grid storage optimization model that simulates battery dispatch schedules against real-time electricity pricing data from CAISO or PJM."
+                },
+                {
+                    headline: "Vestas Opens Offshore Wind Turbine Factory in Virginia",
+                    companyName: "Vestas Wind Systems",
+                    summary: "Danish wind energy giant Vestas inaugurated a 500,000 sq ft offshore wind turbine blade manufacturing facility in Hampton Roads, VA, creating 800 direct jobs and an estimated 2,400 indirect positions.",
+                    impactScore: 82,
+                    location: "Hampton Roads, VA",
+                    predictedRoles: ["Composite Materials Engineer", "Manufacturing Process Lead", "Quality Assurance Manager", "Marine Logistics Coordinator", "Structural Analyst"],
+                    reasoning: "Offshore wind manufacturing in the U.S. is nascent, so Vestas needs to build teams from scratch. Composite blade manufacturing is highly specialized, meaning premium salaries for experienced candidates.",
+                    projectIdea: "Create a finite element analysis (FEA) visualization of wind turbine blade stress patterns under varying load conditions using Python and open-source FEA libraries."
+                },
+                {
+                    headline: "SolarEdge & First Solar Partner on AI-Optimized Solar Farms",
+                    companyName: "SolarEdge / First Solar",
+                    summary: "SolarEdge and First Solar announced a joint venture to develop AI-driven solar farm management systems that increase yield by 15-22% through real-time panel angle and inverter optimization.",
+                    impactScore: 71,
+                    location: "Phoenix, AZ / Remote",
+                    predictedRoles: ["Solar Optimization Data Scientist", "IoT Firmware Engineer", "SCADA Systems Architect", "Renewable Energy Analyst", "Edge Computing Developer"],
+                    reasoning: "The convergence of AI and solar infrastructure is creating hybrid roles. Companies need engineers who understand both energy systems and machine learning to build real-time optimization platforms.",
+                    projectIdea: "Build a real-time solar panel tilt optimizer using weather API data, a reinforcement learning agent, and a simulated solar farm environment."
+                }
+            ],
+            sources: [
+                { title: "DOE Announces $8.5B Battery Storage Grants — Energy.gov", uri: "#" },
+                { title: "Vestas Opens Virginia Wind Blade Factory — Reuters", uri: "#" },
+                { title: "AI-Optimized Solar Farms Promise 20%+ Yield Gains — Canary Media", uri: "#" },
+                { title: "Grid-Scale Storage Market Forecast 2026-2030 — BloombergNEF", uri: "#" },
+                { title: "Offshore Wind Manufacturing in America — DOE Report", uri: "#" }
+            ]
+        },
+        "FinTech Regulations": {
+            opportunities: [
+                {
+                    headline: "Federal Reserve Proposes Real-Time Payment Fraud Detection Requirements",
+                    companyName: "Federal Reserve",
+                    summary: "The Fed proposed new regulations requiring all FedNow participants to implement AI-based real-time fraud detection by Q3 2027, affecting 4,000+ financial institutions.",
+                    impactScore: 88,
+                    location: "Nationwide (U.S.) / Remote",
+                    predictedRoles: ["Fraud Detection ML Engineer", "Payments Compliance Lead", "Real-Time Systems Architect", "FinTech Security Analyst", "Regulatory Technology PM"],
+                    reasoning: "4,000+ financial institutions need to implement AI fraud detection in 18 months. Most community banks lack in-house ML talent, creating massive demand for RegTech vendors and consultants.",
+                    projectIdea: "Build a streaming fraud detection pipeline using Apache Kafka and a gradient boosting classifier trained on synthetic transaction data, with a real-time dashboard."
+                },
+                {
+                    headline: "UK FCA Mandates Open Banking Phase 3 — API Standardization",
+                    companyName: "UK Financial Conduct Authority",
+                    summary: "The FCA announced Phase 3 of Open Banking regulations, requiring all UK banks to support standardized payment initiation and account aggregation APIs by 2027.",
+                    impactScore: 76,
+                    location: "London, UK / Remote",
+                    predictedRoles: ["API Platform Engineer", "Open Banking Product Manager", "Identity & Access Specialist", "FinTech Integration Developer", "Data Privacy Officer"],
+                    reasoning: "Open Banking Phase 3 mandates standardized APIs across every UK bank. This drives hiring for API engineers, integration specialists, and compliance experts at both incumbents and challengers.",
+                    projectIdea: "Create a mock Open Banking API gateway with OAuth2 token management, rate limiting, and a developer portal that generates API documentation automatically."
+                },
+                {
+                    headline: "Stripe Launches Embedded Compliance-as-a-Service for Startups",
+                    companyName: "Stripe",
+                    summary: "Stripe unveiled a new embedded compliance platform that automates KYC, AML, and sanctions screening for startups, signaling a major expansion of their financial infrastructure team.",
+                    impactScore: 72,
+                    location: "San Francisco, CA / Remote",
+                    predictedRoles: ["Compliance Automation Engineer", "Identity Verification ML Lead", "Developer Experience Designer", "Risk Operations Analyst", "Solutions Architect"],
+                    reasoning: "Launching a major new product line means Stripe needs to double their compliance engineering team. The 'developer experience' focus means UX-minded engineers are especially sought after.",
+                    projectIdea: "Build an automated KYC verification prototype that uses document OCR and facial comparison APIs to simulate an identity verification pipeline with audit logging."
+                }
+            ],
+            sources: [
+                { title: "Fed Proposes AI Fraud Detection for FedNow — American Banker", uri: "#" },
+                { title: "FCA Open Banking Phase 3 Announcement — FT", uri: "#" },
+                { title: "Stripe Launches Compliance-as-a-Service — TechCrunch", uri: "#" },
+                { title: "RegTech Market Surges to $28B — Deloitte", uri: "#" },
+                { title: "Real-Time Payments Fraud Landscape 2026 — McKinsey", uri: "#" }
+            ]
+        },
+        "Global Supply Chain": {
+            opportunities: [
+                {
+                    headline: "Panama Canal Drought Restrictions Trigger Nearshoring Boom in Mexico",
+                    companyName: "Industry Wide",
+                    summary: "Continued drought restrictions at the Panama Canal have pushed 200+ companies to accelerate nearshoring operations to Mexico, with Nuevo Leon state announcing 15 new manufacturing facilities.",
+                    impactScore: 89,
+                    location: "Monterrey, Mexico / U.S. Border States",
+                    predictedRoles: ["Nearshoring Strategy Consultant", "Cross-Border Logistics Manager", "Manufacturing Operations Lead", "Trade Compliance Analyst", "Bilingual Supply Chain PM"],
+                    reasoning: "200+ companies relocating operations creates an unprecedented demand for bilingual supply chain professionals who understand USMCA trade regulations and cross-border logistics.",
+                    projectIdea: "Build a nearshoring cost-benefit analysis tool that compares logistics costs, tariffs, and lead times between Asian manufacturing vs. Mexico nearshoring using real trade data APIs."
+                },
+                {
+                    headline: "Maersk Deploys Digital Twin Platform for Container Fleet",
+                    companyName: "Maersk",
+                    summary: "Maersk announced the full deployment of its digital twin platform across its 700-vessel container fleet, enabling predictive maintenance and real-time route optimization powered by machine learning.",
+                    impactScore: 77,
+                    location: "Copenhagen, Denmark / Remote",
+                    predictedRoles: ["Digital Twin Engineer", "Maritime Data Scientist", "IoT Platform Architect", "Predictive Maintenance ML Lead", "Fleet Optimization Analyst"],
+                    reasoning: "Maersk's digital twin deployment requires a new category of engineers who combine maritime domain knowledge with ML and IoT skills. Competitors will follow, multiplying demand across the shipping industry.",
+                    projectIdea: "Create a container ship route optimizer using weather API data, port congestion metrics, and a graph-based shortest-path algorithm with a live visualization dashboard."
+                },
+                {
+                    headline: "TSMC Arizona Fab Reaches Full Production — Semiconductor Supply Shift",
+                    companyName: "TSMC",
+                    summary: "TSMC's first Arizona fabrication plant has reached full production capacity for 4nm chips, marking a milestone in the U.S. semiconductor reshoring effort and triggering a wave of supplier relocations.",
+                    impactScore: 84,
+                    location: "Phoenix, AZ",
+                    predictedRoles: ["Semiconductor Process Engineer", "Yield Enhancement Specialist", "Supplier Quality Manager", "Facility Operations Director", "EHS Compliance Lead"],
+                    reasoning: "Full production at TSMC Arizona triggers a cascade of supplier relocations. Chemical suppliers, equipment vendors, and testing firms all need local talent, creating a semiconductor hiring cluster in Phoenix.",
+                    projectIdea: "Simulate a semiconductor supply chain network using agent-based modeling to visualize how disruptions (factory outages, shipping delays) propagate through the ecosystem."
+                }
+            ],
+            sources: [
+                { title: "Panama Canal Drought Drives Nearshoring Wave — WSJ", uri: "#" },
+                { title: "Maersk Deploys Fleet-Wide Digital Twins — Lloyd's List", uri: "#" },
+                { title: "TSMC Arizona Reaches Full Production — CNBC", uri: "#" },
+                { title: "Mexico Nearshoring Boom Report 2026 — Kearney", uri: "#" },
+                { title: "Semiconductor Reshoring Impact Analysis — SIA", uri: "#" }
+            ]
+        }
+    };
+
+    // Default fallback for custom queries
+    const DEFAULT_DATA = {
+        opportunities: [
+            {
+                headline: "Market Intelligence Scan Complete",
+                companyName: "Industry Wide",
+                summary: "Our AI identified emerging opportunities across multiple sectors related to your query. Industry shifts, regulatory changes, and new technology deployments are creating demand for specialized talent.",
+                impactScore: 75,
+                location: "Remote / Global",
+                predictedRoles: ["Strategy Consultant", "Data Analyst", "Program Manager", "Technical Writer", "Business Development Lead"],
+                reasoning: "Broad industry movements create generalist demand first, followed by specialist roles as companies define their specific needs. Early movers who demonstrate domain knowledge gain significant advantage.",
+                projectIdea: "Build a market trend aggregation dashboard that pulls from RSS feeds, financial APIs, and social sentiment data to visualize emerging industry patterns."
+            },
+            {
+                headline: "Skills Gap Analysis Reveals Critical Shortage",
+                companyName: "Multiple Employers",
+                summary: "Analysis of job postings and hiring trends reveals a significant gap between available talent and employer needs in this domain, with demand outpacing supply by 3:1 in key specializations.",
+                impactScore: 68,
+                location: "Nationwide",
+                predictedRoles: ["Domain Specialist", "Technical Lead", "Operations Manager", "Research Analyst", "Solutions Architect"],
+                reasoning: "Supply-demand imbalances in specialized fields drive premium compensation and create opportunities for career changers who can demonstrate relevant project work.",
+                projectIdea: "Create a skills gap visualization tool that compares job posting requirements against candidate profiles, identifying high-value skill combinations."
+            },
+            {
+                headline: "Regulatory Shifts Open New Compliance Markets",
+                companyName: "Industry Wide",
+                summary: "Recent regulatory changes are forcing companies to build entirely new compliance and operational capabilities, creating greenfield hiring opportunities across the sector.",
+                impactScore: 62,
+                location: "Various",
+                predictedRoles: ["Compliance Analyst", "Policy Advisor", "Risk Manager", "Audit Specialist", "Implementation Consultant"],
+                reasoning: "Regulatory compliance is non-optional — companies must hire regardless of economic conditions. This makes compliance-adjacent roles recession-resistant career moves.",
+                projectIdea: "Build a regulatory change tracker that monitors government RSS feeds and classifies new regulations by industry impact using NLP classification."
+            }
+        ],
+        sources: [
+            { title: "Market Analysis Report — Reuters", uri: "#" },
+            { title: "Industry Hiring Trends 2026 — LinkedIn Economic Graph", uri: "#" },
+            { title: "Skills Gap Report — World Economic Forum", uri: "#" },
+            { title: "Regulatory Impact Assessment — Deloitte", uri: "#" }
+        ]
+    };
+
+    // ==========================================
+    // APP LOGIC
+    // ==========================================
+    let currentState = 'idle'; // idle, scanning, analyzing, complete
+
+    function runQuery(label) {
+        document.getElementById('searchInput').value = label;
+        handleScan();
+    }
+
+    function handleScan() {
+        const input = document.getElementById('searchInput');
+        const query = input.value.trim();
+        if (!query) return;
+        if (currentState === 'scanning' || currentState === 'analyzing') return;
+
+        // Reset
+        currentState = 'scanning';
+        document.getElementById('resultsDashboard').classList.remove('active');
+        document.getElementById('loadingState').classList.add('active');
+        document.getElementById('loadingText').textContent = 'Scanning Global News Wires...';
+        document.getElementById('scanBtn').disabled = true;
+
+        // Update status
+        updateStatus('active', 'Scanning Nodes...');
+
+        // Phase 2: Analyzing
+        setTimeout(() => {
+            currentState = 'analyzing';
+            document.getElementById('loadingText').textContent = 'Synthesizing Market Hypothesis...';
+        }, 1500);
+
+        // Phase 3: Results
+        setTimeout(() => {
+            currentState = 'complete';
+            document.getElementById('loadingState').classList.remove('active');
+            document.getElementById('scanBtn').disabled = false;
+            updateStatus('live', 'Live Data');
+            renderResults(query);
+        }, 3200);
+    }
+
+    function updateStatus(state, text) {
+        const dot = document.getElementById('statusDot');
+        const label = document.getElementById('statusLabel');
+        dot.className = 'status-dot ' + state;
+        label.textContent = text;
+    }
+
+    function renderResults(query) {
+        const data = MOCK_DATA[query] || DEFAULT_DATA;
+        const { opportunities, sources } = data;
+
+        // Render chart
+        const chartBars = document.getElementById('chartBars');
+        chartBars.innerHTML = opportunities.map(opp => {
+            const cls = opp.impactScore > 75 ? 'high' : 'medium';
+            return `
+                <div class="chart-bar-group">
+                    <div class="chart-bar ${cls}" style="height: ${opp.impactScore * 1.8}px">
+                        <span class="chart-bar-value">${opp.impactScore}</span>
+                    </div>
+                    <div class="chart-bar-label">${opp.companyName || 'Story'}</div>
+                </div>
+            `;
+        }).join('');
+
+        // Render sources
+        const sourceList = document.getElementById('sourceList');
+        sourceList.innerHTML = sources.map(s => `
+            <li class="source-item">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <a href="${s.uri}" target="_blank">${s.title}</a>
+            </li>
+        `).join('');
+
+        // Render cards
+        const cardsGrid = document.getElementById('cardsGrid');
+        cardsGrid.innerHTML = opportunities.map(opp => {
+            const impactClass = opp.impactScore > 75 ? 'impact-high' : 'impact-medium';
+            const roles = opp.predictedRoles.map(r => `<span class="role-tag">${r}</span>`).join('');
+            return `
+                <div class="opp-card">
+                    <div class="card-header">
+                        <div class="card-company">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg>
+                            ${opp.companyName || 'Industry News'}
+                        </div>
+                        <div class="impact-badge ${impactClass}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            Impact: ${opp.impactScore}/100
+                        </div>
+                    </div>
+                    <h3 class="card-headline">${opp.headline}</h3>
+                    ${opp.location ? `<div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${opp.location}</div>` : ''}
+                    <p class="card-summary">${opp.summary}</p>
+                    <div>
+                        <div class="card-section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                            Predicted Openings
+                        </div>
+                        <div class="role-tags">${roles}</div>
+                    </div>
+                    <div>
+                        <div class="card-section-title">Analysis</div>
+                        <p class="card-analysis">"${opp.reasoning}"</p>
+                    </div>
+                    <div class="project-idea">
+                        <div class="project-idea-box">
+                            <div class="project-idea-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                Strategic Project Idea
+                            </div>
+                            <p class="project-idea-text">${opp.projectIdea}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Show dashboard
+        document.getElementById('resultsDashboard').classList.add('active');
+    }
+
+    // Enter key support
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleScan();
+    });
+    </script>
+</body>
+</html>

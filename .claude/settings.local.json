@@ -1,12 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(du -sh *.wav *.mp3)",
-      "Bash(jobs -l)",
-      "Bash(git ls-tree:*)",
-      "Bash(git fetch:*)",
-      "Bash(done)",
-      "Bash(ls -la /Users/owenmccormick/Downloads/owen-mccormick-website-2/dist/*.wav)"
+      "Bash(unzip:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(brew install:*)",
+      "Bash(pdftoppm:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(xargs:*)",
+      "Bash(node -e:*)",
+      "Bash(lsof:*)"
     ]
   }
 }

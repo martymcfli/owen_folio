@@ -1,0 +1,7 @@
+first_name,last_name,email,phone,status,course,enrollment_date,student_id
+John,Doe,JOHN@EXAMPLE.COM,08012345678,enrolled,Python Fundamentals,2024-01-15,STU001
+John,Doe,john@example.com,+2348012345678,enrolled,Python Fundamentals,2024-01-20,STU001
+Jane,Smith,jane.smith@test.com,8023456789,pending,Data Science,2024-02-01,STU002
+Michael,Johnson,m.johnson@email.com,+234-803-456-7890,completed,Web Development,2023-12-10,STU003
+Sarah,Williams,,08034567890,dropped,Machine Learning,2024-01-05,STU004
+David,Brown,david.brown@example.com,invalid-phone,enrolled,Python Fundamentals,2024-02-15,STU005
