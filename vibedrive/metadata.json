@@ -1,7 +1,0 @@
-{
-  "name": "VibeDrive",
-  "description": "AI-curated playlists synchronized to your travel time with Google Maps integration.",
-  "requestFramePermissions": [
-    "geolocation"
-  ]
-}
