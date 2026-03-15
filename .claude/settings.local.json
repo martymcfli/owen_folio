@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(du -sh *.wav *.mp3)",
+      "Bash(jobs -l)",
+      "Bash(git ls-tree:*)",
+      "Bash(git fetch:*)",
+      "Bash(done)",
+      "Bash(ls -la /Users/owenmccormick/Downloads/owen-mccormick-website-2/dist/*.wav)"
+    ]
+  }
+}
