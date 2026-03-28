@@ -224,12 +224,8 @@
             width: 320px;
             height: 320px;
             margin: 0 auto;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
+            will-change: transform;
+            transition: none;
         }
 
         .hero-image::before {
@@ -261,7 +257,7 @@
         }
 
         .hero-image:hover img {
-            transform: scale(1.05);
+            transform: none;
         }
 
         .hero-badge {
@@ -3013,6 +3009,109 @@ window.__translations = {
         window.addEventListener('resize', function() { resize(); });
         resize();
         requestAnimationFrame(draw);
+    })();
+    </script>
+
+    <!-- Magnetic Repulsion Floating Profile Picture -->
+    <script>
+    (function() {
+        const el = document.querySelector('.hero-image');
+        if (!el) return;
+
+        // Physics state
+        let px = 0, py = 0;       // current position offset
+        let vx = 0, vy = 0;       // velocity
+        let mouseX = 0, mouseY = 0;
+        let mouseActive = false;
+        let time = 0;
+
+        // Tuning
+        const REPEL_RADIUS = 350;     // how close mouse needs to be to push
+        const REPEL_STRENGTH = 2800;   // force multiplier
+        const FRICTION = 0.92;         // velocity decay (lower = more drag)
+        const SPRING = 0.012;          // pull back toward home position
+        const MAX_OFFSET = 120;        // max pixels it can drift from home
+
+        // Ambient float params
+        const FLOAT_AMP_X = 8;
+        const FLOAT_AMP_Y = 14;
+        const FLOAT_SPEED_X = 0.0008;
+        const FLOAT_SPEED_Y = 0.0012;
+        const FLOAT_ROTATE_AMP = 2;
+
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            mouseActive = true;
+        });
+
+        document.addEventListener('mouseleave', function() {
+            mouseActive = false;
+        });
+
+        function tick() {
+            time++;
+
+            // Get element center in viewport
+            const rect = el.getBoundingClientRect();
+            const homeX = rect.left + rect.width / 2 - px;
+            const homeY = rect.top + rect.height / 2 - py;
+            const elCenterX = homeX + px;
+            const elCenterY = homeY + py;
+
+            // Magnetic repulsion from mouse
+            if (mouseActive) {
+                const dx = elCenterX - mouseX;
+                const dy = elCenterY - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < REPEL_RADIUS && dist > 1) {
+                    const force = REPEL_STRENGTH / (dist * dist);
+                    const nx = dx / dist;
+                    const ny = dy / dist;
+                    vx += nx * force;
+                    vy += ny * force;
+                }
+            }
+
+            // Spring force back to home (0,0)
+            vx -= px * SPRING;
+            vy -= py * SPRING;
+
+            // Friction
+            vx *= FRICTION;
+            vy *= FRICTION;
+
+            // Integrate
+            px += vx;
+            py += vy;
+
+            // Clamp max offset
+            const offsetDist = Math.sqrt(px * px + py * py);
+            if (offsetDist > MAX_OFFSET) {
+                px *= MAX_OFFSET / offsetDist;
+                py *= MAX_OFFSET / offsetDist;
+            }
+
+            // Ambient float (gentle sine wave on top)
+            const floatX = Math.sin(time * FLOAT_SPEED_X) * FLOAT_AMP_X;
+            const floatY = Math.sin(time * FLOAT_SPEED_Y) * FLOAT_AMP_Y;
+            const floatRotate = Math.sin(time * FLOAT_SPEED_X * 0.7) * FLOAT_ROTATE_AMP;
+
+            // Tilt based on velocity (leans away from push direction)
+            const tiltX = vx * 0.8;
+            const tiltRotate = Math.max(-8, Math.min(8, tiltX * 0.3));
+
+            const totalX = px + floatX;
+            const totalY = py + floatY;
+            const totalRotate = floatRotate + tiltRotate;
+
+            el.style.transform = `translate(${totalX.toFixed(1)}px, ${totalY.toFixed(1)}px) rotate(${totalRotate.toFixed(1)}deg)`;
+
+            requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
     })();
     </script>
 
