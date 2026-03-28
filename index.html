@@ -3018,100 +3018,119 @@ window.__translations = {
         const el = document.querySelector('.hero-image');
         if (!el) return;
 
-        // Physics state
-        let px = 0, py = 0;       // current position offset
-        let vx = 0, vy = 0;       // velocity
+        // Break it out of grid flow so it can roam freely
+        const hero = el.closest('.hero');
+        if (hero) hero.style.overflow = 'visible';
+        el.style.position = 'fixed';
+        el.style.zIndex = '999';
+        el.style.pointerEvents = 'none';
+
+        // Get initial position from layout before we yank it out
+        const startRect = el.getBoundingClientRect();
+        let homeX = startRect.left + startRect.width / 2;
+        let homeY = startRect.top + startRect.height / 2;
+
+        // Absolute position state (center of element in viewport coords)
+        let posX = homeX, posY = homeY;
+        let vx = 0, vy = 0;
         let mouseX = 0, mouseY = 0;
         let mouseActive = false;
         let time = 0;
 
         // Tuning
-        const REPEL_RADIUS = 350;     // how close mouse needs to be to push
-        const REPEL_STRENGTH = 2800;   // force multiplier
-        const FRICTION = 0.92;         // velocity decay (lower = more drag)
-        const SPRING = 0.012;          // pull back toward home position
-        const MAX_OFFSET = 120;        // max pixels it can drift from home
+        const REPEL_RADIUS = 300;
+        const REPEL_STRENGTH = 4000;
+        const FRICTION = 0.965;          // high = slippery, keeps momentum
+        const SPRING = 0.003;            // very gentle pull home
+        const BOUNCE_DAMPEN = 0.6;       // energy kept on wall bounce
 
-        // Ambient float params
-        const FLOAT_AMP_X = 8;
-        const FLOAT_AMP_Y = 14;
-        const FLOAT_SPEED_X = 0.0008;
-        const FLOAT_SPEED_Y = 0.0012;
-        const FLOAT_ROTATE_AMP = 2;
+        // Ambient float
+        const FLOAT_AMP_X = 8, FLOAT_AMP_Y = 14;
+        const FLOAT_SPEED_X = 0.0008, FLOAT_SPEED_Y = 0.0012;
+
+        // Recalculate home position on scroll/resize
+        function updateHome() {
+            // Home is where the element would be in the grid without transform
+            const savedTransform = el.style.transform;
+            el.style.transform = 'none';
+            const rect = el.getBoundingClientRect();
+            homeX = rect.left + rect.width / 2;
+            homeY = rect.top + rect.height / 2;
+            el.style.transform = savedTransform;
+        }
 
         document.addEventListener('mousemove', function(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            mouseActive = true;
+            mouseX = e.clientX; mouseY = e.clientY; mouseActive = true;
         });
-
-        document.addEventListener('mouseleave', function() {
-            mouseActive = false;
+        document.addEventListener('mouseleave', function() { mouseActive = false; });
+        window.addEventListener('scroll', updateHome);
+        window.addEventListener('resize', function() {
+            updateHome();
+            posX = homeX; posY = homeY; vx = 0; vy = 0;
         });
 
         function tick() {
             time++;
-
-            // Get element center in viewport
-            const rect = el.getBoundingClientRect();
-            const homeX = rect.left + rect.width / 2 - px;
-            const homeY = rect.top + rect.height / 2 - py;
-            const elCenterX = homeX + px;
-            const elCenterY = homeY + py;
+            const hw = el.offsetWidth / 2;
+            const hh = el.offsetHeight / 2;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
 
             // Magnetic repulsion from mouse
             if (mouseActive) {
-                const dx = elCenterX - mouseX;
-                const dy = elCenterY - mouseY;
+                const dx = posX - mouseX;
+                const dy = posY - mouseY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-
                 if (dist < REPEL_RADIUS && dist > 1) {
                     const force = REPEL_STRENGTH / (dist * dist);
-                    const nx = dx / dist;
-                    const ny = dy / dist;
-                    vx += nx * force;
-                    vy += ny * force;
+                    vx += (dx / dist) * force;
+                    vy += (dy / dist) * force;
                 }
             }
 
-            // Spring force back to home (0,0)
-            vx -= px * SPRING;
-            vy -= py * SPRING;
+            // Gentle spring back to home
+            vx += (homeX - posX) * SPRING;
+            vy += (homeY - posY) * SPRING;
 
             // Friction
             vx *= FRICTION;
             vy *= FRICTION;
 
             // Integrate
-            px += vx;
-            py += vy;
+            posX += vx;
+            posY += vy;
 
-            // Clamp max offset
-            const offsetDist = Math.sqrt(px * px + py * py);
-            if (offsetDist > MAX_OFFSET) {
-                px *= MAX_OFFSET / offsetDist;
-                py *= MAX_OFFSET / offsetDist;
-            }
+            // Bounce off viewport walls
+            if (posX - hw < 0) { posX = hw; vx = Math.abs(vx) * BOUNCE_DAMPEN; }
+            if (posX + hw > vw) { posX = vw - hw; vx = -Math.abs(vx) * BOUNCE_DAMPEN; }
+            if (posY - hh < 0) { posY = hh; vy = Math.abs(vy) * BOUNCE_DAMPEN; }
+            if (posY + hh > vh) { posY = vh - hh; vy = -Math.abs(vy) * BOUNCE_DAMPEN; }
 
-            // Ambient float (gentle sine wave on top)
+            // Ambient float
             const floatX = Math.sin(time * FLOAT_SPEED_X) * FLOAT_AMP_X;
             const floatY = Math.sin(time * FLOAT_SPEED_Y) * FLOAT_AMP_Y;
-            const floatRotate = Math.sin(time * FLOAT_SPEED_X * 0.7) * FLOAT_ROTATE_AMP;
 
-            // Tilt based on velocity (leans away from push direction)
-            const tiltX = vx * 0.8;
-            const tiltRotate = Math.max(-8, Math.min(8, tiltX * 0.3));
+            // Velocity-based tilt/spin
+            const rotate = Math.max(-15, Math.min(15, vx * 0.5));
+            const scale = 1 + Math.min(0.05, Math.sqrt(vx * vx + vy * vy) * 0.002);
 
-            const totalX = px + floatX;
-            const totalY = py + floatY;
-            const totalRotate = floatRotate + tiltRotate;
+            const finalX = posX - hw + floatX;
+            const finalY = posY - hh + floatY;
 
-            el.style.transform = `translate(${totalX.toFixed(1)}px, ${totalY.toFixed(1)}px) rotate(${totalRotate.toFixed(1)}deg)`;
+            el.style.left = '0px';
+            el.style.top = '0px';
+            el.style.transform = `translate(${finalX.toFixed(1)}px, ${finalY.toFixed(1)}px) rotate(${rotate.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
 
             requestAnimationFrame(tick);
         }
 
-        requestAnimationFrame(tick);
+        // Wait a frame for layout to settle
+        requestAnimationFrame(function() {
+            updateHome();
+            posX = homeX;
+            posY = homeY;
+            requestAnimationFrame(tick);
+        });
     })();
     </script>
 
