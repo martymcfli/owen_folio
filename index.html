@@ -2730,16 +2730,17 @@ window.__translations = {
     })();
     </script>
 
-    <!-- JWST Deep Field Starfield -->
+    <!-- JWST Deep Field Starfield (viewport-fitted) -->
     <script>
     (function() {
         const canvas = document.getElementById('starfield');
         const ctx = canvas.getContext('2d');
-        let w, h, staticCanvas, staticCtx, twinkleStars = [], shootingStars = [], lastShootingTime = 0;
+        // Render at viewport size, CSS fixed handles the rest
+        let w, h, staticCanvas, twinkleStars = [], shootingStars = [], lastShootingTime = 0;
 
         function resize() {
             w = canvas.width = window.innerWidth;
-            h = canvas.height = document.documentElement.scrollHeight;
+            h = canvas.height = window.innerHeight;
             renderStaticLayer();
         }
 
@@ -2752,334 +2753,242 @@ window.__translations = {
             staticCanvas = document.createElement('canvas');
             staticCanvas.width = w;
             staticCanvas.height = h;
-            const c = staticCtx = staticCanvas.getContext('2d');
-
-            // Pure black deep space
-            c.fillStyle = '#020308';
-            c.fillRect(0, 0, w, h);
-
+            const c = staticCanvas.getContext('2d');
             const rng = sr(777);
             twinkleStars = [];
 
-            // === LAYER 1: Faint warm background glow (like JWST's warm IR background) ===
-            c.save();
-            c.globalCompositeOperation = 'screen';
-            for (let i = 0; i < 30; i++) {
+            c.fillStyle = '#020308';
+            c.fillRect(0, 0, w, h);
+
+            // === Warm IR background glow patches ===
+            c.save(); c.globalCompositeOperation = 'screen';
+            for (let i = 0; i < 40; i++) {
                 const x = rng() * w, y = rng() * h;
-                const radius = 150 + rng() * 300;
+                const radius = 60 + rng() * 120;
                 const grad = c.createRadialGradient(x, y, 0, x, y, radius);
-                const warmth = rng();
-                if (warmth < 0.4) {
-                    grad.addColorStop(0, `rgba(40, 25, 15, 0.04)`);
-                } else if (warmth < 0.7) {
-                    grad.addColorStop(0, `rgba(25, 20, 40, 0.035)`);
-                } else {
-                    grad.addColorStop(0, `rgba(20, 30, 50, 0.03)`);
-                }
+                const roll = rng();
+                if (roll < 0.35) grad.addColorStop(0, 'rgba(45, 28, 15, 0.05)');
+                else if (roll < 0.65) grad.addColorStop(0, 'rgba(28, 22, 45, 0.04)');
+                else grad.addColorStop(0, 'rgba(18, 28, 50, 0.035)');
                 grad.addColorStop(1, 'rgba(0,0,0,0)');
                 c.fillStyle = grad;
                 c.fillRect(x - radius, y - radius, radius * 2, radius * 2);
             }
             c.restore();
 
-            // === LAYER 2: Distant galaxies (tiny elongated smudges, orange/red/gold) ===
-            const galaxyCount = Math.floor((w * h) / 8000);
-            c.save();
-            for (let i = 0; i < galaxyCount; i++) {
+            // === Distant galaxies (tiny smudges) ===
+            const gCount = Math.floor((w * h) / 4000);
+            for (let i = 0; i < gCount; i++) {
                 const x = rng() * w, y = rng() * h;
-                const size = rng() * 3 + 0.8;
-                const elongation = 1.5 + rng() * 3;
+                const size = rng() * 2 + 0.5;
+                const elong = 1.3 + rng() * 2.5;
                 const angle = rng() * Math.PI;
-                const colorType = rng();
-
+                const ct = rng();
                 let r, g, b, a;
-                if (colorType < 0.35) {
-                    // Orange-red (redshifted)
-                    r = 180 + rng() * 75; g = 80 + rng() * 60; b = 30 + rng() * 40;
-                    a = 0.15 + rng() * 0.35;
-                } else if (colorType < 0.6) {
-                    // Gold-yellow
-                    r = 200 + rng() * 55; g = 160 + rng() * 60; b = 60 + rng() * 50;
-                    a = 0.12 + rng() * 0.3;
-                } else if (colorType < 0.8) {
-                    // Blue-white (nearby)
-                    r = 140 + rng() * 60; g = 160 + rng() * 60; b = 220 + rng() * 35;
-                    a = 0.15 + rng() * 0.3;
-                } else {
-                    // Very faint red
-                    r = 150 + rng() * 80; g = 40 + rng() * 40; b = 30 + rng() * 30;
-                    a = 0.08 + rng() * 0.2;
-                }
+                if (ct < 0.35) { r = 190 + rng() * 65; g = 85 + rng() * 55; b = 30 + rng() * 35; a = 0.18 + rng() * 0.35; }
+                else if (ct < 0.6) { r = 210 + rng() * 45; g = 165 + rng() * 55; b = 65 + rng() * 45; a = 0.15 + rng() * 0.3; }
+                else if (ct < 0.8) { r = 145 + rng() * 55; g = 165 + rng() * 55; b = 220 + rng() * 35; a = 0.15 + rng() * 0.3; }
+                else { r = 155 + rng() * 75; g = 45 + rng() * 35; b = 30 + rng() * 25; a = 0.1 + rng() * 0.2; }
 
-                c.save();
-                c.translate(x, y);
-                c.rotate(angle);
-                c.scale(elongation, 1);
-
-                const grad = c.createRadialGradient(0, 0, 0, 0, 0, size);
-                grad.addColorStop(0, `rgba(${r|0}, ${g|0}, ${b|0}, ${a})`);
-                grad.addColorStop(0.5, `rgba(${r|0}, ${g|0}, ${b|0}, ${a * 0.3})`);
-                grad.addColorStop(1, 'rgba(0,0,0,0)');
-                c.fillStyle = grad;
+                c.save(); c.translate(x, y); c.rotate(angle); c.scale(elong, 1);
+                const gg = c.createRadialGradient(0, 0, 0, 0, 0, size);
+                gg.addColorStop(0, `rgba(${r|0},${g|0},${b|0},${a})`);
+                gg.addColorStop(0.5, `rgba(${r|0},${g|0},${b|0},${a * 0.25})`);
+                gg.addColorStop(1, 'rgba(0,0,0,0)');
+                c.fillStyle = gg;
                 c.fillRect(-size, -size, size * 2, size * 2);
-
-                // Bright core
-                if (size > 1.5) {
-                    c.beginPath();
-                    c.arc(0, 0, size * 0.3, 0, Math.PI * 2);
-                    c.fillStyle = `rgba(${Math.min(255, r + 40)|0}, ${Math.min(255, g + 40)|0}, ${Math.min(255, b + 20)|0}, ${a * 0.6})`;
+                if (size > 1.2) {
+                    c.beginPath(); c.arc(0, 0, size * 0.25, 0, Math.PI * 2);
+                    c.fillStyle = `rgba(${Math.min(255,r+50)|0},${Math.min(255,g+50)|0},${Math.min(255,b+30)|0},${a * 0.5})`;
                     c.fill();
                 }
                 c.restore();
             }
-            c.restore();
 
-            // === LAYER 3: Gravitational lensing arcs (curved orange streaks) ===
-            c.save();
-            c.globalCompositeOperation = 'screen';
-            const arcCount = 3 + Math.floor(rng() * 4);
-            for (let i = 0; i < arcCount; i++) {
+            // === Gravitational lensing arcs ===
+            c.save(); c.globalCompositeOperation = 'screen';
+            for (let i = 0; i < 5 + Math.floor(rng() * 5); i++) {
                 const cx = rng() * w, cy = rng() * h;
-                const radius = 40 + rng() * 80;
-                const startAngle = rng() * Math.PI * 2;
-                const sweep = 0.3 + rng() * 0.8;
+                const radius = 15 + rng() * 40;
                 c.beginPath();
-                c.arc(cx, cy, radius, startAngle, startAngle + sweep);
-                c.strokeStyle = `rgba(200, 120, 50, ${0.06 + rng() * 0.08})`;
-                c.lineWidth = 1 + rng() * 1.5;
+                c.arc(cx, cy, radius, rng() * Math.PI * 2, rng() * Math.PI * 2 + 0.4 + rng() * 0.6);
+                c.strokeStyle = `rgba(210, 130, 55, ${0.05 + rng() * 0.08})`;
+                c.lineWidth = 0.6 + rng() * 1;
                 c.stroke();
             }
             c.restore();
 
-            // === LAYER 4: Background dust stars (extreme density) ===
-            const dustCount = Math.floor((w * h) / 250);
+            // === Background dust stars (extreme density) ===
+            const dustCount = Math.floor((w * h) / 150);
             for (let i = 0; i < dustCount; i++) {
                 const x = rng() * w, y = rng() * h;
-                const r = rng() * 0.5 + 0.1;
-                const colorRoll = rng();
+                const r = rng() * 0.45 + 0.08;
+                const cr = rng();
                 let col;
-                if (colorRoll < 0.5) col = `rgba(200, 210, 230, ${rng() * 0.18 + 0.03})`;
-                else if (colorRoll < 0.75) col = `rgba(230, 200, 160, ${rng() * 0.15 + 0.03})`;
-                else col = `rgba(200, 170, 150, ${rng() * 0.12 + 0.02})`;
-                c.beginPath();
-                c.arc(x, y, r, 0, Math.PI * 2);
-                c.fillStyle = col;
-                c.fill();
+                if (cr < 0.5) col = `rgba(200,210,230,${rng() * 0.2 + 0.03})`;
+                else if (cr < 0.75) col = `rgba(230,200,160,${rng() * 0.15 + 0.03})`;
+                else col = `rgba(200,170,150,${rng() * 0.12 + 0.02})`;
+                c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fillStyle = col; c.fill();
             }
 
-            // === LAYER 5: Medium stars (many colors) ===
-            const medCount = Math.floor((w * h) / 2000);
+            // === Medium stars ===
+            const medCount = Math.floor((w * h) / 1500);
             for (let i = 0; i < medCount; i++) {
                 const x = rng() * w, y = rng() * h;
-                const rad = rng() * 1.2 + 0.3;
+                const rad = rng() * 0.9 + 0.25;
                 const a = rng() * 0.6 + 0.25;
-                const colorRoll = rng();
+                const cr = rng();
                 let hue, sat;
-                if (colorRoll < 0.35) { hue = 210 + rng() * 40; sat = 25 + rng() * 30; }       // blue-white
-                else if (colorRoll < 0.55) { hue = 25 + rng() * 30; sat = 50 + rng() * 30; }    // warm gold
-                else if (colorRoll < 0.7) { hue = 0 + rng() * 20; sat = 40 + rng() * 30; }      // orange-red
-                else if (colorRoll < 0.85) { hue = 45 + rng() * 15; sat = 60 + rng() * 30; }    // yellow
-                else { hue = 180 + rng() * 30; sat = 20 + rng() * 20; }                          // cool white
+                if (cr < 0.35) { hue = 210 + rng() * 40; sat = 25 + rng() * 30; }
+                else if (cr < 0.55) { hue = 25 + rng() * 30; sat = 50 + rng() * 30; }
+                else if (cr < 0.7) { hue = rng() * 20; sat = 40 + rng() * 30; }
+                else if (cr < 0.85) { hue = 45 + rng() * 15; sat = 60 + rng() * 30; }
+                else { hue = 180 + rng() * 30; sat = 20 + rng() * 20; }
 
-                c.beginPath();
-                c.arc(x, y, rad, 0, Math.PI * 2);
-                c.fillStyle = `hsla(${hue}, ${sat}%, 88%, ${a})`;
-                c.fill();
-
-                if (rad > 0.7) {
-                    const glow = c.createRadialGradient(x, y, 0, x, y, rad * 4);
-                    glow.addColorStop(0, `hsla(${hue}, ${sat}%, 85%, ${a * 0.08})`);
-                    glow.addColorStop(1, 'rgba(0,0,0,0)');
-                    c.fillStyle = glow;
-                    c.fillRect(x - rad * 4, y - rad * 4, rad * 8, rad * 8);
+                c.beginPath(); c.arc(x, y, rad, 0, Math.PI * 2);
+                c.fillStyle = `hsla(${hue},${sat}%,88%,${a})`; c.fill();
+                if (rad > 0.6) {
+                    const gl = c.createRadialGradient(x, y, 0, x, y, rad * 3);
+                    gl.addColorStop(0, `hsla(${hue},${sat}%,85%,${a * 0.07})`);
+                    gl.addColorStop(1, 'rgba(0,0,0,0)');
+                    c.fillStyle = gl; c.fillRect(x - rad * 3, y - rad * 3, rad * 6, rad * 6);
                 }
             }
 
-            // === LAYER 6: Bright foreground stars with JWST-style 6-point diffraction spikes ===
-            const brightCount = Math.floor((w * h) / 25000) + 20;
+            // === Bright stars with 6-point JWST spikes ===
+            const brightCount = Math.floor((w * h) / 18000) + 12;
             for (let i = 0; i < brightCount; i++) {
                 const x = rng() * w, y = rng() * h;
-                const rad = rng() * 2.2 + 0.8;
-                const isMajor = rad > 2.0;
-                const colorRoll = rng();
+                const rad = rng() * 1.4 + 0.6;
+                const isMajor = rad > 1.4;
+                const cr = rng();
                 let hue, sat;
-                if (colorRoll < 0.5) { hue = 215 + rng() * 25; sat = 40 + rng() * 20; }   // blue
-                else if (colorRoll < 0.75) { hue = 35 + rng() * 20; sat = 40 + rng() * 30; } // warm
-                else { hue = 0; sat = 0; }                                                     // pure white
+                if (cr < 0.5) { hue = 215 + rng() * 25; sat = 40 + rng() * 20; }
+                else if (cr < 0.75) { hue = 35 + rng() * 20; sat = 40 + rng() * 30; }
+                else { hue = 0; sat = 0; }
 
-                // Outer bloom
-                const bloom = c.createRadialGradient(x, y, 0, x, y, rad * 15);
-                bloom.addColorStop(0, `hsla(${hue}, ${sat}%, 90%, 0.08)`);
-                bloom.addColorStop(0.2, `hsla(${hue}, ${sat}%, 85%, 0.03)`);
-                bloom.addColorStop(1, 'rgba(0,0,0,0)');
-                c.fillStyle = bloom;
-                c.fillRect(x - rad * 15, y - rad * 15, rad * 30, rad * 30);
-
-                // Inner glow
-                const inner = c.createRadialGradient(x, y, 0, x, y, rad * 5);
-                inner.addColorStop(0, `hsla(${hue}, ${Math.max(0, sat - 15)}%, 97%, 0.6)`);
-                inner.addColorStop(0.3, `hsla(${hue}, ${sat}%, 90%, 0.15)`);
-                inner.addColorStop(1, 'rgba(0,0,0,0)');
-                c.fillStyle = inner;
-                c.fillRect(x - rad * 5, y - rad * 5, rad * 10, rad * 10);
+                // Bloom
+                const bl = c.createRadialGradient(x, y, 0, x, y, rad * 8);
+                bl.addColorStop(0, `hsla(${hue},${sat}%,92%,0.1)`);
+                bl.addColorStop(0.3, `hsla(${hue},${sat}%,85%,0.03)`);
+                bl.addColorStop(1, 'rgba(0,0,0,0)');
+                c.fillStyle = bl; c.fillRect(x - rad * 8, y - rad * 8, rad * 16, rad * 16);
 
                 // Core
-                c.beginPath();
-                c.arc(x, y, rad, 0, Math.PI * 2);
-                c.fillStyle = `hsla(${hue}, ${Math.max(0, sat - 10)}%, 98%, 0.95)`;
-                c.fill();
+                const inn = c.createRadialGradient(x, y, 0, x, y, rad * 3);
+                inn.addColorStop(0, `hsla(${hue},${Math.max(0,sat-15)}%,97%,0.65)`);
+                inn.addColorStop(0.4, `hsla(${hue},${sat}%,90%,0.12)`);
+                inn.addColorStop(1, 'rgba(0,0,0,0)');
+                c.fillStyle = inn; c.fillRect(x - rad * 3, y - rad * 3, rad * 6, rad * 6);
 
-                // 6-point diffraction spikes (JWST hexagonal mirror pattern)
-                const spikeLen = isMajor ? rad * 40 + rng() * 30 : rad * 15 + rng() * 10;
-                const spikeAlpha = isMajor ? 0.25 : 0.1;
-                c.save();
-                c.globalCompositeOperation = 'screen';
+                c.beginPath(); c.arc(x, y, rad, 0, Math.PI * 2);
+                c.fillStyle = `hsla(${hue},${Math.max(0,sat-10)}%,98%,0.95)`; c.fill();
+
+                // 6-point spikes
+                const sLen = isMajor ? rad * 22 : rad * 8;
+                const sAlpha = isMajor ? 0.22 : 0.08;
+                c.save(); c.globalCompositeOperation = 'screen';
                 for (let s = 0; s < 3; s++) {
-                    const angle = (s * Math.PI / 3) + Math.PI / 6; // 30, 90, 150 degrees
-                    // Each spike as a tapered line with gradient
+                    const ang = (s * Math.PI / 3) + Math.PI / 6;
                     for (let side = -1; side <= 1; side += 2) {
-                        const ex = x + Math.cos(angle) * spikeLen * side;
-                        const ey = y + Math.sin(angle) * spikeLen * side;
-                        const sGrad = c.createLinearGradient(x, y, ex, ey);
-                        sGrad.addColorStop(0, `hsla(210, 60%, 85%, ${spikeAlpha})`);
-                        sGrad.addColorStop(0.15, `hsla(210, 50%, 80%, ${spikeAlpha * 0.5})`);
-                        sGrad.addColorStop(1, 'rgba(0,0,0,0)');
-                        c.beginPath();
-                        c.moveTo(x, y);
-                        c.lineTo(ex, ey);
-                        c.strokeStyle = sGrad;
-                        c.lineWidth = isMajor ? 1.5 : 0.7;
-                        c.stroke();
-
-                        // Secondary thinner spike offset slightly
-                        if (isMajor) {
-                            const offset = 0.03;
-                            const ex2 = x + Math.cos(angle + offset) * spikeLen * 0.7 * side;
-                            const ey2 = y + Math.sin(angle + offset) * spikeLen * 0.7 * side;
-                            c.beginPath();
-                            c.moveTo(x, y);
-                            c.lineTo(ex2, ey2);
-                            c.strokeStyle = `hsla(210, 50%, 80%, ${spikeAlpha * 0.25})`;
-                            c.lineWidth = 0.5;
-                            c.stroke();
-                        }
+                        const ex = x + Math.cos(ang) * sLen * side;
+                        const ey = y + Math.sin(ang) * sLen * side;
+                        const sg = c.createLinearGradient(x, y, ex, ey);
+                        sg.addColorStop(0, `hsla(210,60%,85%,${sAlpha})`);
+                        sg.addColorStop(0.2, `hsla(210,50%,80%,${sAlpha * 0.4})`);
+                        sg.addColorStop(1, 'rgba(0,0,0,0)');
+                        c.beginPath(); c.moveTo(x, y); c.lineTo(ex, ey);
+                        c.strokeStyle = sg; c.lineWidth = isMajor ? 1.2 : 0.5; c.stroke();
                     }
                 }
                 c.restore();
 
-                // Save for twinkle
-                twinkleStars.push({
-                    x, y, r: rad, hue, sat,
-                    twinkleSpeed: rng() * 0.005 + 0.002,
-                    twinkleOffset: rng() * Math.PI * 2,
-                    baseAlpha: 0.6 + rng() * 0.4,
-                });
+                twinkleStars.push({ x, y, r: rad, hue, sat,
+                    twinkleSpeed: rng() * 0.005 + 0.002, twinkleOffset: rng() * Math.PI * 2,
+                    baseAlpha: 0.6 + rng() * 0.4 });
             }
 
-            // === LAYER 7: A few very bright stars (like the central JWST stars) ===
-            const megaStars = 2 + Math.floor(rng() * 3);
-            for (let i = 0; i < megaStars; i++) {
-                const x = w * (0.2 + rng() * 0.6);
-                const y = h * (0.05 + rng() * 0.3);
-                const rad = 3 + rng() * 2;
+            // === 3-5 mega bright JWST stars ===
+            const megaCount = 3 + Math.floor(rng() * 3);
+            for (let i = 0; i < megaCount; i++) {
+                const x = w * (0.1 + rng() * 0.8);
+                const y = h * (0.1 + rng() * 0.8);
+                const rad = 2 + rng() * 1.5;
 
-                // Massive bloom
-                const megaBloom = c.createRadialGradient(x, y, 0, x, y, rad * 30);
-                megaBloom.addColorStop(0, 'rgba(220, 230, 255, 0.12)');
-                megaBloom.addColorStop(0.1, 'rgba(200, 215, 250, 0.05)');
-                megaBloom.addColorStop(0.3, 'rgba(180, 200, 240, 0.015)');
-                megaBloom.addColorStop(1, 'rgba(0,0,0,0)');
-                c.fillStyle = megaBloom;
-                c.fillRect(x - rad * 30, y - rad * 30, rad * 60, rad * 60);
+                // Big bloom
+                const mb = c.createRadialGradient(x, y, 0, x, y, rad * 18);
+                mb.addColorStop(0, 'rgba(220,230,255,0.12)');
+                mb.addColorStop(0.15, 'rgba(200,215,250,0.04)');
+                mb.addColorStop(0.4, 'rgba(180,200,240,0.01)');
+                mb.addColorStop(1, 'rgba(0,0,0,0)');
+                c.fillStyle = mb; c.fillRect(x - rad * 18, y - rad * 18, rad * 36, rad * 36);
 
-                // White-hot core
-                const coreGrad = c.createRadialGradient(x, y, 0, x, y, rad * 3);
-                coreGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-                coreGrad.addColorStop(0.3, 'rgba(230, 240, 255, 0.4)');
-                coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
-                c.fillStyle = coreGrad;
-                c.fillRect(x - rad * 3, y - rad * 3, rad * 6, rad * 6);
+                // Hot core
+                const cg = c.createRadialGradient(x, y, 0, x, y, rad * 2.5);
+                cg.addColorStop(0, 'rgba(255,255,255,0.95)');
+                cg.addColorStop(0.35, 'rgba(230,240,255,0.35)');
+                cg.addColorStop(1, 'rgba(0,0,0,0)');
+                c.fillStyle = cg; c.fillRect(x - rad * 2.5, y - rad * 2.5, rad * 5, rad * 5);
+                c.beginPath(); c.arc(x, y, rad, 0, Math.PI * 2);
+                c.fillStyle = 'rgba(255,255,255,1)'; c.fill();
 
-                c.beginPath();
-                c.arc(x, y, rad, 0, Math.PI * 2);
-                c.fillStyle = 'rgba(255, 255, 255, 1)';
-                c.fill();
-
-                // Massive 6-point spikes
-                c.save();
-                c.globalCompositeOperation = 'screen';
-                const megaSpikeLen = rad * 80;
+                // Big 6-point spikes
+                c.save(); c.globalCompositeOperation = 'screen';
+                const msLen = rad * 45;
                 for (let s = 0; s < 3; s++) {
-                    const angle = (s * Math.PI / 3) + Math.PI / 6;
+                    const ang = (s * Math.PI / 3) + Math.PI / 6;
                     for (let side = -1; side <= 1; side += 2) {
-                        const ex = x + Math.cos(angle) * megaSpikeLen * side;
-                        const ey = y + Math.sin(angle) * megaSpikeLen * side;
+                        const ex = x + Math.cos(ang) * msLen * side;
+                        const ey = y + Math.sin(ang) * msLen * side;
                         const sg = c.createLinearGradient(x, y, ex, ey);
-                        sg.addColorStop(0, 'rgba(180, 210, 255, 0.35)');
-                        sg.addColorStop(0.05, 'rgba(160, 195, 250, 0.2)');
-                        sg.addColorStop(0.2, 'rgba(140, 180, 240, 0.06)');
+                        sg.addColorStop(0, 'rgba(180,210,255,0.3)');
+                        sg.addColorStop(0.06, 'rgba(160,195,250,0.15)');
+                        sg.addColorStop(0.25, 'rgba(140,180,240,0.04)');
                         sg.addColorStop(1, 'rgba(0,0,0,0)');
-                        c.beginPath();
-                        c.moveTo(x, y);
-                        c.lineTo(ex, ey);
-                        c.strokeStyle = sg;
-                        c.lineWidth = 2;
-                        c.stroke();
-
-                        // Secondary spike
-                        const ex2 = x + Math.cos(angle + 0.04) * megaSpikeLen * 0.6 * side;
-                        const ey2 = y + Math.sin(angle + 0.04) * megaSpikeLen * 0.6 * side;
-                        c.beginPath();
-                        c.moveTo(x, y);
-                        c.lineTo(ex2, ey2);
-                        c.strokeStyle = 'rgba(160, 190, 240, 0.08)';
-                        c.lineWidth = 0.8;
-                        c.stroke();
+                        c.beginPath(); c.moveTo(x, y); c.lineTo(ex, ey);
+                        c.strokeStyle = sg; c.lineWidth = 1.6; c.stroke();
+                        // secondary
+                        const ex2 = x + Math.cos(ang + 0.035) * msLen * 0.55 * side;
+                        const ey2 = y + Math.sin(ang + 0.035) * msLen * 0.55 * side;
+                        c.beginPath(); c.moveTo(x, y); c.lineTo(ex2, ey2);
+                        c.strokeStyle = 'rgba(160,190,240,0.06)'; c.lineWidth = 0.6; c.stroke();
                     }
                 }
                 c.restore();
 
-                twinkleStars.push({
-                    x, y, r: rad, hue: 215, sat: 40,
-                    twinkleSpeed: rng() * 0.003 + 0.001,
-                    twinkleOffset: rng() * Math.PI * 2,
-                    baseAlpha: 0.8 + rng() * 0.2,
-                });
+                twinkleStars.push({ x, y, r: rad, hue: 215, sat: 40,
+                    twinkleSpeed: rng() * 0.003 + 0.001, twinkleOffset: rng() * Math.PI * 2,
+                    baseAlpha: 0.8 + rng() * 0.2 });
             }
         }
 
         // === ANIMATION ===
-        function createShootingStar() {
-            return {
-                x: Math.random() * w * 1.3 - w * 0.15,
-                y: Math.random() * h * 0.5,
-                len: 90 + Math.random() * 160,
-                speed: 12 + Math.random() * 10,
-                angle: Math.PI / 7 + Math.random() * Math.PI / 5,
-                alpha: 1,
-                decay: 0.01 + Math.random() * 0.008,
-            };
-        }
-
         function draw(time) {
             ctx.clearRect(0, 0, w, h);
             if (staticCanvas) ctx.drawImage(staticCanvas, 0, 0);
 
-            // Twinkle
             for (const s of twinkleStars) {
                 const t = Math.sin(time * s.twinkleSpeed + s.twinkleOffset);
                 const a = s.baseAlpha * (0.4 + 0.6 * ((t + 1) / 2));
-                const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 10);
-                g.addColorStop(0, `hsla(${s.hue}, ${s.sat}%, 95%, ${a * 0.12})`);
-                g.addColorStop(0.4, `hsla(${s.hue}, ${s.sat}%, 88%, ${a * 0.03})`);
+                const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 6);
+                g.addColorStop(0, `hsla(${s.hue},${s.sat}%,95%,${a * 0.1})`);
+                g.addColorStop(0.5, `hsla(${s.hue},${s.sat}%,88%,${a * 0.02})`);
                 g.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = g;
-                ctx.fillRect(s.x - s.r * 10, s.y - s.r * 10, s.r * 20, s.r * 20);
+                ctx.fillStyle = g; ctx.fillRect(s.x - s.r * 6, s.y - s.r * 6, s.r * 12, s.r * 12);
             }
 
-            // Shooting stars
-            if (time - lastShootingTime > 6000 + Math.random() * 12000) {
-                if (shootingStars.length < 2) { shootingStars.push(createShootingStar()); lastShootingTime = time; }
+            if (time - lastShootingTime > 7000 + Math.random() * 12000) {
+                if (shootingStars.length < 2) {
+                    shootingStars.push({
+                        x: Math.random() * w * 1.2 - w * 0.1,
+                        y: Math.random() * h * 0.4,
+                        len: 60 + Math.random() * 100,
+                        speed: 10 + Math.random() * 8,
+                        angle: Math.PI / 7 + Math.random() * Math.PI / 5,
+                        alpha: 1, decay: 0.012 + Math.random() * 0.008,
+                    });
+                    lastShootingTime = time;
+                }
             }
             for (let i = shootingStars.length - 1; i >= 0; i--) {
                 const ss = shootingStars[i];
@@ -3087,35 +2996,23 @@ window.__translations = {
                 ss.y += Math.sin(ss.angle) * ss.speed;
                 ss.alpha -= ss.decay;
                 if (ss.alpha <= 0) { shootingStars.splice(i, 1); continue; }
-
                 const tx = ss.x - Math.cos(ss.angle) * ss.len;
                 const ty = ss.y - Math.sin(ss.angle) * ss.len;
                 const g = ctx.createLinearGradient(tx, ty, ss.x, ss.y);
                 g.addColorStop(0, 'rgba(255,255,255,0)');
-                g.addColorStop(0.5, `rgba(200, 220, 255, ${ss.alpha * 0.2})`);
-                g.addColorStop(1, `rgba(255, 255, 255, ${ss.alpha})`);
+                g.addColorStop(0.5, `rgba(200,220,255,${ss.alpha * 0.2})`);
+                g.addColorStop(1, `rgba(255,255,255,${ss.alpha})`);
                 ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(ss.x, ss.y);
-                ctx.strokeStyle = g; ctx.lineWidth = 1.8; ctx.stroke();
-
-                ctx.beginPath(); ctx.arc(ss.x, ss.y, 2, 0, Math.PI * 2);
+                ctx.strokeStyle = g; ctx.lineWidth = 1.5; ctx.stroke();
+                ctx.beginPath(); ctx.arc(ss.x, ss.y, 1.8, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255,255,255,${ss.alpha})`; ctx.fill();
-
-                const hg = ctx.createRadialGradient(ss.x, ss.y, 0, ss.x, ss.y, 15);
-                hg.addColorStop(0, `rgba(200, 220, 255, ${ss.alpha * 0.25})`);
-                hg.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = hg; ctx.fillRect(ss.x - 15, ss.y - 15, 30, 30);
             }
-
             requestAnimationFrame(draw);
         }
 
         window.addEventListener('resize', function() { resize(); });
         resize();
         requestAnimationFrame(draw);
-        setInterval(function() {
-            const newH = document.documentElement.scrollHeight;
-            if (Math.abs(canvas.height - newH) > 100) { canvas.height = newH; h = newH; renderStaticLayer(); }
-        }, 3000);
     })();
     </script>
 
