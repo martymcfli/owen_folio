@@ -779,27 +779,24 @@
 
         .otc-artist {
             position: relative;
-            border-radius: 16px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
             overflow: hidden;
-            aspect-ratio: 9 / 16;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            flex-shrink: 0;
         }
 
         .otc-artist img,
         .otc-artist video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             display: block;
         }
 
         .otc-artist-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 24px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            display: none;
         }
 
         .otc-artist-name {
@@ -966,8 +963,8 @@
                 gap: 40px;
             }
             .otc-artist {
-                max-width: 320px;
-                margin: 0 auto;
+                width: 64px;
+                height: 64px;
             }
             .off-the-clock {
                 padding: 60px 20px;
@@ -2137,15 +2134,16 @@
     <section class="off-the-clock" id="music">
         <div class="otc-label" data-i18n="otc.label">Off the Clock</div>
         <div class="otc-layout">
-            <div class="otc-artist">
-                <video src="./images/artist/zen0-artist.mp4" autoplay muted loop playsinline></video>
-                <div class="otc-artist-overlay">
-                    <div class="otc-artist-name">ZEN0</div>
-                    <div class="otc-artist-tag">Producer · Multi-instrumentalist</div>
-                </div>
-            </div>
             <div class="otc-player">
-                <h2 class="otc-heading" data-i18n="otc.heading">I also make music.</h2>
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
+                    <div class="otc-artist">
+                        <video src="./images/artist/zen0-artist.mp4" autoplay muted loop playsinline></video>
+                    </div>
+                    <div>
+                        <h2 class="otc-heading" data-i18n="otc.heading" style="margin-bottom: 0;">I also make music.</h2>
+                        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 2px;">ZEN0 · Producer · Multi-instrumentalist</div>
+                    </div>
+                </div>
                 <p class="otc-sub" data-i18n="otc.sub">Drums, guitar, bass, and a DAW. These are original productions with different vibes. Hit play.</p>
                 <div class="track-list">
                     <div class="track" data-src="./music/lover-boy.mp3" onclick="toggleTrack(this)">
