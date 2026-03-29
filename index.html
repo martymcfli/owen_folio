@@ -1015,11 +1015,18 @@
             letter-spacing: 0.1em;
         }
 
-        /* FAQ Bot Snake */
+        /* FAQ Bot Snake — Spotlight */
         .faq-snake-outer {
             position: relative;
             display: inline-block;
-            padding: 5px 12px;
+            padding: 10px 22px;
+            border-radius: 8px;
+            background: rgba(167, 139, 250, 0.06);
+            animation: faq-pulse 3s ease-in-out infinite;
+        }
+        @keyframes faq-pulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(167, 139, 250, 0.2), 0 0 20px rgba(96, 165, 250, 0.1); }
+            50%      { box-shadow: 0 0 16px rgba(167, 139, 250, 0.4), 0 0 40px rgba(96, 165, 250, 0.2); }
         }
         .faq-snake-svg {
             position: absolute;
@@ -1030,9 +1037,9 @@
         }
         .faq-snake-rect {
             fill: none;
-            stroke: var(--accent-primary);
-            stroke-width: 1.5;
-            opacity: 0.85;
+            stroke: url(#faq-gradient);
+            stroke-width: 2;
+            opacity: 0.9;
         }
         .faq-rainbow-text {
             background: linear-gradient(
@@ -1044,6 +1051,8 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: faq-shimmer 4s linear infinite;
+            font-weight: 700;
+            letter-spacing: 0.05em;
         }
         @keyframes faq-shimmer {
             0%   { background-position: 100% 0; }
@@ -2240,8 +2249,8 @@
                         </svg>
                         GitHub
                     </a>
-                    <a href="https://www.linkedin.com/in/owen-p-mccormick/" target="_blank">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <a href="https://www.linkedin.com/in/owen-p-mccormick/" target="_blank" style="color: #0A66C2;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#0A66C2">
                             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                         </svg>
                         LinkedIn
@@ -2269,8 +2278,14 @@
         <div class="footer-bottom">
             <div>&copy; 2026 Owen McCormick</div>
             <div class="faq-snake-outer">
-                <svg class="faq-snake-svg" aria-hidden="true"><rect class="faq-snake-rect" rx="4" ry="4"/></svg>
-                <a href="./hire-owen/chat.html" target="_blank" class="faq-rainbow-text" style="text-decoration: none; font-size: 0.8rem; position: relative; z-index: 1;" data-i18n="footer.faqbot">Owen FAQ Bot</a>
+                <svg class="faq-snake-svg" aria-hidden="true">
+                    <defs><linearGradient id="faq-gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="50%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+                    <rect class="faq-snake-rect" rx="8" ry="8"/>
+                </svg>
+                <span style="position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <a href="./hire-owen/chat.html" target="_blank" class="faq-rainbow-text" style="text-decoration: none; font-size: 0.95rem;" data-i18n="footer.faqbot">Owen FAQ Bot</a>
+                </span>
             </div>
             <div data-i18n="footer.tagline">Built with Precision</div>
         </div>
