@@ -3032,10 +3032,10 @@ window.__translations = {
         const el = document.querySelector('.hero-image');
         if (!el) return;
 
-        // Let it visually overflow containers when knocked around
-        let p = el.parentElement;
-        while (p && p !== document.body) { p.style.overflow = 'visible'; p = p.parentElement; }
-        el.style.zIndex = '999';
+        // Clip at hero section so image can't leak into other sections
+        const heroSection = el.closest('.hero');
+        if (heroSection) heroSection.style.overflow = 'clip';
+        el.style.zIndex = '10';
 
         // Bottom boundary: top of the certifications section (in page coords)
         const boundary = document.querySelector('.skills');
