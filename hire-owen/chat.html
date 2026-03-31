@@ -620,11 +620,9 @@
 
     <script>
         // =====================================================
-        // GEMINI API CONFIGURATION
+        // FAQ PROXY CONFIGURATION (Claude API via Railway proxy)
         // =====================================================
-        const GEMINI_API_KEY = 'AIzaSyD0KFWW5X5q301-GPfhPBAgq3aSU6qfdg8';
-        const GEMINI_MODEL = 'gemini-2.5-flash';
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+        const FAQ_PROXY_URL = 'https://faq-proxy-production.up.railway.app/chat';
 
         // =====================================================
         // SYSTEM PROMPTS (EN + FR)
@@ -703,8 +701,8 @@ RÈGLES :
             return window.__langSystem ? window.__langSystem.getCurrentLang() : 'en';
         }
 
-        // Conversation history for Gemini (maintains context)
-        let geminiHistory = [];
+        // Conversation history for Claude (maintains context)
+        let claudeMessages = [];
         let conversationHistory = [];
         let visitorInfo = {
             referrer: document.referrer || 'direct',
@@ -730,7 +728,7 @@ RÈGLES :
 
             if (lang === 'fr') {
                 const greetingsFr = [
-                    "Bonjour. Je suis le bot FAQ d'Owen — propulsé par Gemini, donc un peu plus malin qu'un widget normal. Posez-moi n'importe quoi.",
+                    "Bonjour. Je suis le bot FAQ d'Owen — propulsé par Claude, donc un peu plus malin qu'un widget normal. Posez-moi n'importe quoi.",
                     "Salut. Je connais les compétences d'Owen, son parcours, sa fourchette salariale, et son avis sur le pain français. Qu'est-ce qui vous intéresse ?",
                     "Bienvenue. Je suis essentiellement une page FAQ avec une personnalité. Posez vos questions."
                 ];
@@ -738,7 +736,7 @@ RÈGLES :
             }
 
             const greetings = [
-                "Hey. I'm Owen's FAQ bot, powered by Gemini — so a step up from a normal widget. Ask me anything.",
+                "Hey. I'm Owen's FAQ bot, powered by Claude — so a step up from a normal widget. Ask me anything.",
                 "Hi there. I know Owen's skills, background, salary range, and his opinions on French bread. What do you want to know?",
                 "Welcome. I'm basically a FAQ page with a personality. Go ahead.",
                 "Hey. I know more about Owen than is probably healthy. Ask away."
@@ -783,60 +781,43 @@ RÈGLES :
             document.getElementById('typingIndicator').classList.remove('active');
         }
 
-        // Call Gemini API — uses current language's system prompt
-        async function callGemini(userMessage) {
-            geminiHistory.push({ role: 'user', parts: [{ text: userMessage }] });
-
-            const requestBody = {
-                system_instruction: {
-                    parts: [{ text: getSystemPrompt() }]
-                },
-                contents: geminiHistory,
-                generationConfig: {
-                    temperature: 0.8,
-                    topP: 0.95,
-                    topK: 40,
-                    maxOutputTokens: 1024
-                }
-            };
+        // Call Claude API via proxy — uses current language's system prompt
+        async function callClaude(userMessage) {
+            claudeMessages.push({ role: 'user', content: userMessage });
 
             try {
-                const response = await fetch(GEMINI_URL, {
+                const response = await fetch(FAQ_PROXY_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
+                    body: JSON.stringify({
+                        system: getSystemPrompt(),
+                        messages: claudeMessages
+                    })
                 });
 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
-                    console.error('Gemini API error:', response.status, errorData);
-
-                    if (response.status === 400 && GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
-                        if (getLang() === 'fr') {
-                            return "⚠️ La clé API n'a pas encore été configurée. Owen doit ajouter sa clé API Gemini pour m'activer. En attendant, explorez son portfolio sur **omccormick.com** ou contactez-le directement à **mcmcowen@gmail.com** !";
-                        }
-                        return "⚠️ The API key hasn't been configured yet. Owen needs to add his Gemini API key to activate me. In the meantime, feel free to explore his portfolio at **omccormick.com** or reach out directly at **mcmcowen@gmail.com**!";
-                    }
+                    console.error('Claude proxy error:', response.status, errorData);
                     throw new Error(`API error: ${response.status}`);
                 }
 
                 const data = await response.json();
-                const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                const aiResponse = data.response;
 
                 if (!aiResponse) {
-                    throw new Error('No response from Gemini');
+                    throw new Error('No response from Claude');
                 }
 
-                geminiHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
+                claudeMessages.push({ role: 'assistant', content: aiResponse });
 
-                if (geminiHistory.length > 40) {
-                    geminiHistory = geminiHistory.slice(-40);
+                if (claudeMessages.length > 40) {
+                    claudeMessages = claudeMessages.slice(-40);
                 }
 
                 return aiResponse;
 
             } catch (error) {
-                console.error('Gemini call failed:', error);
+                console.error('Claude call failed:', error);
                 if (getLang() === 'fr') {
                     return "J'ai un petit souci de connexion en ce moment, mais je ne veux pas que vous partiez les mains vides ! Voici le pitch rapide :\n\n**Owen McCormick** est un Consultant en Opérations Stratégiques qui construit des outils IA et des systèmes d'automatisation. Il recherche son prochain poste à temps plein.\n\n• **Email :** mcmcowen@gmail.com\n• **Portfolio :** omccormick.com\n• **LinkedIn :** linkedin.com/in/owenpmccormick\n\nRéessayez dans un instant, ou contactez-le directement !";
                 }
@@ -865,7 +846,7 @@ RÈGLES :
                     openBooking();
                 }
 
-                const response = await callGemini(message);
+                const response = await callClaude(message);
                 hideTyping();
                 addMessage('ai', response);
             } catch (error) {
