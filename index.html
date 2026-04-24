@@ -1567,6 +1567,66 @@
         .video-modal-close:hover {
             color: var(--accent-primary);
         }
+
+        /* Trail Hazers Apparel — Project 04 */
+        .th-video-showcase {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: #0a0a0a;
+            aspect-ratio: 16 / 9;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+        }
+
+        .th-hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .th-video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 24px;
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .th-overlay-logo {
+            height: 36px;
+            filter: brightness(0) invert(1);
+            opacity: 0.85;
+        }
+
+        .th-live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .th-live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: thPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes thPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
     </style>
 </head>
 <body>
@@ -1722,45 +1782,55 @@
             </div>
         </div>
 
-        <!-- Project 2: HEB Analytics Dashboard -->
+        <!-- Project 2: Trail Hazers Apparel -->
         <div class="featured-project">
             <div class="featured-content">
                 <div class="featured-number">02</div>
-                <div class="featured-tag">Retail Analytics / Business Intelligence</div>
-                <h3 class="featured-title">H-E-B Executive Analytics Dashboard</h3>
-                <p class="featured-subtitle">Chairman-Level BI Across All Subsidiaries</p>
-                <p class="featured-desc">A live dashboard built for H-E-B's chairman showing how the entire business is performing: revenue, store regions, product categories, inventory, and community impact, all in one place across every subsidiary in Texas.</p>
+                <div class="featured-tag">Brand Design / E-Commerce / Marketing</div>
+                <h3 class="featured-title">Trail Hazers Apparel</h3>
+                <p class="featured-subtitle">Outdoor Lifestyle Brand — Built From the Ground Up</p>
+                <p class="featured-desc">Conceived, designed, and launched an outdoor lifestyle clothing brand entirely from scratch — spanning logo design, brand identity, product development across 6 categories, photography, commercial videography, social marketing campaigns, and e-commerce. From the first sketch to the first sale.</p>
                 <div class="featured-stats">
                     <div class="featured-stat">
-                        <div class="featured-stat-value">8</div>
-                        <div class="featured-stat-label">Dashboard Views</div>
+                        <div class="featured-stat-value">21</div>
+                        <div class="featured-stat-label">Products</div>
                     </div>
                     <div class="featured-stat">
-                        <div class="featured-stat-value">Live</div>
-                        <div class="featured-stat-label">Data Simulation</div>
+                        <div class="featured-stat-value">2</div>
+                        <div class="featured-stat-label">Commercials</div>
                     </div>
                     <div class="featured-stat">
-                        <div class="featured-stat-value">TX</div>
-                        <div class="featured-stat-label">Territory</div>
+                        <div class="featured-stat-value">6</div>
+                        <div class="featured-stat-label">Categories</div>
                     </div>
                 </div>
                 <div class="featured-tags">
-                    <span class="tag">React</span>
-                    <span class="tag">TypeScript</span>
-                    <span class="tag">Recharts</span>
-                    <span class="tag">Tailwind</span>
-                    <span class="tag">DMAIC</span>
+                    <span class="tag">Brand Identity</span>
+                    <span class="tag">Product Design</span>
+                    <span class="tag">Photography</span>
+                    <span class="tag">Videography</span>
+                    <span class="tag">E-Commerce</span>
+                    <span class="tag">Print Design</span>
                 </div>
                 <div class="featured-links">
-                    <a href="https://martymcfli.github.io/heb-analytics/" target="_blank" class="btn-primary" style="padding: 14px 24px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        Live Demo
+                    <a href="./videos/trailhazers-commercial.mp4" target="_blank" class="btn-primary" style="padding: 14px 24px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Watch Commercial
                     </a>
-                    <a href="https://github.com/martymcfli/heb-analytics" target="_blank" class="btn-secondary" style="padding: 14px 24px;">View on GitHub</a>
+                    <a href="./videos/trailhazers-main.mp4" target="_blank" class="btn-secondary" style="padding: 14px 24px;">Brand Film</a>
                 </div>
             </div>
-            <div class="dashboard-preview">
-                <img src="./images/heb-dashboard-preview.png" alt="H-E-B Analytics Dashboard Preview" onerror="this.style.display='none'">
+            <div class="th-video-showcase">
+                <video autoplay muted loop playsinline class="th-hero-video">
+                    <source src="./videos/trailhazers-commercial.mp4" type="video/mp4">
+                </video>
+                <div class="th-video-overlay">
+                    <img src="./images/trailhazers/brand-logo.png" alt="Trail Hazers" class="th-overlay-logo">
+                    <div class="th-live-badge">
+                        <div class="th-live-dot"></div>
+                        Commercial
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1801,6 +1871,7 @@
                 <img src="./images/voicemirror-preview.png" alt="VoiceMirror — AI Voice Profile Generator">
             </div>
         </div>
+
 
     </section>
 
