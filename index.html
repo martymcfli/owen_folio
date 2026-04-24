@@ -1568,40 +1568,32 @@
             color: var(--accent-primary);
         }
 
-        /* Trail Hazers Apparel — Project 04 */
+        /* Trail Hazers Apparel — Project 02 */
         .th-video-showcase {
             position: relative;
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.08);
             background: #0a0a0a;
-            aspect-ratio: 16 / 9;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 24px 64px rgba(0,0,0,0.5);
         }
 
         .th-hero-video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
             display: block;
+            object-fit: cover;
+            object-position: 50% 10%;
         }
 
         .th-video-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 24px;
-            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-        }
-
-        .th-overlay-logo {
-            height: 36px;
-            filter: brightness(0) invert(1);
-            opacity: 0.85;
+            bottom: 16px;
+            right: 16px;
         }
 
         .th-live-badge {
@@ -1612,7 +1604,11 @@
             font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.85);
+            background: rgba(0,0,0,0.55);
+            padding: 5px 10px;
+            border-radius: 6px;
+            backdrop-filter: blur(4px);
         }
 
         .th-live-dot {
@@ -1825,7 +1821,6 @@
                     <source src="./videos/trailhazers-commercial.mp4" type="video/mp4">
                 </video>
                 <div class="th-video-overlay">
-                    <img src="./images/trailhazers/brand-logo.png" alt="Trail Hazers" class="th-overlay-logo">
                     <div class="th-live-badge">
                         <div class="th-live-dot"></div>
                         Commercial
