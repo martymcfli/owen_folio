@@ -1637,12 +1637,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.18);
-            transition: background 0.2s ease;
-        }
-
-        .th-video-showcase:hover .th-video-overlay {
-            background: rgba(0,0,0,0.28);
+            background: transparent;
+            pointer-events: none;
         }
 
         .th-play-btn {
@@ -1857,7 +1853,9 @@
                 </div>
             </div>
             <div class="th-video-showcase" onclick="openVideoModal('./videos/trailhazers-main.mp4')" style="cursor: pointer;">
-                <img src="./images/trailhazers/thumb-8s.jpg" alt="Trail Hazers — Brand Film" class="th-hero-video" style="object-position: center center;">
+                <video autoplay muted loop playsinline class="th-hero-video">
+                    <source src="./videos/trailhazers-commercial.mp4" type="video/mp4">
+                </video>
                 <div class="th-video-overlay">
                     <div class="th-play-btn">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="white" style="margin-left: 4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
