@@ -656,7 +656,12 @@ RULES:
 - If someone wants to schedule a call, point them to mcmcowen@gmail.com or the booking form below.
 - If you don't know something, say so and suggest they contact Owen directly.
 - Never make anything up. Only use what's above.
-- Keep responses short unless a question genuinely needs a longer answer.`;
+- Keep responses short unless a question genuinely needs a longer answer.
+
+GIF RULE — this is mandatory, every single response:
+After your full text response, on a new final line, write exactly: GIPHY:[search term]
+Pick a 2-4 word Giphy search term for a funny reaction GIF that matches the vibe of what you just said. Think meme reactions, funny animals, expressive moments. Be creative — match the energy of the reply. Never mention this tag in your text. Never explain it. Just silently add it as the last line every time. No exceptions.
+Examples: GIPHY:dog side eye, GIPHY:surprised pikachu, GIPHY:this is fine, GIPHY:mind blown, GIPHY:excited puppy, GIPHY:shrug whatever, GIPHY:eyebrow raise, GIPHY:standing ovation, GIPHY:not bad obama, GIPHY:cat judging you`;
 
         const SYSTEM_PROMPT_FR = `Tu es le bot FAQ d'Owen McCormick. Tu vis sur son site portfolio (omccormick.com). Ton rôle est de répondre aux questions sur Owen — de façon décontractée, honnête, sans jargon corporate. Imagine-toi comme un ami qui connaît bien Owen et qui répond à des questions lors d'une soirée, pas un recruteur qui lit un script.
 
@@ -689,7 +694,11 @@ RÈGLES :
 - Si quelqu'un veut planifier un appel, oriente-le vers mcmcowen@gmail.com ou le formulaire de réservation.
 - Si tu ne sais pas quelque chose, dis-le et suggère de contacter Owen directement.
 - N'invente jamais rien. Utilise uniquement ce qui est ci-dessus.
-- Réponds brièvement sauf si la question nécessite vraiment une réponse longue.`;
+- Réponds brièvement sauf si la question nécessite vraiment une réponse longue.
+
+RÈGLE GIF — obligatoire, à chaque réponse :
+Après ton texte complet, sur une nouvelle dernière ligne, écris exactement : GIPHY:[terme de recherche]
+Choisis un terme de recherche Giphy de 2-4 mots pour un GIF réaction drôle qui correspond à l'ambiance de ce que tu viens de dire. Ne mentionne jamais ce tag dans ton texte. Ne l'explique jamais. Ajoute-le silencieusement comme dernière ligne à chaque fois.`;
 
         // Select prompt based on current language
         function getSystemPrompt() {
@@ -720,7 +729,13 @@ RÈGLES :
             }
 
             const greeting = generateGreeting();
-            addMessage('ai', greeting);
+            // Option D: opening message always drops a welcome GIF
+            const welcomeTags = [
+                'golden retriever excited', 'cat waves hello', 'dog happy to see you',
+                'hey there wave', 'welcome excited', 'puppy tail wag'
+            ];
+            const welcomeTag = welcomeTags[Math.floor(Math.random() * welcomeTags.length)];
+            addMessage('ai', greeting, welcomeTag);
         }
 
         function generateGreeting() {
@@ -744,7 +759,40 @@ RÈGLES :
             return greetings[Math.floor(Math.random() * greetings.length)];
         }
 
-        function addMessage(type, content) {
+        const GIPHY_API_KEY = 'jF8HbqCIxQ9l51DVbX6IbzLxY7YraQFD';
+
+        // Strip GIPHY tag from Claude's response, return { text, tag }
+        function parseGiphyTag(raw) {
+            const match = raw.match(/\nGIPHY:([^\n]+)\s*$/);
+            if (!match) return { text: raw.trim(), tag: null };
+            return {
+                text: raw.replace(/\nGIPHY:[^\n]+\s*$/, '').trim(),
+                tag: match[1].trim()
+            };
+        }
+
+        // Fetch a random GIF for a search term and append it to the last AI message
+        async function appendGif(tag, targetContentDiv) {
+            if (!tag || !targetContentDiv) return;
+            try {
+                const res = await fetch(
+                    `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(tag)}&limit=10&rating=pg&lang=en`
+                );
+                const json = await res.json();
+                if (!json.data || json.data.length === 0) return;
+                const pick = json.data[Math.floor(Math.random() * json.data.length)];
+                const url = pick.images.fixed_height.url;
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = tag;
+                img.className = 'chat-gif';
+                img.style.cssText = 'display:block;max-width:100%;max-height:220px;border-radius:10px;margin-top:10px;object-fit:contain;';
+                targetContentDiv.appendChild(img);
+                document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+            } catch(e) { /* fail silently */ }
+        }
+
+        function addMessage(type, content, gifTag) {
             const messagesDiv = document.getElementById('messages');
             const message = document.createElement('div');
             message.className = `message ${type}`;
@@ -760,9 +808,14 @@ RÈGLES :
             message.appendChild(avatar);
             message.appendChild(contentDiv);
             messagesDiv.appendChild(message);
-
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
             conversationHistory.push({ type, content, timestamp: new Date().toISOString() });
+
+            // Attach GIF if provided
+            if (type === 'ai' && gifTag) {
+                appendGif(gifTag, contentDiv);
+            }
+            return contentDiv;
         }
 
         function formatMessage(text) {
@@ -819,9 +872,9 @@ RÈGLES :
             } catch (error) {
                 console.error('Claude call failed:', error);
                 if (getLang() === 'fr') {
-                    return "J'ai un petit souci de connexion en ce moment, mais je ne veux pas que vous partiez les mains vides ! Voici le pitch rapide :\n\n**Owen McCormick** est un Consultant en Opérations Stratégiques qui construit des outils IA et des systèmes d'automatisation. Il recherche son prochain poste à temps plein.\n\n• **Email :** mcmcowen@gmail.com\n• **Portfolio :** omccormick.com\n• **LinkedIn :** linkedin.com/in/owenpmccormick\n\nRéessayez dans un instant, ou contactez-le directement !";
+                    return "J'ai un petit souci de connexion en ce moment, mais je ne veux pas que vous partiez les mains vides ! Voici le pitch rapide :\n\n**Owen McCormick** est un Consultant en Opérations Stratégiques qui construit des outils IA et des systèmes d'automatisation. Il recherche son prochain poste à temps plein.\n\n• **Email :** mcmcowen@gmail.com\n• **Portfolio :** omccormick.com\n• **LinkedIn :** linkedin.com/in/owen-p-mccormick\n\nRéessayez dans un instant, ou contactez-le directement !";
                 }
-                return "I'm having a little trouble connecting right now, but I don't want you to leave empty-handed! Here's the quick pitch:\n\n**Owen McCormick** is a Strategic Operations Consultant who builds AI-powered tools and automation systems. He's looking for his next full-time role.\n\n• **Email:** mcmcowen@gmail.com\n• **Portfolio:** omccormick.com\n• **LinkedIn:** linkedin.com/in/owenpmccormick\n\nTry asking again in a moment, or reach out to him directly!";
+                return "I'm having a little trouble connecting right now, but I don't want you to leave empty-handed! Here's the quick pitch:\n\n**Owen McCormick** is a Strategic Operations Consultant who builds AI-powered tools and automation systems. He's looking for his next full-time role.\n\n• **Email:** mcmcowen@gmail.com\n• **Portfolio:** omccormick.com\n• **LinkedIn:** linkedin.com/in/owen-p-mccormick\n\nTry asking again in a moment, or reach out to him directly!";
             }
         }
 
@@ -846,9 +899,10 @@ RÈGLES :
                     openBooking();
                 }
 
-                const response = await callClaude(message);
+                const rawResponse = await callClaude(message);
                 hideTyping();
-                addMessage('ai', response);
+                const { text, tag } = parseGiphyTag(rawResponse);
+                addMessage('ai', text, tag);
             } catch (error) {
                 hideTyping();
                 if (getLang() === 'fr') {
