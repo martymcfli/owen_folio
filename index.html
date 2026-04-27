@@ -1747,37 +1747,6 @@
         }
         .chill-close:hover { color: #fff; background: rgba(255,255,255,0.08); }
 
-        /* Category tabs */
-        .chill-tabs {
-            display: flex;
-            gap: 8px;
-            padding: 12px 22px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .chill-tabs::-webkit-scrollbar { display: none; }
-
-        .chill-tab {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #71717a;
-            border-radius: 20px;
-            padding: 5px 14px;
-            font-size: 0.75rem;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.15s ease;
-        }
-        .chill-tab:hover { border-color: rgba(255,255,255,0.25); color: #d4d4d8; }
-        .chill-tab.active {
-            background: linear-gradient(135deg, #7c3aed, #db2777);
-            border-color: transparent;
-            color: #fff;
-        }
-
         /* GIF display */
         .chill-gif-wrap {
             position: relative;
@@ -3544,14 +3513,6 @@ window.__translations = {
                 <span class="chill-modal-title">🐾 Chill Out Mode</span>
                 <button class="chill-close" onclick="closeChillModal()">×</button>
             </div>
-            <div class="chill-tabs" id="chillTabs">
-                <button class="chill-tab active" data-tag="funny animals">🐾 Animals</button>
-                <button class="chill-tab" data-tag="dog funny">🐶 Dogs</button>
-                <button class="chill-tab" data-tag="cat funny">🐱 Cats</button>
-                <button class="chill-tab" data-tag="funny baby animals">🐼 Baby Animals</button>
-                <button class="chill-tab" data-tag="fails funny">💀 Fails</button>
-                <button class="chill-tab" data-tag="meme reaction funny">😂 Memes</button>
-            </div>
             <div class="chill-gif-wrap">
                 <div class="chill-loading" id="chillLoading">
                     <div class="chill-spinner"></div>
@@ -3567,11 +3528,43 @@ window.__translations = {
     </div>
 
     <script>
-    // Chill Out GIF Modal
-    // Uses Giphy public API — swap GIPHY_KEY for your own free key from developers.giphy.com
-    const GIPHY_KEY = 'dc6zaTOxFJmzC';
-    let chillTag = 'funny animals';
+    // ── Chill Out GIF Modal ──────────────────────────────────────────
+    // Paste your free Giphy API key below — takes 2 min at developers.giphy.com
+    const GIPHY_KEY = 'PASTE_YOUR_KEY_HERE';
+
+    // Owen's curated vibe tags — rotates randomly, user never sees these
+    const CHILL_TAGS = [
+        'dog being derpy',
+        'cat surprised',
+        'animal fail',
+        'golden retriever',
+        'panda funny',
+        'dog zoomies',
+        'goat funny',
+        'otter funny',
+        'raccoon funny',
+        'capybara',
+        'dog fail',
+        'penguin funny',
+        'bear cub funny',
+        'Michael Scott reaction',
+        'that is not correct',
+        'nope funny',
+        'unexpected funny',
+        'try not to laugh animals',
+        'sneeze funny animal',
+        'cat fall funny',
+    ];
+
     let chillOpen = false;
+    let lastTagIndex = -1;
+
+    function pickTag() {
+        let idx;
+        do { idx = Math.floor(Math.random() * CHILL_TAGS.length); } while (idx === lastTagIndex);
+        lastTagIndex = idx;
+        return CHILL_TAGS[idx];
+    }
 
     function openChillModal() {
         document.getElementById('chillModal').classList.add('open');
@@ -3588,6 +3581,8 @@ window.__translations = {
         gif.src = '';
         gif.style.display = 'none';
         document.getElementById('chillLoading').style.display = 'flex';
+        document.getElementById('chillLoading').innerHTML =
+            '<div class="chill-spinner"></div><span>Loading something ridiculous...</span>';
     }
 
     async function nextGif() {
@@ -3596,18 +3591,25 @@ window.__translations = {
         const caption = document.getElementById('chillCaption');
         gif.style.display = 'none';
         loading.style.display = 'flex';
+        loading.innerHTML = '<div class="chill-spinner"></div><span>Loading something ridiculous...</span>';
         caption.textContent = '';
+
+        if (GIPHY_KEY === 'PASTE_YOUR_KEY_HERE') {
+            loading.innerHTML = '<span style="color:#a1a1aa;font-size:0.82rem;text-align:center;padding:0 24px;">Add your free Giphy API key to activate this feature.<br><a href="https://developers.giphy.com" target="_blank" style="color:#7c3aed;">developers.giphy.com</a></span>';
+            return;
+        }
+
         try {
+            const tag = pickTag();
             const res = await fetch(
-                `https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_KEY}&tag=${encodeURIComponent(chillTag)}&rating=g`
+                `https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_KEY}&tag=${encodeURIComponent(tag)}&rating=pg`
             );
             const json = await res.json();
-            const url = json.data.images.original.url;
-            const title = json.data.title || '';
-            gif.src = url;
-            caption.textContent = title;
+            if (!json.data || !json.data.images) throw new Error('no data');
+            gif.src = json.data.images.original.url;
+            caption.textContent = json.data.title || '';
         } catch(e) {
-            loading.innerHTML = '<span style="color:#ef4444">Connection hiccup — try again 🤙</span>';
+            loading.innerHTML = '<span style="color:#ef4444">Couldn\'t load one — hit Another One 🎲</span>';
         }
     }
 
@@ -3617,26 +3619,16 @@ window.__translations = {
     }
 
     function gifError() {
+        document.getElementById('chillLoading').style.display = 'flex';
         document.getElementById('chillLoading').innerHTML =
-            '<span style="color:#ef4444">GIF failed to load — hit Another One 🎲</span>';
+            '<span style="color:#ef4444">That one didn\'t load — hit Another One 🎲</span>';
+        document.getElementById('chillGif').style.display = 'none';
     }
 
-    // Tab switching
-    document.getElementById('chillTabs').addEventListener('click', function(e) {
-        const btn = e.target.closest('.chill-tab');
-        if (!btn) return;
-        document.querySelectorAll('.chill-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        chillTag = btn.dataset.tag;
-        nextGif();
-    });
-
-    // Close on backdrop click
     document.getElementById('chillModal').addEventListener('click', function(e) {
         if (e.target === this) closeChillModal();
     });
 
-    // Close on Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && chillOpen) closeChillModal();
     });
