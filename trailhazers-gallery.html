@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <title>Trail Hazers — Product Gallery | Owen McCormick</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8WFEYDEQ4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-D8WFEYDEQ4');
+    </script>
+
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "whyffwzjgj");
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #080c10;
+            --bg-secondary: #1a2027;
+            --bg-card: #1e252e;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-primary: #3B82F6;
+            --accent-secondary: #2563EB;
+            --border-color: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --shadow-lg: 0 10px 25px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 60px 40px 100px;
+        }
+
+        @media (max-width: 600px) {
+            .page-wrap { padding: 40px 20px 80px; }
+        }
+
+        /* Back button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-decoration: none;
+            margin-bottom: 56px;
+            transition: color 0.18s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .back-btn:hover { color: var(--text-primary); }
+
+        .back-btn svg { flex-shrink: 0; }
+
+        /* Header */
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .gallery-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 14px;
+        }
+
+        .gallery-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+        }
+
+        .gallery-sub {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 460px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Filters */
+        .gallery-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+
+        .gallery-filter {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-size: 0.82rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .gallery-filter:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .gallery-filter.active {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+            color: #0d0d0d;
+            font-weight: 600;
+        }
+
+        /* Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 540px) { .gallery-grid { grid-template-columns: 1fr; } }
+
+        /* Cards */
+        .g-card {
+            background: #161616;
+            border: 1px solid #242424;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .g-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+            border-color: #383838;
+        }
+
+        .g-img-wrap {
+            position: relative;
+            width: 100%;
+            padding-top: 110%;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .g-img-wrap.landscape { padding-top: 68%; }
+
+        .g-img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            transition: transform 0.4s ease;
+        }
+
+        .g-card:hover .g-img { transform: scale(1.04); }
+
+        .g-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            border-radius: 5px;
+            padding: 4px 10px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            z-index: 2;
+        }
+
+        .badge-best-seller { background: #d4a017; color: #000; }
+        .badge-signature   { background: #fff; color: #000; }
+        .badge-limited     { background: #c0392b; color: #fff; }
+        .badge-new         { background: #27ae60; color: #fff; }
+        .badge-campaign    { background: #6c3fc5; color: #fff; }
+        .badge-editorial   { background: #c0392b; color: #fff; }
+
+        .g-body {
+            padding: 18px 20px 22px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .g-cat {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .g-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f0f0f0;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .g-desc {
+            font-size: 0.82rem;
+            color: #777;
+            line-height: 1.6;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+
+    <div class="page-wrap">
+
+        <!-- Back Button -->
+        <a href="./index.html" class="back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back to Portfolio
+        </a>
+
+        <!-- Header -->
+        <div class="gallery-header">
+            <div class="gallery-eyebrow">Trail Hazers Apparel</div>
+            <h1 class="gallery-title">Product Gallery</h1>
+            <p class="gallery-sub">21 products across 6 categories. From first sketch to first sale.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="gallery-filters">
+            <button class="gallery-filter active" onclick="filterGallery('all', this)">All</button>
+            <button class="gallery-filter" onclick="filterGallery('t-shirts', this)">T-Shirts</button>
+            <button class="gallery-filter" onclick="filterGallery('hoodies', this)">Hoodies</button>
+            <button class="gallery-filter" onclick="filterGallery('crewnecks', this)">Crewnecks</button>
+            <button class="gallery-filter" onclick="filterGallery('shoes', this)">Shoes</button>
+            <button class="gallery-filter" onclick="filterGallery('pants', this)">Pants</button>
+            <button class="gallery-filter" onclick="filterGallery('accessories', this)">Accessories</button>
+            <button class="gallery-filter" onclick="filterGallery('lifestyle', this)">Lifestyle</button>
+        </div>
+
+        <!-- Grid -->
+        <div class="gallery-grid" id="galleryGrid">
+
+            <div class="g-card" data-cat="t-shirts">
+                <div class="g-img-wrap">
+                    <img src="./images/trailhazers/black-forest-tee.png" alt="Black Forest Tee" class="g-img">
+                    <span class="g-badge badge-best-seller">Best Seller</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">T-Shirts</p>
+                    <h3 class="g-name">Black Forest Tee</h3>
+                    <p class="g-desc">Bold forest-and-mountain photography printed across the back with the TRAILHAZERS wordmark. All-black base, heavyweight cotton, unisex sizing.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="hoodies">
+                <div class="g-img-wrap">
+                    <img src="./images/trailhazers/black-forest-hoodie.png" alt="Black Forest Hoodie" class="g-img">
+                    <span class="g-badge badge-best-seller">Best Seller</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Hoodies</p>
+                    <h3 class="g-name">Black Forest Hoodie</h3>
+                    <p class="g-desc">A vivid red-forest landscape printed front-center on a heavyweight black hoodie. Kangaroo pocket and drawstring hood.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="crewnecks">
+                <div class="g-img-wrap">
+                    <img src="./images/trailhazers/logo-crewneck.png" alt="Logo Crewneck" class="g-img">
+                    <span class="g-badge badge-signature">Signature</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Crewnecks</p>
+                    <h3 class="g-name">Logo Crewneck</h3>
+                    <p class="g-desc">The rabbit mascot and speed-striped TRAILHAZERS wordmark on a heavy cotton crewneck. Minimal, versatile, and built to last.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="shoes">
+                <div class="g-img-wrap">
+                    <img src="./images/trailhazers/logo-sneakers.png" alt="Logo Sneakers" class="g-img">
+                    <span class="g-badge badge-limited">Limited Edition</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Shoes</p>
+                    <h3 class="g-name">Logo Sneakers</h3>
+                    <p class="g-desc">Custom NMD-silhouette sneakers with the Trail Hazers rabbit embossed on the side panel. White leather upper with black accents.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="pants">
+                <div class="g-img-wrap">
+                    <img src="./images/trailhazers/logo-joggers.png" alt="Logo Joggers" class="g-img">
+                    <span class="g-badge badge-new">New</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Pants</p>
+                    <h3 class="g-name">Logo Joggers</h3>
+                    <p class="g-desc">Athletic-fit joggers with an oversized rabbit graphic wrapping the leg. Tapered cuff, elastic waistband and brushed fleece interior.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="accessories">
+                <div class="g-img-wrap">
+                    <img src="./images/trailhazers/canvas-tote.png" alt="Canvas Tote Bag" class="g-img">
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Accessories</p>
+                    <h3 class="g-name">Canvas Tote Bag</h3>
+                    <p class="g-desc">Natural heavyweight canvas with the rabbit mascot screen-printed in black. Reinforced handles and a roomy interior.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="lifestyle">
+                <div class="g-img-wrap landscape">
+                    <img src="./images/trailhazers/lifestyle-tee-dc.jpg" alt="DC Campaign" class="g-img" style="object-position:center center;">
+                    <span class="g-badge badge-campaign">Campaign</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Lifestyle</p>
+                    <h3 class="g-name">Women's Tee — DC Campaign</h3>
+                    <p class="g-desc">Editorial shoot at the Washington Monument. The white logo tee styled effortlessly; sunglasses, relaxed fit, confident energy.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="lifestyle">
+                <div class="g-img-wrap landscape">
+                    <img src="./images/trailhazers/lifestyle-tee-truck.jpg" alt="Truck Campaign" class="g-img" style="object-position:center center;">
+                    <span class="g-badge badge-campaign">Campaign</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Lifestyle</p>
+                    <h3 class="g-name">Men's Tee — Truck Campaign</h3>
+                    <p class="g-desc">Rugged outdoor lifestyle shot. The white logo tee captured in a natural setting alongside a classic truck. Built for people who move.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="lifestyle">
+                <div class="g-img-wrap landscape">
+                    <img src="./images/trailhazers/lifestyle-hoodie-urban-1.jpg" alt="Urban Campaign" class="g-img" style="object-position:center center;">
+                    <span class="g-badge badge-campaign">Campaign</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Lifestyle</p>
+                    <h3 class="g-name">Women's Hoodie — Urban Campaign</h3>
+                    <p class="g-desc">Street-level editorial shoot. The white forest hoodie paired with denim in an urban architectural setting. Clean, modern and versatile.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="lifestyle">
+                <div class="g-img-wrap landscape">
+                    <img src="./images/trailhazers/lifestyle-hoodie-editorial.jpg" alt="Forest Hoodie Editorial" class="g-img" style="object-position:center center;">
+                    <span class="g-badge badge-editorial">Editorial</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Lifestyle</p>
+                    <h3 class="g-name">Forest Hoodie — Editorial</h3>
+                    <p class="g-desc">High-contrast editorial shot of the white forest hoodie. Stylized lighting crafted to push the brand into fashion-forward territory.</p>
+                </div>
+            </div>
+
+            <div class="g-card" data-cat="lifestyle">
+                <div class="g-img-wrap landscape">
+                    <img src="./images/trailhazers/lifestyle-tee-beach.jpg" alt="Trail Tee Golden Hour" class="g-img" style="object-position:center center;">
+                    <span class="g-badge badge-campaign">Campaign</span>
+                </div>
+                <div class="g-body">
+                    <p class="g-cat">Lifestyle</p>
+                    <h3 class="g-name">Trail Tee — Golden Hour</h3>
+                    <p class="g-desc">Caught in a sunset on the beach wearing the Trail Hazers tee. Raw, real and on-brand. The outdoor lifestyle in a single frame.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+    // Filter
+    function filterGallery(cat, btn) {
+        document.querySelectorAll('.gallery-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('#galleryGrid .g-card').forEach(card => {
+            card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
+        });
+    }
+    </script>
+
+    <!-- Starfield -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let w, h, staticCanvas, twinkleStars = [], shootingStars = [], lastShootingTime = 0;
+
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; renderStaticLayer(); }
+
+        function sr(seed) { let s = seed; return function() { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+
+        function renderStaticLayer() {
+            staticCanvas = document.createElement('canvas');
+            staticCanvas.width = w; staticCanvas.height = h;
+            const c = staticCanvas.getContext('2d');
+            const rng = sr(777);
+            twinkleStars = [];
+            c.fillStyle = '#020308'; c.fillRect(0, 0, w, h);
+            c.save(); c.globalCompositeOperation = 'screen';
+            for (let i = 0; i < 40; i++) {
+                const x = rng()*w, y = rng()*h, radius = 60+rng()*120;
+                const grad = c.createRadialGradient(x,y,0,x,y,radius);
+                const roll = rng();
+                if (roll<0.35) grad.addColorStop(0,'rgba(45,28,15,0.05)');
+                else if (roll<0.65) grad.addColorStop(0,'rgba(28,22,45,0.04)');
+                else grad.addColorStop(0,'rgba(18,28,50,0.035)');
+                grad.addColorStop(1,'rgba(0,0,0,0)');
+                c.fillStyle = grad; c.fillRect(x-radius,y-radius,radius*2,radius*2);
+            }
+            c.restore();
+            const dustCount = Math.floor((w*h)/150);
+            for (let i = 0; i < dustCount; i++) {
+                const x=rng()*w, y=rng()*h, r=rng()*0.45+0.08, cr=rng();
+                let col;
+                if (cr<0.5) col=`rgba(200,210,230,${rng()*0.2+0.03})`;
+                else if (cr<0.75) col=`rgba(230,200,160,${rng()*0.15+0.03})`;
+                else col=`rgba(200,170,150,${rng()*0.12+0.02})`;
+                c.beginPath(); c.arc(x,y,r,0,Math.PI*2); c.fillStyle=col; c.fill();
+            }
+            const medCount = Math.floor((w*h)/1500);
+            for (let i = 0; i < medCount; i++) {
+                const x=rng()*w, y=rng()*h, rad=rng()*0.9+0.25, a=rng()*0.6+0.25, cr=rng();
+                let hue, sat;
+                if (cr<0.35){hue=210+rng()*40;sat=25+rng()*30;}
+                else if (cr<0.55){hue=25+rng()*30;sat=50+rng()*30;}
+                else if (cr<0.7){hue=rng()*20;sat=40+rng()*30;}
+                else if (cr<0.85){hue=45+rng()*15;sat=60+rng()*30;}
+                else{hue=180+rng()*30;sat=20+rng()*20;}
+                c.beginPath(); c.arc(x,y,rad,0,Math.PI*2);
+                c.fillStyle=`hsla(${hue},${sat}%,88%,${a})`; c.fill();
+            }
+            const brightCount = Math.floor((w*h)/18000)+12;
+            for (let i = 0; i < brightCount; i++) {
+                const x=rng()*w, y=rng()*h, rad=rng()*1.4+0.6, isMajor=rad>1.4, cr=rng();
+                let hue, sat;
+                if (cr<0.5){hue=215+rng()*25;sat=40+rng()*20;}
+                else if (cr<0.75){hue=35+rng()*20;sat=40+rng()*30;}
+                else{hue=0;sat=0;}
+                const bl=c.createRadialGradient(x,y,0,x,y,rad*8);
+                bl.addColorStop(0,`hsla(${hue},${sat}%,92%,0.1)`);
+                bl.addColorStop(1,'rgba(0,0,0,0)');
+                c.fillStyle=bl; c.fillRect(x-rad*8,y-rad*8,rad*16,rad*16);
+                c.beginPath(); c.arc(x,y,rad,0,Math.PI*2);
+                c.fillStyle=`hsla(${hue},0%,98%,0.95)`; c.fill();
+                twinkleStars.push({x,y,r:rad,hue,sat,twinkleSpeed:rng()*0.005+0.002,twinkleOffset:rng()*Math.PI*2,baseAlpha:0.6+rng()*0.4});
+            }
+        }
+
+        function draw(time) {
+            ctx.clearRect(0,0,w,h);
+            if (staticCanvas) ctx.drawImage(staticCanvas,0,0);
+            for (const s of twinkleStars) {
+                const t=Math.sin(time*s.twinkleSpeed+s.twinkleOffset);
+                const a=s.baseAlpha*(0.4+0.6*((t+1)/2));
+                const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*6);
+                g.addColorStop(0,`hsla(${s.hue},${s.sat}%,95%,${a*0.1})`);
+                g.addColorStop(1,'rgba(0,0,0,0)');
+                ctx.fillStyle=g; ctx.fillRect(s.x-s.r*6,s.y-s.r*6,s.r*12,s.r*12);
+            }
+            if (time-lastShootingTime>7000+Math.random()*12000) {
+                if (shootingStars.length<2) {
+                    shootingStars.push({x:Math.random()*w*1.2-w*0.1,y:Math.random()*h*0.4,len:60+Math.random()*100,speed:10+Math.random()*8,angle:Math.PI/7+Math.random()*Math.PI/5,alpha:1,decay:0.012+Math.random()*0.008});
+                    lastShootingTime=time;
+                }
+            }
+            for (let i=shootingStars.length-1;i>=0;i--) {
+                const ss=shootingStars[i];
+                ss.x+=Math.cos(ss.angle)*ss.speed; ss.y+=Math.sin(ss.angle)*ss.speed; ss.alpha-=ss.decay;
+                if (ss.alpha<=0){shootingStars.splice(i,1);continue;}
+                const tx=ss.x-Math.cos(ss.angle)*ss.len, ty=ss.y-Math.sin(ss.angle)*ss.len;
+                const g=ctx.createLinearGradient(tx,ty,ss.x,ss.y);
+                g.addColorStop(0,'rgba(255,255,255,0)');
+                g.addColorStop(1,`rgba(255,255,255,${ss.alpha})`);
+                ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(ss.x,ss.y);
+                ctx.strokeStyle=g; ctx.lineWidth=1.5; ctx.stroke();
+            }
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        requestAnimationFrame(draw);
+    })();
+    </script>
+</body>
+</html>
