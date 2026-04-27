@@ -1660,6 +1660,182 @@
             border-color: rgba(255,255,255,0.9);
             transform: scale(1.1);
         }
+
+        /* ── Trail Hazers Product Gallery ────────────────────────────── */
+        .th-gallery-section {
+            padding: 100px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .th-gallery-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .th-gallery-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 14px;
+        }
+
+        .th-gallery-title {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .th-gallery-sub {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .th-gallery-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+
+        .th-gallery-filter {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-size: 0.82rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .th-gallery-filter:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .th-gallery-filter.active {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+            color: #0d0d0d;
+            font-weight: 600;
+        }
+
+        .th-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .th-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .th-gallery-section { padding: 60px 20px; }
+        }
+
+        @media (max-width: 540px) {
+            .th-gallery-grid { grid-template-columns: 1fr; }
+        }
+
+        .th-gcard {
+            background: #161616;
+            border: 1px solid #242424;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .th-gcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+            border-color: #383838;
+        }
+
+        .th-gcard-img-wrap {
+            position: relative;
+            width: 100%;
+            padding-top: 110%;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .th-gcard-img-wrap.landscape {
+            padding-top: 68%;
+        }
+
+        .th-gcard-img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            transition: transform 0.4s ease;
+        }
+
+        .th-gcard:hover .th-gcard-img {
+            transform: scale(1.04);
+        }
+
+        .th-gcard-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            border-radius: 5px;
+            padding: 4px 10px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            z-index: 2;
+        }
+
+        .badge-best-seller  { background: #d4a017; color: #000; }
+        .badge-signature    { background: #fff; color: #000; }
+        .badge-limited      { background: #c0392b; color: #fff; }
+        .badge-new          { background: #27ae60; color: #fff; }
+        .badge-campaign     { background: #6c3fc5; color: #fff; }
+        .badge-editorial    { background: #c0392b; color: #fff; }
+
+        .th-gcard-body {
+            padding: 18px 20px 22px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .th-gcard-cat {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .th-gcard-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f0f0f0;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .th-gcard-desc {
+            font-size: 0.82rem;
+            color: #777;
+            line-height: 1.6;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -1846,9 +2022,9 @@
                     <span class="tag">Print Design</span>
                 </div>
                 <div class="featured-links">
-                    <a href="#" onclick="openVideoModal('./videos/trailhazers-main.mp4'); return false;" class="btn-primary" style="padding: 14px 24px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        Watch Film
+                    <a href="#trailhazers-gallery" class="btn-primary" style="padding: 14px 24px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                        Product Gallery
                     </a>
                 </div>
             </div>
@@ -1902,6 +2078,174 @@
         </div>
 
 
+    </section>
+
+    <!-- Trail Hazers Product Gallery -->
+    <section id="trailhazers-gallery">
+        <div class="th-gallery-section">
+            <div class="th-gallery-header">
+                <div class="th-gallery-eyebrow">Trail Hazers Apparel</div>
+                <h2 class="th-gallery-title">Product Gallery</h2>
+                <p class="th-gallery-sub">21 products across 6 categories — from first sketch to first sale.</p>
+            </div>
+
+            <div class="th-gallery-filters">
+                <button class="th-gallery-filter active" onclick="filterGallery('all', this)">All</button>
+                <button class="th-gallery-filter" onclick="filterGallery('t-shirts', this)">T-Shirts</button>
+                <button class="th-gallery-filter" onclick="filterGallery('hoodies', this)">Hoodies</button>
+                <button class="th-gallery-filter" onclick="filterGallery('crewnecks', this)">Crewnecks</button>
+                <button class="th-gallery-filter" onclick="filterGallery('shoes', this)">Shoes</button>
+                <button class="th-gallery-filter" onclick="filterGallery('pants', this)">Pants</button>
+                <button class="th-gallery-filter" onclick="filterGallery('accessories', this)">Accessories</button>
+                <button class="th-gallery-filter" onclick="filterGallery('lifestyle', this)">Lifestyle</button>
+            </div>
+
+            <div class="th-gallery-grid" id="thGalleryGrid">
+
+                <!-- Black Forest Tee -->
+                <div class="th-gcard" data-cat="t-shirts">
+                    <div class="th-gcard-img-wrap">
+                        <img src="./images/trailhazers/black-forest-tee.png" alt="Black Forest Tee" class="th-gcard-img">
+                        <span class="th-gcard-badge badge-best-seller">Best Seller</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">T-Shirts</p>
+                        <h5 class="th-gcard-name">Black Forest Tee</h5>
+                        <p class="th-gcard-desc">Bold forest-and-mountain photography printed across the back with the TRAILHAZERS wordmark. All-black base, heavyweight cotton.</p>
+                    </div>
+                </div>
+
+                <!-- Black Forest Hoodie -->
+                <div class="th-gcard" data-cat="hoodies">
+                    <div class="th-gcard-img-wrap">
+                        <img src="./images/trailhazers/black-forest-hoodie.png" alt="Black Forest Hoodie" class="th-gcard-img">
+                        <span class="th-gcard-badge badge-best-seller">Best Seller</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Hoodies</p>
+                        <h5 class="th-gcard-name">Black Forest Hoodie</h5>
+                        <p class="th-gcard-desc">A vivid red-forest landscape printed front-center on a heavyweight black hoodie. Kangaroo pocket, drawstring hood.</p>
+                    </div>
+                </div>
+
+                <!-- Logo Crewneck -->
+                <div class="th-gcard" data-cat="crewnecks">
+                    <div class="th-gcard-img-wrap">
+                        <img src="./images/trailhazers/logo-crewneck.png" alt="Logo Crewneck" class="th-gcard-img">
+                        <span class="th-gcard-badge badge-signature">Signature</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Crewnecks</p>
+                        <h5 class="th-gcard-name">Logo Crewneck</h5>
+                        <p class="th-gcard-desc">The rabbit mascot and speed-striped TRAILHAZERS wordmark on a heavy cotton crewneck. Minimal, versatile, built to last.</p>
+                    </div>
+                </div>
+
+                <!-- Logo Sneakers -->
+                <div class="th-gcard" data-cat="shoes">
+                    <div class="th-gcard-img-wrap">
+                        <img src="./images/trailhazers/logo-sneakers.png" alt="Logo Sneakers" class="th-gcard-img">
+                        <span class="th-gcard-badge badge-limited">Limited Edition</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Shoes</p>
+                        <h5 class="th-gcard-name">Logo Sneakers</h5>
+                        <p class="th-gcard-desc">Custom NMD-silhouette sneakers with the Trail Hazers rabbit embossed on the side panel. White leather upper, black accents.</p>
+                    </div>
+                </div>
+
+                <!-- Logo Joggers -->
+                <div class="th-gcard" data-cat="pants">
+                    <div class="th-gcard-img-wrap">
+                        <img src="./images/trailhazers/logo-joggers.png" alt="Logo Joggers" class="th-gcard-img">
+                        <span class="th-gcard-badge badge-new">New</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Pants</p>
+                        <h5 class="th-gcard-name">Logo Joggers</h5>
+                        <p class="th-gcard-desc">Athletic-fit joggers with an oversized rabbit graphic wrapping the leg. Tapered cuff, elastic waistband, brushed fleece interior.</p>
+                    </div>
+                </div>
+
+                <!-- Canvas Tote -->
+                <div class="th-gcard" data-cat="accessories">
+                    <div class="th-gcard-img-wrap">
+                        <img src="./images/trailhazers/canvas-tote.png" alt="Canvas Tote Bag" class="th-gcard-img">
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Accessories</p>
+                        <h5 class="th-gcard-name">Canvas Tote Bag</h5>
+                        <p class="th-gcard-desc">Natural heavyweight canvas with the rabbit mascot screen-printed in black. Reinforced handles, roomy interior.</p>
+                    </div>
+                </div>
+
+                <!-- DC Campaign -->
+                <div class="th-gcard" data-cat="lifestyle">
+                    <div class="th-gcard-img-wrap landscape">
+                        <img src="./images/trailhazers/lifestyle-tee-dc.jpg" alt="DC Campaign" class="th-gcard-img" style="object-position: center center;">
+                        <span class="th-gcard-badge badge-campaign">Campaign</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Lifestyle</p>
+                        <h5 class="th-gcard-name">Women's Tee — DC Campaign</h5>
+                        <p class="th-gcard-desc">Editorial shoot at the Washington Monument. The white logo tee styled effortlessly — sunglasses, relaxed fit, confident energy.</p>
+                    </div>
+                </div>
+
+                <!-- Truck Campaign -->
+                <div class="th-gcard" data-cat="lifestyle">
+                    <div class="th-gcard-img-wrap landscape">
+                        <img src="./images/trailhazers/lifestyle-tee-truck.jpg" alt="Truck Campaign" class="th-gcard-img" style="object-position: center center;">
+                        <span class="th-gcard-badge badge-campaign">Campaign</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Lifestyle</p>
+                        <h5 class="th-gcard-name">Men's Tee — Truck Campaign</h5>
+                        <p class="th-gcard-desc">Rugged outdoor lifestyle shot. The white logo tee captured in a natural setting alongside a classic truck — built for people who move.</p>
+                    </div>
+                </div>
+
+                <!-- Urban Campaign -->
+                <div class="th-gcard" data-cat="lifestyle">
+                    <div class="th-gcard-img-wrap landscape">
+                        <img src="./images/trailhazers/lifestyle-hoodie-urban-1.jpg" alt="Urban Campaign" class="th-gcard-img" style="object-position: center center;">
+                        <span class="th-gcard-badge badge-campaign">Campaign</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Lifestyle</p>
+                        <h5 class="th-gcard-name">Women's Hoodie — Urban Campaign</h5>
+                        <p class="th-gcard-desc">Street-level editorial shoot. The white forest hoodie paired with denim in an urban architectural setting — clean, modern, versatile.</p>
+                    </div>
+                </div>
+
+                <!-- Editorial -->
+                <div class="th-gcard" data-cat="lifestyle">
+                    <div class="th-gcard-img-wrap landscape">
+                        <img src="./images/trailhazers/lifestyle-hoodie-editorial.jpg" alt="Forest Hoodie Editorial" class="th-gcard-img" style="object-position: center center;">
+                        <span class="th-gcard-badge badge-editorial">Editorial</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Lifestyle</p>
+                        <h5 class="th-gcard-name">Forest Hoodie — Editorial</h5>
+                        <p class="th-gcard-desc">High-contrast editorial shot of the white forest hoodie. Stylized lighting crafted to push the brand into fashion-forward territory.</p>
+                    </div>
+                </div>
+
+                <!-- Beach / Golden Hour -->
+                <div class="th-gcard" data-cat="lifestyle">
+                    <div class="th-gcard-img-wrap landscape">
+                        <img src="./images/trailhazers/lifestyle-tee-beach.jpg" alt="Trail Tee Golden Hour" class="th-gcard-img" style="object-position: center center;">
+                        <span class="th-gcard-badge badge-campaign">Campaign</span>
+                    </div>
+                    <div class="th-gcard-body">
+                        <p class="th-gcard-cat">Lifestyle</p>
+                        <h5 class="th-gcard-name">Trail Tee — Golden Hour</h5>
+                        <p class="th-gcard-desc">Caught in a sunset on the beach wearing the Trail Hazers tee. Raw, real, and on-brand — the outdoor lifestyle in a single frame.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </section>
 
     <!-- All Projects Section -->
@@ -2733,6 +3077,19 @@ window.__translations = {
                 closeVideoModal();
             }
         });
+
+        // Trail Hazers Gallery Filter
+        function filterGallery(cat, btn) {
+            document.querySelectorAll('.th-gallery-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('#thGalleryGrid .th-gcard').forEach(card => {
+                if (cat === 'all' || card.dataset.cat === cat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
     </script>
 
     <!-- Music Player -->
