@@ -1615,36 +1615,36 @@
 
         .th-video-overlay {
             position: absolute;
-            bottom: 16px;
-            right: 16px;
-        }
-
-        .th-live-badge {
+            top: 0; left: 0; right: 0; bottom: 0;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.85);
-            background: rgba(0,0,0,0.55);
-            padding: 5px 10px;
-            border-radius: 6px;
-            backdrop-filter: blur(4px);
+            justify-content: center;
+            background: rgba(0,0,0,0.18);
+            transition: background 0.2s ease;
         }
 
-        .th-live-dot {
-            width: 6px;
-            height: 6px;
+        .th-video-showcase:hover .th-video-overlay {
+            background: rgba(0,0,0,0.28);
+        }
+
+        .th-play-btn {
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
-            background: #ef4444;
-            animation: thPulse 1.5s ease-in-out infinite;
+            background: rgba(0,0,0,0.52);
+            border: 2px solid rgba(255,255,255,0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+            backdrop-filter: blur(6px);
+            cursor: pointer;
         }
 
-        @keyframes thPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
+        .th-video-showcase:hover .th-play-btn {
+            background: rgba(59,130,246,0.72);
+            border-color: rgba(255,255,255,0.9);
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -1832,21 +1832,17 @@
                     <span class="tag">Print Design</span>
                 </div>
                 <div class="featured-links">
-                    <a href="./videos/trailhazers-commercial.mp4" target="_blank" class="btn-primary" style="padding: 14px 24px;">
+                    <a href="#" onclick="openVideoModal('./videos/trailhazers-main.mp4'); return false;" class="btn-primary" style="padding: 14px 24px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        Watch Commercial
+                        Watch Film
                     </a>
-                    <a href="./videos/trailhazers-main.mp4" target="_blank" class="btn-secondary" style="padding: 14px 24px;">Brand Film</a>
                 </div>
             </div>
-            <div class="th-video-showcase">
-                <video autoplay muted loop playsinline class="th-hero-video">
-                    <source src="./videos/trailhazers-commercial.mp4" type="video/mp4">
-                </video>
+            <div class="th-video-showcase" onclick="openVideoModal('./videos/trailhazers-main.mp4')" style="cursor: pointer;">
+                <img src="./images/trailhazers/thumb-8s.jpg" alt="Trail Hazers — Brand Film" class="th-hero-video" style="object-position: center center;">
                 <div class="th-video-overlay">
-                    <div class="th-live-badge">
-                        <div class="th-live-dot"></div>
-                        Commercial
+                    <div class="th-play-btn">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="white" style="margin-left: 4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
                 </div>
             </div>
@@ -2680,9 +2676,10 @@ window.__translations = {
         });
 
         // Video Modal Functions
-        function openVideoModal() {
+        function openVideoModal(src) {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('redwoodVideo');
+            if (src) { video.src = src; }
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
             video.play();
