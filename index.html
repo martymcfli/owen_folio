@@ -1661,6 +1661,194 @@
             transform: scale(1.1);
         }
 
+        /* ── Chill Out Button ───────────────────────────────────────── */
+        .chill-btn {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(124,58,237,0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            letter-spacing: 0.02em;
+            animation: chillFloat 3s ease-in-out infinite;
+        }
+        .chill-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 32px rgba(124,58,237,0.6);
+        }
+        @keyframes chillFloat {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-5px); }
+        }
+        .chill-btn:hover { animation: none; }
+
+        /* Modal backdrop */
+        .chill-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(4,6,12,0.92);
+            backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .chill-modal.open { display: flex; }
+
+        .chill-modal-inner {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            background: #0f1218;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+        }
+
+        .chill-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .chill-modal-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #d4d4d8;
+            letter-spacing: 0.02em;
+        }
+
+        .chill-close {
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .chill-close:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
+        /* Category tabs */
+        .chill-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 22px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .chill-tabs::-webkit-scrollbar { display: none; }
+
+        .chill-tab {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #71717a;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.75rem;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+        .chill-tab:hover { border-color: rgba(255,255,255,0.25); color: #d4d4d8; }
+        .chill-tab.active {
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        /* GIF display */
+        .chill-gif-wrap {
+            position: relative;
+            width: 100%;
+            min-height: 340px;
+            background: #080c10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chill-gif {
+            display: block;
+            width: 100%;
+            max-height: 420px;
+            object-fit: contain;
+        }
+
+        .chill-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            color: #52525b;
+            font-size: 0.85rem;
+        }
+
+        .chill-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(255,255,255,0.06);
+            border-top-color: #7c3aed;
+            border-radius: 50%;
+            animation: chillSpin 0.7s linear infinite;
+        }
+        @keyframes chillSpin { to { transform: rotate(360deg); } }
+
+        .chill-caption {
+            padding: 10px 22px 6px;
+            font-size: 0.78rem;
+            color: #52525b;
+            font-style: italic;
+            min-height: 32px;
+            text-align: center;
+        }
+
+        .chill-modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 22px 20px;
+        }
+
+        .chill-next {
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 32px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.2s;
+            letter-spacing: 0.03em;
+        }
+        .chill-next:hover { opacity: 0.88; transform: scale(1.04); }
+        .chill-next:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
@@ -3345,6 +3533,113 @@ window.__translations = {
 
         requestAnimationFrame(tick);
     })();
+    </script>
+
+    <!-- ── Chill Out Button ─────────────────────────────────────────── -->
+    <button class="chill-btn" onclick="openChillModal()">🐾 Chill Out</button>
+
+    <div class="chill-modal" id="chillModal">
+        <div class="chill-modal-inner">
+            <div class="chill-modal-header">
+                <span class="chill-modal-title">🐾 Chill Out Mode</span>
+                <button class="chill-close" onclick="closeChillModal()">×</button>
+            </div>
+            <div class="chill-tabs" id="chillTabs">
+                <button class="chill-tab active" data-tag="funny animals">🐾 Animals</button>
+                <button class="chill-tab" data-tag="dog funny">🐶 Dogs</button>
+                <button class="chill-tab" data-tag="cat funny">🐱 Cats</button>
+                <button class="chill-tab" data-tag="funny baby animals">🐼 Baby Animals</button>
+                <button class="chill-tab" data-tag="fails funny">💀 Fails</button>
+                <button class="chill-tab" data-tag="meme reaction funny">😂 Memes</button>
+            </div>
+            <div class="chill-gif-wrap">
+                <div class="chill-loading" id="chillLoading">
+                    <div class="chill-spinner"></div>
+                    <span>Loading something ridiculous...</span>
+                </div>
+                <img class="chill-gif" id="chillGif" src="" alt="funny gif" style="display:none;" onload="gifLoaded()" onerror="gifError()">
+            </div>
+            <p class="chill-caption" id="chillCaption"></p>
+            <div class="chill-modal-footer">
+                <button class="chill-next" onclick="nextGif()">Another One 🎲</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Chill Out GIF Modal
+    // Uses Giphy public API — swap GIPHY_KEY for your own free key from developers.giphy.com
+    const GIPHY_KEY = 'dc6zaTOxFJmzC';
+    let chillTag = 'funny animals';
+    let chillOpen = false;
+
+    function openChillModal() {
+        document.getElementById('chillModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+        chillOpen = true;
+        nextGif();
+    }
+
+    function closeChillModal() {
+        document.getElementById('chillModal').classList.remove('open');
+        document.body.style.overflow = '';
+        chillOpen = false;
+        const gif = document.getElementById('chillGif');
+        gif.src = '';
+        gif.style.display = 'none';
+        document.getElementById('chillLoading').style.display = 'flex';
+    }
+
+    async function nextGif() {
+        const gif = document.getElementById('chillGif');
+        const loading = document.getElementById('chillLoading');
+        const caption = document.getElementById('chillCaption');
+        gif.style.display = 'none';
+        loading.style.display = 'flex';
+        caption.textContent = '';
+        try {
+            const res = await fetch(
+                `https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_KEY}&tag=${encodeURIComponent(chillTag)}&rating=g`
+            );
+            const json = await res.json();
+            const url = json.data.images.original.url;
+            const title = json.data.title || '';
+            gif.src = url;
+            caption.textContent = title;
+        } catch(e) {
+            loading.innerHTML = '<span style="color:#ef4444">Connection hiccup — try again 🤙</span>';
+        }
+    }
+
+    function gifLoaded() {
+        document.getElementById('chillLoading').style.display = 'none';
+        document.getElementById('chillGif').style.display = 'block';
+    }
+
+    function gifError() {
+        document.getElementById('chillLoading').innerHTML =
+            '<span style="color:#ef4444">GIF failed to load — hit Another One 🎲</span>';
+    }
+
+    // Tab switching
+    document.getElementById('chillTabs').addEventListener('click', function(e) {
+        const btn = e.target.closest('.chill-tab');
+        if (!btn) return;
+        document.querySelectorAll('.chill-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        chillTag = btn.dataset.tag;
+        nextGif();
+    });
+
+    // Close on backdrop click
+    document.getElementById('chillModal').addEventListener('click', function(e) {
+        if (e.target === this) closeChillModal();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && chillOpen) closeChillModal();
+    });
     </script>
 
 </body>
