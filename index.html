@@ -968,6 +968,7 @@
         }
 
         .track-progress-bar {
+            cursor: pointer;
             grid-column: 1 / -1;
             height: 3px;
             background: rgba(255,255,255,0.08);
@@ -2320,10 +2321,10 @@
                         </button>
                         <div class="track-info">
                             <div class="track-title">Lover Boy</div>
-                            <div class="track-meta">ZEN0 · Original · Mar 1, 2026</div>
+                            <div class="track-meta">ZEN0 · Original</div>
                         </div>
                         <div class="track-duration" data-duration>--:--</div>
-                        <div class="track-progress-bar"><div class="track-progress-fill"></div></div>
+                        <div class="track-progress-bar" onclick="seekTrack(event,this.closest('.track'))"><div class="track-progress-fill"></div></div>
                     </div>
                     <div class="track" data-src="./music/pierpont-st.mp3" onclick="toggleTrack(this)">
                         <button class="track-play-btn" aria-label="Play">
@@ -2335,7 +2336,7 @@
                             <div class="track-meta">ZEN0 · Original</div>
                         </div>
                         <div class="track-duration" data-duration>--:--</div>
-                        <div class="track-progress-bar"><div class="track-progress-fill"></div></div>
+                        <div class="track-progress-bar" onclick="seekTrack(event,this.closest('.track'))"><div class="track-progress-fill"></div></div>
                     </div>
                     <div class="track" data-src="./music/sleep-better.mp3" onclick="toggleTrack(this)">
                         <button class="track-play-btn" aria-label="Play">
@@ -2344,10 +2345,10 @@
                         </button>
                         <div class="track-info">
                             <div class="track-title">Sleep Better</div>
-                            <div class="track-meta">ZEN0 · Original · Mar 26, 2026</div>
+                            <div class="track-meta">ZEN0 · Original</div>
                         </div>
                         <div class="track-duration" data-duration>--:--</div>
-                        <div class="track-progress-bar"><div class="track-progress-fill"></div></div>
+                        <div class="track-progress-bar" onclick="seekTrack(event,this.closest('.track'))"><div class="track-progress-fill"></div></div>
                     </div>
                     <div class="track" data-src="./music/landmine.mp3" onclick="toggleTrack(this)">
                         <button class="track-play-btn" aria-label="Play">
@@ -2356,10 +2357,22 @@
                         </button>
                         <div class="track-info">
                             <div class="track-title">Landmine</div>
-                            <div class="track-meta">ZEN0 · Original · May 16, 2026</div>
+                            <div class="track-meta">ZEN0 · Original</div>
                         </div>
                         <div class="track-duration" data-duration>--:--</div>
-                        <div class="track-progress-bar"><div class="track-progress-fill"></div></div>
+                        <div class="track-progress-bar" onclick="seekTrack(event,this.closest('.track'))"><div class="track-progress-fill"></div></div>
+                    </div>
+                    <div class="track" data-src="./music/rosha.mp3" onclick="toggleTrack(this)">
+                        <button class="track-play-btn" aria-label="Play">
+                            <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
+                            <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+                        </button>
+                        <div class="track-info">
+                            <div class="track-title">Rosha</div>
+                            <div class="track-meta">ZEN0 · Original</div>
+                        </div>
+                        <div class="track-duration" data-duration>--:--</div>
+                        <div class="track-progress-bar" onclick="seekTrack(event,this.closest('.track'))"><div class="track-progress-fill"></div></div>
                     </div>
                 </div>
                 <a class="otc-spotify-link" href="https://open.spotify.com/artist/54nNgjbYv12prvtDt0Vozh?si=0u_pQnEfRbuTXuMsvXkXsA" target="_blank" rel="noopener noreferrer" aria-label="Listen on Spotify">
@@ -2836,6 +2849,18 @@ window.__translations = {
             });
 
             startProgress(trackEl);
+        };
+
+        window.seekTrack = function(e, trackEl) {
+            e.stopPropagation();
+            if (!currentAudio || currentTrack !== trackEl) return;
+            var bar = trackEl.querySelector('.track-progress-bar');
+            var rect = bar.getBoundingClientRect();
+            var fraction = (e.clientX - rect.left) / rect.width;
+            fraction = Math.max(0, Math.min(1, fraction));
+            if (currentAudio.duration) {
+                currentAudio.currentTime = fraction * currentAudio.duration;
+            }
         };
 
         function startProgress(trackEl) {
