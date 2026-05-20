@@ -1672,6 +1672,29 @@
             margin-bottom: 4px;
         }
         .zt-status.zt-green { color: #3fb950; }
+        .zombie-terminal-skull {
+            background: linear-gradient(135deg, #0d1117 0%, #1a0a0a 100%);
+            border-bottom: 1px solid rgba(248,81,73,0.25);
+            padding: 22px 24px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .zt-skull-label {
+            color: #f85149;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .zt-skull-sub {
+            color: rgba(255,255,255,0.35);
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+        }
 
         /* Trail Hazers Apparel — legacy CSS kept */
         .th-video-showcase {
@@ -1898,7 +1921,7 @@
                         <div class="featured-stat-label">Instances Scanned</div>
                     </div>
                     <div class="featured-stat">
-                        <div class="featured-stat-value">$834K</div>
+                        <div class="featured-stat-value">$286K</div>
                         <div class="featured-stat-label">Zombie Waste</div>
                     </div>
                 </div>
@@ -1921,24 +1944,37 @@
                 </div>
             </div>
             <div class="zombie-terminal">
+                <div class="zombie-terminal-skull">
+                    <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="28" r="20" fill="#1a1f2e" stroke="#f85149" stroke-width="2"/>
+                        <ellipse cx="24" cy="26" rx="5" ry="6" fill="#f85149" opacity="0.9"/>
+                        <ellipse cx="40" cy="26" rx="5" ry="6" fill="#f85149" opacity="0.9"/>
+                        <rect x="26" y="44" width="5" height="6" rx="1" fill="#f85149" opacity="0.7"/>
+                        <rect x="33" y="44" width="5" height="6" rx="1" fill="#f85149" opacity="0.7"/>
+                        <path d="M22 48 Q32 52 42 48" stroke="#f85149" stroke-width="1.5" fill="none" opacity="0.6"/>
+                        <path d="M26 38 Q32 42 38 38" stroke="#f85149" stroke-width="1.5" fill="none" opacity="0.5"/>
+                    </svg>
+                    <div class="zt-skull-label">FinOps Zombie Hunter</div>
+                    <div class="zt-skull-sub">AWS Cloud Cost Intelligence</div>
+                </div>
                 <div class="zombie-terminal-bar">
                     <span class="zt-dot" style="background:#ff5f57"></span>
                     <span class="zt-dot" style="background:#febc2e"></span>
                     <span class="zt-dot" style="background:#28c840"></span>
-                    <span class="zt-title">finops-zombie-hunter</span>
+                    <span class="zt-title">finops-zombie-hunter — live scan</span>
                 </div>
                 <div class="zt-body">
                     <div class="zt-alert">&#9760; ZOMBIE DETECTED</div>
-                    <div class="zt-row"><span class="zt-label">Instance</span><span class="zt-val zt-blue">i-0x9b3c1d4e</span></div>
-                    <div class="zt-row"><span class="zt-label">Type</span><span class="zt-val zt-blue">t3.medium</span></div>
-                    <div class="zt-row"><span class="zt-label">CPU avg</span><span class="zt-val zt-red">0.4%</span></div>
-                    <div class="zt-row"><span class="zt-label">Network in</span><span class="zt-val zt-red">847 bytes</span></div>
-                    <div class="zt-row"><span class="zt-label">Days running</span><span class="zt-val zt-orange">47 days</span></div>
-                    <div class="zt-row"><span class="zt-label">Monthly cost</span><span class="zt-val zt-red">$185,400 / mo</span></div>
+                    <div class="zt-row"><span class="zt-label">Instance</span><span class="zt-val zt-blue">i-0e1a3c5f7b9d2e4f</span></div>
+                    <div class="zt-row"><span class="zt-label">Type</span><span class="zt-val zt-blue">g4dn.12xlarge</span></div>
+                    <div class="zt-row"><span class="zt-label">CPU avg</span><span class="zt-val zt-red">0.8%</span></div>
+                    <div class="zt-row"><span class="zt-label">Network in</span><span class="zt-val zt-red">4,096 bytes</span></div>
+                    <div class="zt-row"><span class="zt-label">Days running</span><span class="zt-val zt-orange">421 days</span></div>
+                    <div class="zt-row"><span class="zt-label">Monthly cost</span><span class="zt-val zt-red">$68,400 / mo</span></div>
                     <div class="zt-divider"></div>
-                    <div class="zt-status">&#8594; Gemini alert drafted</div>
-                    <div class="zt-status">&#8594; Slack notification sent</div>
-                    <div class="zt-status zt-green">&#8594; Awaiting decommission approval...</div>
+                    <div class="zt-status">&#8594; AI-authored decommission alert generated</div>
+                    <div class="zt-status">&#8594; Slack DM sent to Sofia Reyes</div>
+                    <div class="zt-status zt-green">&#8594; Awaiting approve / deny...</div>
                 </div>
             </div>
         </div>
