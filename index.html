@@ -1446,6 +1446,66 @@
             50% { transform: translateY(-10px) rotate(1deg); }
         }
 
+        /* Live Dashboard Window Preview */
+        .dashboard-window {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #0d1117;
+            margin-bottom: 14px;
+            cursor: pointer;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            display: block;
+        }
+        .dashboard-window:hover {
+            border-color: rgba(20,184,166,0.45);
+            box-shadow: 0 0 28px rgba(20,184,166,0.09);
+        }
+        .dw-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            background: #161b22;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            user-select: none;
+        }
+        .dw-dots { display: flex; gap: 5px; flex-shrink: 0; }
+        .dw-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+        .dw-label {
+            flex: 1;
+            font-size: 0.62rem;
+            color: rgba(255,255,255,0.28);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Courier New', monospace;
+        }
+        .dw-expand {
+            color: rgba(255,255,255,0.28);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+        .dashboard-window:hover .dw-expand { color: #14b8a6; }
+        .dw-frame {
+            position: relative;
+            width: 100%;
+            height: 255px;
+            overflow: hidden;
+            background: #080c12;
+        }
+        .dw-iframe {
+            width: 1280px;
+            height: 910px;
+            border: none;
+            transform: scale(0.282);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+
         /* All Projects Toggle */
         .all-projects-section {
             padding: 60px 40px;
@@ -2065,7 +2125,26 @@
                     <div class="project-company">H-E-B / Charles Butt</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.heb.desc">A live dashboard built for H-E-B's chairman showing how the entire business is performing: revenue, store regions, product categories, inventory, and community impact, all in one place.</p>
+                    <div class="dashboard-window" onclick="window.open('https://martymcfli.github.io/heb-analytics/','_blank')">
+                        <div class="dw-bar">
+                            <div class="dw-dots">
+                                <span class="dw-dot" style="background:#ff5f57"></span>
+                                <span class="dw-dot" style="background:#febc2e"></span>
+                                <span class="dw-dot" style="background:#28c840"></span>
+                            </div>
+                            <div class="dw-label">heb-analytics — live preview</div>
+                            <span class="dw-expand">⤢</span>
+                        </div>
+                        <div class="dw-frame">
+                            <iframe src="https://martymcfli.github.io/heb-analytics/"
+                                    class="dw-iframe"
+                                    scrolling="no"
+                                    loading="lazy"
+                                    sandbox="allow-scripts allow-same-origin"
+                                    title="H-E-B Executive Analytics Dashboard">
+                            </iframe>
+                        </div>
+                    </div>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">8</div>
@@ -2089,8 +2168,8 @@
                     </div>
                 </div>
                 <div class="project-actions">
-                    <a href="https://martymcfli.github.io/heb-analytics/" target="_blank" class="project-btn project-btn-primary">Launch Dashboard</a>
-                    <a href="https://github.com/martymcfli/heb-analytics" target="_blank" class="project-btn project-btn-secondary">View on GitHub</a>
+                    <a href="https://martymcfli.github.io/heb-analytics/" target="_blank" class="project-btn project-btn-primary">Open Full Dashboard ↗</a>
+                    <a href="https://github.com/martymcfli/heb-analytics" target="_blank" class="project-btn project-btn-secondary">GitHub</a>
                 </div>
             </div>
 
@@ -2102,7 +2181,25 @@
                     <div class="project-company">WeCovr (InsurTech Startup)</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.revops.desc">End-to-end revenue operations pipeline with lead scoring, lifecycle management, and attribution modeling for US market expansion.</p>
+                    <div class="dashboard-window" onclick="window.open('./revops-pipeline/dashboard.html','_blank')">
+                        <div class="dw-bar">
+                            <div class="dw-dots">
+                                <span class="dw-dot" style="background:#ff5f57"></span>
+                                <span class="dw-dot" style="background:#febc2e"></span>
+                                <span class="dw-dot" style="background:#28c840"></span>
+                            </div>
+                            <div class="dw-label">revops-pipeline — live preview</div>
+                            <span class="dw-expand">⤢</span>
+                        </div>
+                        <div class="dw-frame">
+                            <iframe src="./revops-pipeline/dashboard.html"
+                                    class="dw-iframe"
+                                    scrolling="no"
+                                    loading="lazy"
+                                    title="RevOps Pipeline Dashboard">
+                            </iframe>
+                        </div>
+                    </div>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">$842K</div>
@@ -2122,9 +2219,9 @@
                         <span class="tag">RevOps</span>
                         <span class="tag">Lead Scoring</span>
                     </div>
-                    <div class="project-links">
-                        <a href="./revops-pipeline/dashboard.html" class="project-btn project-btn-primary" data-i18n="btn.viewdash">View Dashboard</a>
-                    </div>
+                </div>
+                <div class="project-actions">
+                    <a href="./revops-pipeline/dashboard.html" target="_blank" class="project-btn project-btn-primary">Open Full Dashboard ↗</a>
                 </div>
             </div>
 
@@ -2136,7 +2233,25 @@
                     <div class="project-company">Trail Blazers LLC</div>
                 </div>
                 <div class="project-body">
-                    <p class="project-desc" data-i18n="grid.ga4.desc">Full GA4 dashboard with funnel analysis, attribution modeling, and conversion optimization for $2.5M athletic brand.</p>
+                    <div class="dashboard-window" onclick="window.open('./ga4-analytics/dashboard.html','_blank')">
+                        <div class="dw-bar">
+                            <div class="dw-dots">
+                                <span class="dw-dot" style="background:#ff5f57"></span>
+                                <span class="dw-dot" style="background:#febc2e"></span>
+                                <span class="dw-dot" style="background:#28c840"></span>
+                            </div>
+                            <div class="dw-label">ga4-analytics — live preview</div>
+                            <span class="dw-expand">⤢</span>
+                        </div>
+                        <div class="dw-frame">
+                            <iframe src="./ga4-analytics/dashboard.html"
+                                    class="dw-iframe"
+                                    scrolling="no"
+                                    loading="lazy"
+                                    title="E-Commerce Analytics Suite">
+                            </iframe>
+                        </div>
+                    </div>
                     <div class="project-stats">
                         <div class="stat">
                             <div class="stat-value">$2.41M</div>
@@ -2156,9 +2271,9 @@
                         <span class="tag">E-Commerce</span>
                         <span class="tag">Attribution</span>
                     </div>
-                    <div class="project-links">
-                        <a href="./ga4-analytics/dashboard.html" class="project-btn project-btn-primary">View Dashboard</a>
-                    </div>
+                </div>
+                <div class="project-actions">
+                    <a href="./ga4-analytics/dashboard.html" target="_blank" class="project-btn project-btn-primary">Open Full Dashboard ↗</a>
                 </div>
             </div>
 
