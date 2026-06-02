@@ -3252,8 +3252,8 @@ window.__translations = {
             if (currentTrack === trackEl && currentAudio && !currentAudio.paused) {
                 currentAudio.pause();
                 trackEl.classList.remove('playing');
-                trackEl.querySelector('.icon-play').style.display = '';
-                trackEl.querySelector('.icon-pause').style.display = 'none';
+                trackEl.querySelector('.play-icon').style.display = '';
+                trackEl.querySelector('.pause-icon').style.display = 'none';
                 clearInterval(progressInterval);
                 return;
             }
@@ -3262,8 +3262,8 @@ window.__translations = {
             if (currentTrack === trackEl && currentAudio && currentAudio.paused) {
                 currentAudio.play();
                 trackEl.classList.add('playing');
-                trackEl.querySelector('.icon-play').style.display = 'none';
-                trackEl.querySelector('.icon-pause').style.display = '';
+                trackEl.querySelector('.play-icon').style.display = 'none';
+                trackEl.querySelector('.pause-icon').style.display = '';
                 startProgress(trackEl);
                 return;
             }
@@ -3274,8 +3274,8 @@ window.__translations = {
                 currentAudio.currentTime = 0;
                 if (currentTrack) {
                     currentTrack.classList.remove('playing');
-                    currentTrack.querySelector('.icon-play').style.display = '';
-                    currentTrack.querySelector('.icon-pause').style.display = 'none';
+                    currentTrack.querySelector('.play-icon').style.display = '';
+                    currentTrack.querySelector('.pause-icon').style.display = 'none';
                     var oldFill = currentTrack.querySelector('.track-progress-fill');
                     if (oldFill) oldFill.style.width = '0%';
                 }
@@ -3287,13 +3287,13 @@ window.__translations = {
             currentTrack = trackEl;
             currentAudio.play();
             trackEl.classList.add('playing');
-            trackEl.querySelector('.icon-play').style.display = 'none';
-            trackEl.querySelector('.icon-pause').style.display = '';
+            trackEl.querySelector('.play-icon').style.display = 'none';
+            trackEl.querySelector('.pause-icon').style.display = '';
 
             currentAudio.addEventListener('ended', function() {
                 trackEl.classList.remove('playing');
-                trackEl.querySelector('.icon-play').style.display = '';
-                trackEl.querySelector('.icon-pause').style.display = 'none';
+                trackEl.querySelector('.play-icon').style.display = '';
+                trackEl.querySelector('.pause-icon').style.display = 'none';
                 var fill = trackEl.querySelector('.track-progress-fill');
                 if (fill) fill.style.width = '0%';
                 clearInterval(progressInterval);
