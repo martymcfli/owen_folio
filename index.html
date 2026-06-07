@@ -2766,6 +2766,22 @@
                         </div>
                     </div>
                     <div class="track-list-divider">More tracks</div>
+                    <div class="track" onclick="toggleTrack(this)" data-src="./music/it-all-just-goes-by.mp3">
+                        <div class="track-play-btn">
+                            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                            <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                        </div>
+                        <div class="track-info">
+                            <div class="track-title">It All Just Goes By</div>
+                            <div class="track-meta">ZEN0</div>
+                        </div>
+                        <div class="track-right">
+                            <div class="track-progress-bar" onclick="seekTrack(event,this.closest('.track'))">
+                                <div class="track-progress-fill"></div>
+                            </div>
+                            <div class="track-time">0:00</div>
+                        </div>
+                    </div>
                     <div class="track" onclick="toggleTrack(this)" data-src="./music/sour-pink-skies.mp3">
                         <div class="track-play-btn">
                             <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
