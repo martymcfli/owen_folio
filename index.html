@@ -1530,6 +1530,15 @@
             pointer-events: none;
         }
 
+        .model-wrap { cursor: default; }
+        .model-frame { height: 440px; }
+        .model-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
         /* Live Dashboard Window Preview */
         .dashboard-window {
             border-radius: 10px;
@@ -2126,60 +2135,61 @@
             </div>
         </div>
 
-        <!-- Project 3: Culture Heat Map -->
+        <!-- Project 3: Homestead Build Model (SketchUp 3D embed) -->
+        <!-- TODO: replace SKETCHFAB_MODEL_UID (2 places) with the uid from the model's Sketchfab embed code -->
         <div class="featured-project">
             <div class="featured-content">
                 <div class="featured-number">03</div>
-                <div class="featured-tag">Data Intelligence / AI</div>
-                <h3 class="featured-title">Culture Heat Map</h3>
-                <p class="featured-subtitle">Company Culture Intelligence Platform</p>
-                <p class="featured-desc">Search real jobs, explore 300+ companies, and see what their culture is actually like. Based on real data pulled from across the web; compare work-life balance, salary ranges, and company ratings on an interactive map to find the kind of place you'd actually want to work.</p>
+                <div class="featured-tag">Design / Build Planning</div>
+                <h3 class="featured-title">Homestead Build Model</h3>
+                <p class="featured-subtitle">Timber Frame Home &amp; Site Systems in SketchUp</p>
+                <p class="featured-desc">A full 3D model of the off-grid homestead I plan to build, drawn in SketchUp before anything gets cut. The timber frame house, passive house envelope, solar PV, ERV, rainwater collection, greywater and septic, and MEP layout are modeled together to see how every system fits. Drag to orbit, scroll to zoom.</p>
                 <div class="featured-stats">
                     <div class="featured-stat">
-                        <div class="featured-stat-value">300+</div>
-                        <div class="featured-stat-label">Companies</div>
+                        <div class="featured-stat-value">Timber Frame</div>
+                        <div class="featured-stat-label">Structure</div>
                     </div>
                     <div class="featured-stat">
-                        <div class="featured-stat-value">1,847</div>
-                        <div class="featured-stat-label">Salaries</div>
+                        <div class="featured-stat-value">Off-Grid</div>
+                        <div class="featured-stat-label">Systems</div>
                     </div>
                     <div class="featured-stat">
-                        <div class="featured-stat-value">AI</div>
-                        <div class="featured-stat-label">Powered</div>
+                        <div class="featured-stat-value">Interactive</div>
+                        <div class="featured-stat-label">3D Model</div>
                     </div>
                 </div>
                 <div class="featured-tags">
-                    <span class="tag">React</span>
-                    <span class="tag">TypeScript</span>
-                    <span class="tag">tRPC</span>
-                    <span class="tag">MySQL</span>
-                    <span class="tag">OpenAI</span>
+                    <span class="tag">SketchUp</span>
+                    <span class="tag">Timber Frame</span>
+                    <span class="tag">Passive House</span>
+                    <span class="tag">Solar PV</span>
+                    <span class="tag">ERV</span>
+                    <span class="tag">MEP</span>
                 </div>
                 <div class="featured-links">
-                    <a href="https://culture-heatmap-production-4e9d.up.railway.app" target="_blank" class="btn-primary" style="padding: 14px 24px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        View Live
+                    <a href="https://sketchfab.com/models/SKETCHFAB_MODEL_UID" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 14px 24px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        Open Full 3D Model
                     </a>
-                    <a href="./culture-heatmap.html" class="btn-secondary" style="padding: 14px 24px;">Case Study</a>
                 </div>
             </div>
-            <div class="featured-iframe-wrap" onclick="window.open('https://culture-heatmap-production-4e9d.up.railway.app','_blank')">
+            <div class="featured-iframe-wrap model-wrap">
                 <div class="fiw-bar">
                     <div class="dw-dots">
                         <span class="dw-dot" style="background:#ff5f57"></span>
                         <span class="dw-dot" style="background:#febc2e"></span>
                         <span class="dw-dot" style="background:#28c840"></span>
                     </div>
-                    <div class="dw-label">culture-heatmap.up.railway.app</div>
-                    <span class="dw-expand">⤢</span>
+                    <div class="dw-label">Homestead model · drag to orbit</div>
                 </div>
-                <div class="fiw-frame">
-                    <iframe src="https://culture-heatmap-production-4e9d.up.railway.app"
-                            class="fiw-iframe"
-                            scrolling="no"
+                <div class="fiw-frame model-frame">
+                    <iframe src="https://sketchfab.com/models/SKETCHFAB_MODEL_UID/embed?ui_theme=dark"
+                            class="model-iframe"
                             loading="lazy"
-                            sandbox="allow-scripts allow-same-origin allow-forms"
-                            title="Culture Heat Map">
+                            allow="autoplay; fullscreen; xr-spatial-tracking"
+                            allowfullscreen
+                            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                            title="Homestead timber frame build, 3D model">
                     </iframe>
                 </div>
             </div>
