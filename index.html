@@ -417,6 +417,12 @@
         .design-build { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
         .db-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); background: var(--bg-card); box-shadow: var(--shadow-xl); }
         .db-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .db-tabs { display: flex; justify-content: center; gap: 8px; margin: 0 auto 24px; flex-wrap: wrap; }
+        .db-tab { appearance: none; cursor: pointer; font: inherit; font-weight: 600; padding: 10px 24px; border-radius: 999px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-secondary); transition: all .2s ease; }
+        .db-tab:hover { color: var(--accent-primary); border-color: var(--accent-primary); }
+        .db-tab[aria-selected="true"] { background: var(--accent-primary); border-color: var(--accent-primary); color: #fff; }
+        .db-tab:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+        .db-panel[hidden] { display: none; }
         .db-copy { max-width: 760px; margin: 28px auto 0; text-align: center; color: var(--text-secondary); line-height: 1.7; }
         .db-copy a { color: var(--accent-primary); text-decoration: none; font-weight: 600; }
         .db-copy a:hover { text-decoration: underline; }
@@ -2661,10 +2667,46 @@
             <span class="section-tag">Design + Build</span>
             <h2 class="section-title">Catskill Timber Frame Cabin</h2>
         </div>
-        <div class="db-frame">
-            <iframe title="Catskill Timber Frame Cabin: Full Build Model" loading="lazy" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/fddb9c3f91d54f358abfc16fd45809e9/embed?autostart=0&ui_theme=dark"></iframe>
+        <div class="db-tabs" role="tablist" aria-label="Cabin model views">
+            <button class="db-tab" role="tab" id="db-tab-ext" aria-selected="true" aria-controls="db-panel-ext" data-target="ext">Exterior</button>
+            <button class="db-tab" role="tab" id="db-tab-int" aria-selected="false" aria-controls="db-panel-int" data-target="int" tabindex="-1">Interior</button>
         </div>
-        <p class="db-copy">A high-performance timber frame cabin for the Catskills, modeled in SketchUp at build level: pier foundation, pegged joinery, insulated envelope, rooftop solar, a covered porch and an elevated boardwalk to the outhouse. Orbit the model and click the numbered pins for a guided tour. <a href="https://skfb.ly/pPrY6" target="_blank" rel="noopener noreferrer">Open full screen on Sketchfab</a></p>
+        <div class="db-panel" id="db-panel-ext" role="tabpanel" aria-labelledby="db-tab-ext">
+            <div class="db-frame">
+                <iframe title="Catskill Timber Frame Cabin: Full Build Model" loading="lazy" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/fddb9c3f91d54f358abfc16fd45809e9/embed?autostart=0&ui_theme=dark"></iframe>
+            </div>
+            <p class="db-copy">The whole site: pier foundation on a slope, standing-seam roof with rooftop solar, south glass under a deep overhang, a covered porch, an outdoor shower, rainwater and greywater systems, a standby generator, and a solar-lit elevated boardwalk to a three-walled outhouse. Orbit the model and click the numbered pins for a guided tour. <a href="https://skfb.ly/pPrY6" target="_blank" rel="noopener noreferrer">Open full screen on Sketchfab</a></p>
+        </div>
+        <div class="db-panel" id="db-panel-int" role="tabpanel" aria-labelledby="db-tab-int" hidden>
+            <div class="db-frame">
+                <iframe title="Catskill Timber Frame Cabin: Interior Cutaway" data-src="https://sketchfab.com/models/dd6434c830b84626b8247b6c4f9cd2b3/embed?autostart=0&ui_theme=dark" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking"></iframe>
+            </div>
+            <p class="db-copy">The same cabin with the roof and solar removed so you can look straight down into it: exposed pegged timber frame, the wood stove and chimney, kitchen and living space, and the mechanical and power systems tucked behind the walls. <a href="https://sketchfab.com/3d-models/catskillcabin3-interior-dd6434c830b84626b8247b6c4f9cd2b3" target="_blank" rel="noopener noreferrer">Open full screen on Sketchfab</a></p>
+        </div>
+        <script>
+        (function () {
+            var tabs = document.querySelectorAll('.db-tab');
+            function show(t) {
+                tabs.forEach(function (b) {
+                    var on = b === t;
+                    b.setAttribute('aria-selected', on ? 'true' : 'false');
+                    b.tabIndex = on ? 0 : -1;
+                    document.getElementById('db-panel-' + b.dataset.target).hidden = !on;
+                });
+                var f = document.querySelector('#db-panel-' + t.dataset.target + ' iframe[data-src]');
+                if (f) { f.src = f.dataset.src; f.removeAttribute('data-src'); }
+            }
+            tabs.forEach(function (b, i) {
+                b.addEventListener('click', function () { show(b); });
+                b.addEventListener('keydown', function (e) {
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                        var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+                        n.focus(); show(n);
+                    }
+                });
+            });
+        })();
+        </script>
     </section>
 
     <!-- Video Modal -->
